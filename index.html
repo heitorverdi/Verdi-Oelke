@@ -12,72 +12,90 @@
     <style>
         :root { --primary: #064e3b; --accent: #10b981; --gold: #c5a059; --bg: #f1f5f9; --text: #1e293b; --white: #ffffff; }
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; }
+        body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; overflow-x: hidden; }
 
         header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .logo-header { height: 35px; filter: brightness(0) invert(1); }
         .user-pill { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 50px; color: white; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.15); }
-        .user-pill b { color: var(--gold); }
-
+        
         .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
         .tab { padding: 18px 0; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.75rem; letter-spacing: 1px; border-bottom: 3px solid transparent; transition: 0.3s; }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
 
-        .content { max-width: 1200px; margin: 30px auto; padding: 0 20px; min-height: 400px; position: relative; }
+        .content { max-width: 1200px; margin: 30px auto; padding: 0 20px 100px 20px; min-height: 400px; position: relative; }
         .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .hero h2 { font-size: 1.5rem; color: var(--primary); margin: 0; font-weight: 700; }
 
-        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; box-shadow: 0 4px 12px rgba(6, 78, 59, 0.2); }
-        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(6, 78, 59, 0.3); }
-
+        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+        
+        /* GRID E CARTÕES */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
         .card { 
             background: var(--white); border-radius: 16px; padding: 24px; position: relative;
-            border: 1px solid #e2e8f0; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            border-left: 6px solid var(--accent); display: flex; flex-direction: column; gap: 12px;
+            border: 1px solid #e2e8f0; transition: 0.3s; border-left: 8px solid #64748b;
+            display: flex; flex-direction: column; gap: 10px;
         }
-        .card:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .card.sector-fiscal { border-left-color: #3b82f6; } 
+        .card.sector-comercial { border-left-color: #10b981; }
+        .card.sector-pessoal { border-left-color: #f59e0b; }
+        .card.sector-societario { border-left-color: #ec4899; }
+        .card.sector-diretoria { border-left-color: #c5a059; }
 
-        .card-header { display: flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; }
-        .info-row { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
-        .info-row:last-of-type { border-bottom: none; }
-        .info-label { font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-        .info-value { font-size: 0.95rem; color: var(--text); font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        .info-value i { color: var(--gold); width: 16px; height: 16px; opacity: 0.8; }
+        .status-badge { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; align-self: flex-start; margin-bottom: 5px; }
+        .status-now { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .status-today { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
+        .status-future { background: #f1f5f9; color: #475569; }
 
-        .del-btn { 
-            position: absolute; top: 15px; right: 15px; background: #fff1f2; color: #ef4444; 
-            border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        .card-header { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; color: var(--text); }
+        .info-row { display: flex; flex-direction: column; gap: 2px; }
+        .info-label { font-size: 0.6rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
+        .info-value { font-size: 0.9rem; color: var(--text); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .info-value i { width: 14px; height: 14px; color: var(--gold); }
+
+        .actions { position: absolute; top: 15px; right: 15px; display: flex; gap: 5px; }
+        .act-btn { border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .del-btn { background: #fff1f2; color: #ef4444; }
+        .edit-btn { background: #f0f9ff; color: #0ea5e9; }
+
+        /* LEGENDA NO CANTO INFERIOR */
+        .legend-box { 
+            position: fixed; bottom: 20px; left: 20px; background: white; 
+            padding: 12px 18px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            border: 1px solid #e2e8f0; z-index: 900;
         }
+        .legend-title { font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 4px; }
+        .color-dot { width: 12px; height: 12px; border-radius: 3px; }
 
-        #loader-container { 
-            display: none; position: absolute; top: 50%; left: 50%; 
-            transform: translate(-50%, -50%); text-align: center; z-index: 500; 
-        }
-        .spinner { width: 50px; height: 50px; border: 5px solid #e2e8f0; border-top: 5px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        #loader-container { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 500; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .auth-box { background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .keep-row { display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 12px 18px; border-radius: 12px; margin: 15px 0 20px 0; border: 1px solid #e2e8f0; cursor: pointer; }
-        .keep-row span { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; }
-        .keep-row input { width: 22px; height: 22px; accent-color: var(--primary); cursor: pointer; }
-
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); z-index: 2000; align-items: center; justify-content: center; }
-        .modal { background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 440px; }
+        #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 3000; display: flex; align-items: center; justify-content: center; }
+        .auth-box { background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; }
         
-        input, select { width: 100%; padding: 14px; margin: 6px 0 16px 0; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 1rem; }
-        label { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; display: block; text-align: left; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
+        .modal { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
+        input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; }
+        label { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; display: block; text-align: left; }
     </style>
 </head>
 <body>
 
+    <div class="legend-box" id="legend">
+        <span class="legend-title">Cores por Setor</span>
+        <div class="legend-item"><div class="color-dot" style="background:#3b82f6"></div> Fiscal</div>
+        <div class="legend-item"><div class="color-dot" style="background:#10b981"></div> Comercial</div>
+        <div class="legend-item"><div class="color-dot" style="background:#f59e0b"></div> Pessoal</div>
+        <div class="legend-item"><div class="color-dot" style="background:#ec4899"></div> Societário</div>
+        <div class="legend-item"><div class="color-dot" style="background:#c5a059"></div> Diretoria</div>
+    </div>
+
     <div id="auth-screen">
         <div class="auth-box" id="box-signup">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 150px; filter: contrast(0.1) brightness(0.2); margin-bottom: 25px;">
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 140px; filter: brightness(0); opacity: 0.8; margin-bottom: 20px;">
             <h3>Criar Conta</h3>
-            <label>Nome Completo</label><input type="text" id="s-name" placeholder="Digite seu nome">
+            <label>Nome Completo</label><input type="text" id="s-name" placeholder="Seu nome">
             <label>E-mail Corporativo</label><input type="email" id="s-email" placeholder="seuemail@empresa.com.br">
             <label>Setor</label>
             <select id="s-dept">
@@ -85,22 +103,17 @@
                 <option value="Pessoal">Pessoal</option><option value="Societario">Societário</option>
                 <option value="Comercial">Comercial</option><option value="Diretoria">Diretoria</option>
             </select>
-            <label>Crie uma Senha</label><input type="password" id="s-pass" placeholder="••••••••">
-            <button class="btn-main" style="width:100%; justify-content:center; padding:16px" onclick="handleAuth('signup')">Cadastrar</button>
-            <p style="margin-top:20px; font-size:0.9rem">Já tem conta? <b style="color:var(--primary); cursor:pointer" onclick="toggleAuth()">Entrar</b></p>
+            <label>Senha</label><input type="password" id="s-pass" placeholder="••••••••">
+            <button class="btn-main" style="width:100%; justify-content:center" onclick="handleAuth('signup')">Cadastrar</button>
+            <p style="font-size:0.8rem; margin-top:15px">Já tem conta? <b style="color:var(--primary); cursor:pointer" onclick="toggleAuth()">Entrar</b></p>
         </div>
-
         <div class="auth-box" id="box-login" style="display:none">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 150px; filter: contrast(0.1) brightness(0.2); margin-bottom: 25px;">
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 140px; filter: brightness(0); opacity: 0.8; margin-bottom: 20px;">
             <h3>Login</h3>
             <label>E-mail</label><input type="email" id="l-email" placeholder="Digite seu e-mail">
-            <label>Senha</label><input type="password" id="l-pass" placeholder="Digite sua senha">
-            <div class="keep-row" onclick="document.getElementById('u-keep').click()">
-                <span>Manter-me conectado</span>
-                <input type="checkbox" id="u-keep" checked onclick="event.stopPropagation()">
-            </div>
-            <button class="btn-main" id="btn-login" style="width:100%; justify-content:center; padding:16px" onclick="handleAuth('login')">Entrar</button>
-            <p style="margin-top:20px; font-size:0.9rem">Não tem conta? <b style="color:var(--primary); cursor:pointer" onclick="toggleAuth()">Cadastrar</b></p>
+            <label>Senha</label><input type="password" id="l-pass" placeholder="Sua senha">
+            <button class="btn-main" id="btn-login" style="width:100%; justify-content:center" onclick="handleAuth('login')">Entrar</button>
+            <p style="font-size:0.8rem; margin-top:15px">Novo aqui? <b style="color:var(--primary); cursor:pointer" onclick="toggleAuth()">Criar conta</b></p>
         </div>
     </div>
 
@@ -110,116 +123,129 @@
     </header>
 
     <div class="tabs">
-        <div class="tab active" id="tab1" onclick="setRoom(1)">SALA 01</div>
-        <div class="tab" id="tab2" onclick="setRoom(2)">SALA 02</div>
+        <div class="tab active" onclick="setRoom(1)">SALA 01</div>
+        <div class="tab" onclick="setRoom(2)">SALA 02</div>
     </div>
 
     <div class="content">
-        <div id="loader-container">
-            <div class="spinner"></div>
-            <p style="font-weight:600; color:var(--primary)">Sincronizando dados...</p>
-        </div>
-
+        <div id="loader-container"><div class="spinner"></div><p>Sincronizando...</p></div>
         <div class="hero">
             <h2 id="room-title">Sala de Reunião 01</h2>
-            <button class="btn-main" onclick="openMod()"><i data-lucide="plus"></i> Agendar Reunião</button>
+            <button class="btn-main" onclick="openMod()"><i data-lucide="plus"></i> Agendar</button>
         </div>
-
-        <div id="empty-msg" style="text-align:center; padding-top:50px">
-            <i data-lucide="calendar-off" style="width:48px; height:48px; color:#cbd5e1; margin-bottom:15px"></i>
-            <p style="color:#94a3b8; font-weight:500">Nenhum agendamento encontrado.</p>
-        </div>
-
+        <div id="empty-msg" style="text-align:center; display:none; color:#94a3b8; margin-top:40px">Nenhuma reunião para hoje.</div>
         <div id="list" class="grid"></div>
     </div>
 
     <div id="overlay" class="overlay">
         <div class="modal">
-            <h3 style="margin-top:0; color:var(--primary)">Novo Agendamento</h3>
-            <label>Data da Reunião</label><input type="date" id="f-date">
-            <div style="display:flex; gap:15px">
+            <h3 id="modal-title" style="margin-top:0">Novo Agendamento</h3>
+            <input type="hidden" id="f-id">
+            <label>Data</label><input type="date" id="f-date">
+            <div style="display:flex; gap:10px">
                 <div style="flex:1"><label>Início</label><input type="time" id="f-start"></div>
-                <div style="flex:1"><label>Término</label><input type="time" id="f-end"></div>
+                <div style="flex:1"><label>Fim</label><input type="time" id="f-end"></div>
             </div>
-            <label>Nome do Cliente / Assunto</label><input type="text" id="f-client" placeholder="Ex: Reunião de Alinhamento">
-            <label>Condutor (Host)</label><input type="text" id="f-host" placeholder="Ex: Consultor Responsável">
-            <button class="btn-main" style="width:100%; justify-content:center; margin-top:10px" onclick="save()">Confirmar Agendamento</button>
-            <button onclick="closeMod()" style="width:100%; border:none; background:none; margin-top:15px; color:#94a3b8; cursor:pointer; font-weight:600">Cancelar</button>
+            <label>Cliente / Assunto</label><input type="text" id="f-client">
+            <label>Host (Condutor)</label><input type="text" id="f-host">
+            <button class="btn-main" style="width:100%; justify-content:center" onclick="save()">Confirmar</button>
+            <button onclick="closeMod()" style="width:100%; background:none; border:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
         </div>
     </div>
 
     <script>
-        const URL = "SUA_URL_DO_APPS_SCRIPT";
+        const URL = "SUA_URL_AQUI"; // <--- ATUALIZE AQUI
         let room = 1, user = null, data = [];
 
         window.onload = () => {
             const saved = localStorage.getItem('v_user') || sessionStorage.getItem('v_user');
             if(saved) { user = JSON.parse(saved); start(); }
             lucide.createIcons();
+            document.getElementById('f-date').min = new Date().toISOString().split("T")[0];
         };
 
         function toggleAuth() {
-            const s = document.getElementById('box-signup'), l = document.getElementById('box-login');
-            s.style.display = s.style.display === 'none' ? 'block' : 'none';
-            l.style.display = l.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('box-signup').style.display = document.getElementById('box-signup').style.display === 'none' ? 'block' : 'none';
+            document.getElementById('box-login').style.display = document.getElementById('box-login').style.display === 'none' ? 'block' : 'none';
         }
 
         async function handleAuth(mode) {
-            const domain = "@verdicontadores.com.br", master = "heitor.verdi@gmail.com";
-            if (mode === 'signup') {
-                const n = document.getElementById('s-name').value, e = document.getElementById('s-email').value.toLowerCase().trim(), s = document.getElementById('s-dept').value, p = document.getElementById('s-pass').value;
-                if(!n || !e || !p) return alert("Preencha todos os campos!");
-                if(!e.endsWith(domain) && e !== master) return alert("Apenas e-mails corporativos são permitidos.");
-                await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p}), mode: 'no-cors' });
-                alert("Conta criada! Agora você pode entrar.");
-                toggleAuth();
+            const domain = "@verdicontadores.com.br";
+            if(mode==='signup'){
+                const n=document.getElementById('s-name').value, e=document.getElementById('s-email').value.toLowerCase().trim(), s=document.getElementById('s-dept').value, p=document.getElementById('s-pass').value;
+                if(!n||!e||!p) return alert("Preencha tudo.");
+                if(!e.endsWith(domain) && e !== "heitor.verdi@gmail.com") return alert("Use e-mail corporativo.");
+                await fetch(URL, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p}), mode:'no-cors'});
+                alert("Cadastrado! Faça login."); toggleAuth();
             } else {
-                const e = document.getElementById('l-email').value.toLowerCase().trim(), p = document.getElementById('l-pass').value, k = document.getElementById('u-keep').checked;
-                document.getElementById('btn-login').innerText = "Verificando...";
-                const resp = await fetch(URL + "?action=login_verify&email=" + e + "&pass=" + p);
+                const e=document.getElementById('l-email').value.toLowerCase().trim(), p=document.getElementById('l-pass').value;
+                document.getElementById('btn-login').innerText = "Entrando...";
+                const resp = await fetch(URL+"?action=login_verify&email="+e+"&pass="+p);
                 const resTxt = await resp.text();
-                if (resTxt === "Erro") { alert("E-mail ou senha incorretos."); document.getElementById('btn-login').innerText = "Entrar"; }
-                else {
-                    user = JSON.parse(resTxt); user.email = e;
-                    if(k) localStorage.setItem('v_user', JSON.stringify(user));
-                    else sessionStorage.setItem('v_user', JSON.stringify(user));
-                    start();
-                }
+                if(resTxt==="Erro") { alert("Dados incorretos."); document.getElementById('btn-login').innerText="Entrar"; }
+                else { user=JSON.parse(resTxt); user.email=e; localStorage.setItem('v_user', JSON.stringify(user)); start(); }
             }
         }
 
-        function start() { document.getElementById('auth-screen').style.display = 'none'; document.getElementById('user-display').innerHTML = `<b>${user.dept}</b> | ${user.name} <span onclick="logout()" style="cursor:pointer; margin-left:12px; font-weight:700; color:var(--gold)">Sair</span>`; load(); }
-        function logout() { localStorage.clear(); sessionStorage.clear(); location.reload(); }
-
-        async function load() {
-            document.getElementById('loader-container').style.display = 'block';
-            document.getElementById('list').style.opacity = '0.2';
-            try { const res = await fetch(URL); data = await res.json(); render(); } catch(e){}
-            document.getElementById('loader-container').style.display = 'none';
-            document.getElementById('list').style.opacity = '1';
+        function start() { 
+            document.getElementById('auth-screen').style.display='none'; 
+            document.getElementById('legend').style.display='block';
+            document.getElementById('user-display').innerHTML=`<b>${user.dept}</b> | ${user.name} <small onclick="logout()" style="margin-left:10px; cursor:pointer; color:var(--gold)">Sair</small>`; 
+            load(); 
         }
 
-        function setRoom(n) { room = n; document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i+1 === n)); document.getElementById('room-title').innerText = `Sala de Reunião 0${n}`; render(); }
+        function logout() { localStorage.clear(); location.reload(); }
+
+        async function load() {
+            document.getElementById('loader-container').style.display='block';
+            try { const res=await fetch(URL); data=await res.json(); render(); } catch(e){}
+            document.getElementById('loader-container').style.display='none';
+        }
+
+        function setRoom(n) { room=n; document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i+1===n)); document.getElementById('room-title').innerText = `Sala de Reunião 0${n}`; render(); }
 
         function render() {
             const list = document.getElementById('list'); list.innerHTML = "";
+            const todayStr = new Date().toISOString().split('T')[0];
+            const nowTime = new Date().getHours() * 60 + new Date().getMinutes();
+
             const filtered = data.filter(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                return String(m.room || m.sala) === String(room);
+                const itemDate = (m.date || m.data || "").split('T')[0];
+                return String(m.room || m.sala) === String(room) && itemDate >= todayStr;
             });
+
             document.getElementById('empty-msg').style.display = filtered.length ? 'none' : 'block';
-            filtered.forEach(i => {
+
+            filtered.sort((a,b) => (a.Start || a.Início) > (b.Start || b.Início) ? 1 : -1).forEach(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                const dateF = (m.date || m.data || "").split('T')[0].split('-').reverse().join('/');
                 const isMe = (m.createdby || "").toLowerCase() === user.email.toLowerCase();
+                const itemDate = (m.date || m.data || "").split('T')[0];
                 
-                const div = document.createElement('div'); div.className = 'card';
+                let statusClass = "status-future", statusText = "Agendada";
+                if(itemDate === todayStr) {
+                    const [hS, mS] = m.start.split(':').map(Number);
+                    const [hE, mE] = m.end.split(':').map(Number);
+                    const startMin = hS * 60 + mS, endMin = hE * 60 + mE;
+                    if(nowTime >= startMin && nowTime <= endMin) { statusClass = "status-now"; statusText = "Agora"; }
+                    else if(nowTime < startMin) { statusClass = "status-today"; statusText = "Hoje"; }
+                }
+
+                const sClass = `sector-${(m.dept || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`;
+
+                const div = document.createElement('div'); div.className = `card ${sClass}`;
                 div.innerHTML = `
-                    <div class="card-header"><i data-lucide="clock"></i> ${m.start} — ${m.end}</div>
-                    <div class="info-row"><span class="info-label">Data</span><span class="info-value"><i data-lucide="calendar"></i> ${dateF}</span></div>
-                    <div class="info-row"><span class="info-label">Cliente / Assunto</span><span class="info-value"><i data-lucide="briefcase"></i> ${m.client || m.cliente}</span></div>
-                    <div class="info-row"><span class="info-label">Host</span><span class="info-value"><i data-lucide="user-check"></i> ${m.host || m.condutor}</span></div>
-                    ${isMe ? `<button class="del-btn" onclick="del('${m.id}')"><i data-lucide="trash-2"></i></button>` : ''}
+                    <div class="status-badge ${statusClass}">${statusText}</div>
+                    <div class="card-header"><i data-lucide="clock"></i> ${m.start} - ${m.end}</div>
+                    <div class="info-row"><span class="info-label">Data</span><span class="info-value"><i data-lucide="calendar"></i> ${itemDate.split('-').reverse().join('/')}</span></div>
+                    <div class="info-row"><span class="info-label">Cliente</span><span class="info-value"><i data-lucide="briefcase"></i> ${m.client||m.cliente}</span></div>
+                    <div class="info-row"><span class="info-label">Host</span><span class="info-value"><i data-lucide="user"></i> ${m.host||m.condutor} (${m.dept||'Geral'})</span></div>
+                    ${isMe ? `
+                        <div class="actions">
+                            <button class="act-btn edit-btn" onclick="edit('${m.id}')"><i data-lucide="pencil"></i></button>
+                            <button class="act-btn del-btn" onclick="del('${m.id}')"><i data-lucide="trash"></i></button>
+                        </div>
+                    ` : ''}
                 `;
                 list.appendChild(div);
             });
@@ -227,16 +253,43 @@
         }
 
         async function save() {
-            const entry = { id: "ID-"+Date.now(), room, date: document.getElementById('f-date').value, start: document.getElementById('f-start').value, end: document.getElementById('f-end').value, client: document.getElementById('f-client').value, host: document.getElementById('f-host').value, createdBy: user.email };
-            if(!entry.date || !entry.start || !entry.end || !entry.client) return alert("Preencha os campos obrigatórios!");
-            closeMod(); document.getElementById('loader-container').style.display = 'block';
-            await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'create', ...entry}), mode: 'no-cors' });
+            const entry = { id: document.getElementById('f-id').value || "ID-"+Date.now(), room, date: document.getElementById('f-date').value, start: document.getElementById('f-start').value, end: document.getElementById('f-end').value, client: document.getElementById('f-client').value, host: document.getElementById('f-host').value, createdBy: user.email, dept: user.dept };
+            if(!entry.date||!entry.start||!entry.end||!entry.client) return alert("Preencha todos os campos.");
+            
+            // Verificação de Conflito
+            const nS = entry.start.split(':').map(Number).reduce((h, m) => h * 60 + m);
+            const nE = entry.end.split(':').map(Number).reduce((h, m) => h * 60 + m);
+            const conflict = data.find(i => {
+                const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
+                if (String(m.room) !== String(room) || m.date.split('T')[0] !== entry.date || m.id === entry.id) return false;
+                const eS = m.start.split(':').map(Number).reduce((h, m) => h * 60 + m);
+                const eE = m.end.split(':').map(Number).reduce((h, m) => h * 60 + m);
+                return (nS < eE && nE > eS);
+            });
+
+            if(conflict) return alert(`Conflito! Esta sala já está ocupada por ${conflict.Host || conflict.Condutor}.`);
+
+            closeMod(); document.getElementById('loader-container').style.display='block';
+            await fetch(URL, {method:'POST', body:new URLSearchParams({action:'create', ...entry}), mode:'no-cors'});
             setTimeout(load, 1200);
         }
 
-        async function del(id) { if(!confirm("Deseja realmente excluir este agendamento?")) return; await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'delete', id}), mode: 'no-cors' }); setTimeout(load, 800); }
-        function openMod() { document.getElementById('f-date').value = new Date().toISOString().split('T')[0]; document.getElementById('overlay').style.display='flex'; }
-        function closeMod() { document.getElementById('overlay').style.display='none'; }
+        function edit(id) {
+            const item = data.find(i => (i.Id || i.id) === id);
+            const m = {}; for(let k in item) m[k.toLowerCase().trim()] = item[k];
+            document.getElementById('f-id').value = m.id;
+            document.getElementById('f-date').value = m.date.split('T')[0];
+            document.getElementById('f-start').value = m.start;
+            document.getElementById('f-end').value = m.end;
+            document.getElementById('f-client').value = m.client || m.cliente;
+            document.getElementById('f-host').value = m.host || m.condutor;
+            document.getElementById('modal-title').innerText = "Editar Agendamento";
+            openMod();
+        }
+
+        async function del(id) { if(confirm("Excluir?")) { await fetch(URL, {method:'POST', body:new URLSearchParams({action:'delete', id}), mode:'no-cors'}); setTimeout(load, 800); } }
+        function openMod() { document.getElementById('overlay').style.display='flex'; }
+        function closeMod() { document.getElementById('overlay').style.display='none'; document.getElementById('f-id').value = ""; document.getElementById('modal-title').innerText = "Novo Agendamento"; }
     </script>
 </body>
 </html>
