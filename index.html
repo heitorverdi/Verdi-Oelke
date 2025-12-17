@@ -4,76 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verdi & Oelke | Gestão</title>
-    
     <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=12">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
         :root { --primary: #064e3b; --accent: #10b981; --gold: #c5a059; --bg: #f1f5f9; --text: #1e293b; --white: #ffffff; }
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; overflow-x: hidden; }
-
         header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .logo-header { height: 35px; filter: brightness(0) invert(1); }
         .user-pill { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 50px; color: white; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.15); }
-        
         .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
         .tab { padding: 18px 0; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.75rem; letter-spacing: 1px; border-bottom: 3px solid transparent; transition: 0.3s; }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
-
         .content { max-width: 1200px; margin: 30px auto; padding: 0 20px 100px 20px; min-height: 400px; position: relative; }
         .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .hero h2 { font-size: 1.5rem; color: var(--primary); margin: 0; font-weight: 700; }
-
         .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
-        
-        /* GRID E CARTÕES */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-        .card { 
-            background: var(--white); border-radius: 16px; padding: 24px; position: relative;
-            border: 1px solid #e2e8f0; transition: 0.3s; border-left: 8px solid #64748b;
-            display: flex; flex-direction: column; gap: 10px;
-        }
+        .card { background: var(--white); border-radius: 16px; padding: 24px; position: relative; border: 1px solid #e2e8f0; transition: 0.3s; border-left: 8px solid #64748b; display: flex; flex-direction: column; gap: 10px; }
         .card.sector-fiscal { border-left-color: #3b82f6; } 
         .card.sector-comercial { border-left-color: #10b981; }
         .card.sector-pessoal { border-left-color: #f59e0b; }
         .card.sector-societario { border-left-color: #ec4899; }
         .card.sector-diretoria { border-left-color: #c5a059; }
-
-        .status-badge { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; align-self: flex-start; margin-bottom: 5px; }
+        .status-badge { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; align-self: flex-start; }
         .status-now { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
         .status-today { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
         .status-future { background: #f1f5f9; color: #475569; }
-
         .card-header { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; color: var(--text); }
         .info-row { display: flex; flex-direction: column; gap: 2px; }
         .info-label { font-size: 0.6rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
         .info-value { font-size: 0.9rem; color: var(--text); font-weight: 600; display: flex; align-items: center; gap: 6px; }
-        .info-value i { width: 14px; height: 14px; color: var(--gold); }
-
         .actions { position: absolute; top: 15px; right: 15px; display: flex; gap: 5px; }
-        .act-btn { border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .act-btn { border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .del-btn { background: #fff1f2; color: #ef4444; }
         .edit-btn { background: #f0f9ff; color: #0ea5e9; }
-
-        /* LEGENDA NO CANTO INFERIOR */
-        .legend-box { 
-            position: fixed; bottom: 20px; left: 20px; background: white; 
-            padding: 12px 18px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
-            border: 1px solid #e2e8f0; z-index: 900;
-        }
-        .legend-title { font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 4px; }
+        .legend-box { position: fixed; bottom: 20px; left: 20px; background: white; padding: 12px 18px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; z-index: 900; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 600; color: #475569; }
         .color-dot { width: 12px; height: 12px; border-radius: 3px; }
-
-        #loader-container { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 500; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+        #loader-container { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 3000; display: flex; align-items: center; justify-content: center; }
         .auth-box { background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; }
-        
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
         .modal { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
         input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; }
@@ -81,9 +55,7 @@
     </style>
 </head>
 <body>
-
-    <div class="legend-box" id="legend">
-        <span class="legend-title">Cores por Setor</span>
+    <div class="legend-box" id="legend" style="display:none">
         <div class="legend-item"><div class="color-dot" style="background:#3b82f6"></div> Fiscal</div>
         <div class="legend-item"><div class="color-dot" style="background:#10b981"></div> Comercial</div>
         <div class="legend-item"><div class="color-dot" style="background:#f59e0b"></div> Pessoal</div>
@@ -92,28 +64,28 @@
     </div>
 
     <div id="auth-screen">
-        <div class="auth-box" id="box-signup">
+        <div class="auth-box" id="box-login">
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 140px; filter: brightness(0); opacity: 0.8; margin-bottom: 20px;">
+            <h3>Acessar Sistema</h3>
+            <label>E-mail</label><input type="email" id="l-email" placeholder="nome@verdicontadores.com.br">
+            <label>Senha</label><input type="password" id="l-pass" placeholder="••••••••">
+            <button class="btn-main" id="btn-login" style="width:100%; justify-content:center" onclick="handleAuth('login')">Entrar</button>
+            <p style="font-size:0.8rem; margin-top:15px">Novo? <b style="color:var(--primary); cursor:pointer" onclick="toggleAuth()">Cadastrar-se</b></p>
+        </div>
+        <div class="auth-box" id="box-signup" style="display:none">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 140px; filter: brightness(0); opacity: 0.8; margin-bottom: 20px;">
             <h3>Criar Conta</h3>
-            <label>Nome Completo</label><input type="text" id="s-name" placeholder="Seu nome">
-            <label>E-mail Corporativo</label><input type="email" id="s-email" placeholder="seuemail@empresa.com.br">
+            <label>Nome Completo</label><input type="text" id="s-name" placeholder="Ex: João Silva">
+            <label>E-mail Corporativo</label><input type="email" id="s-email" placeholder="nome@verdicontadores.com.br">
             <label>Setor</label>
             <select id="s-dept">
                 <option value="Fiscal">Fiscal</option><option value="Contabil">Contábil</option>
                 <option value="Pessoal">Pessoal</option><option value="Societario">Societário</option>
                 <option value="Comercial">Comercial</option><option value="Diretoria">Diretoria</option>
             </select>
-            <label>Senha</label><input type="password" id="s-pass" placeholder="••••••••">
-            <button class="btn-main" style="width:100%; justify-content:center" onclick="handleAuth('signup')">Cadastrar</button>
-            <p style="font-size:0.8rem; margin-top:15px">Já tem conta? <b style="color:var(--primary); cursor:pointer" onclick="toggleAuth()">Entrar</b></p>
-        </div>
-        <div class="auth-box" id="box-login" style="display:none">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 140px; filter: brightness(0); opacity: 0.8; margin-bottom: 20px;">
-            <h3>Login</h3>
-            <label>E-mail</label><input type="email" id="l-email" placeholder="Digite seu e-mail">
-            <label>Senha</label><input type="password" id="l-pass" placeholder="Sua senha">
-            <button class="btn-main" id="btn-login" style="width:100%; justify-content:center" onclick="handleAuth('login')">Entrar</button>
-            <p style="font-size:0.8rem; margin-top:15px">Novo aqui? <b style="color:var(--primary); cursor:pointer" onclick="toggleAuth()">Criar conta</b></p>
+            <label>Criar Senha</label><input type="password" id="s-pass" placeholder="••••••••">
+            <button class="btn-main" id="btn-signup" style="width:100%; justify-content:center" onclick="handleAuth('signup')">Finalizar Cadastro</button>
+            <p style="font-size:0.8rem; margin-top:15px">Já tem conta? <b style="color:var(--primary); cursor:pointer" onclick="toggleAuth()">Entrar agora</b></p>
         </div>
     </div>
 
@@ -133,13 +105,12 @@
             <h2 id="room-title">Sala de Reunião 01</h2>
             <button class="btn-main" onclick="openMod()"><i data-lucide="plus"></i> Agendar</button>
         </div>
-        <div id="empty-msg" style="text-align:center; display:none; color:#94a3b8; margin-top:40px">Nenhuma reunião para hoje.</div>
         <div id="list" class="grid"></div>
     </div>
 
     <div id="overlay" class="overlay">
         <div class="modal">
-            <h3 id="modal-title" style="margin-top:0">Novo Agendamento</h3>
+            <h3 id="modal-title">Agendar Reunião</h3>
             <input type="hidden" id="f-id">
             <label>Data</label><input type="date" id="f-date">
             <div style="display:flex; gap:10px">
@@ -147,83 +118,61 @@
                 <div style="flex:1"><label>Fim</label><input type="time" id="f-end"></div>
             </div>
             <label>Cliente / Assunto</label><input type="text" id="f-client">
-            <label>Host (Condutor)</label><input type="text" id="f-host">
-            <button class="btn-main" style="width:100%; justify-content:center" onclick="save()">Confirmar</button>
+            <label>Host (Responsável)</label><input type="text" id="f-host">
+            <button class="btn-main" style="width:100%; justify-content:center" onclick="save()">Confirmar Agendamento</button>
             <button onclick="closeMod()" style="width:100%; background:none; border:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
         </div>
     </div>
 
     <script>
-        const URL = "https://script.google.com/macros/s/AKfycbyLQlU9v824Xm6TDnRChMeGD0I4i8lrNyQZ1Isr4Gz0_mPfoBju-C62tfeit246KkJc/exec
-            "; // <--- ATUALIZE AQUI
+        // SUBSTITUA ABAIXO PELA SUA URL DE IMPLANTAÇÃO (SEM ESPAÇOS OU QUEBRAS DE LINHA)
+        const URL = "https://script.google.com/macros/s/AKfycbyLQlU9v824Xm6TDnRChMeGD0I4i8lrNyQZ1Isr4Gz0_mPfoBju-C62tfeit246KkJc/exec"; 
+        
         let room = 1, user = null, data = [];
 
         window.onload = () => {
-            const saved = localStorage.getItem('v_user') || sessionStorage.getItem('v_user');
+            const saved = localStorage.getItem('v_user');
             if(saved) { user = JSON.parse(saved); start(); }
             lucide.createIcons();
             document.getElementById('f-date').min = new Date().toISOString().split("T")[0];
         };
 
         function toggleAuth() {
-            document.getElementById('box-signup').style.display = document.getElementById('box-signup').style.display === 'none' ? 'block' : 'none';
-            document.getElementById('box-login').style.display = document.getElementById('box-login').style.display === 'none' ? 'block' : 'none';
+            const s = document.getElementById('box-signup'), l = document.getElementById('box-login');
+            s.style.display = s.style.display === 'none' ? 'block' : 'none';
+            l.style.display = l.style.display === 'none' ? 'block' : 'none';
         }
 
-async function handleAuth(mode) {
-    const domain = "@verdicontadores.com.br";
-    const URL_SCRIPT = "SUA_NOVA_URL_AQUI"; // COLE A URL DO PASSO ANTERIOR AQUI
-
-    if(mode === 'signup') {
-        const n = document.getElementById('s-name').value, 
-              e = document.getElementById('s-email').value.toLowerCase().trim(), 
-              s = document.getElementById('s-dept').value, 
-              p = document.getElementById('s-pass').value;
-              
-        if(!n || !e || !p) return alert("Preencha todos os campos.");
-        if(!e.endsWith(domain) && e !== "heitor.verdi@gmail.com") return alert("Use e-mail corporativo.");
-
-        try {
-            const response = await fetch(URL_SCRIPT, { 
-                method: 'POST', 
-                body: new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p}) 
-            });
-            const result = await response.text();
-            
-            if(result === "Email ja existe") {
-                alert("Este e-mail já está cadastrado!");
+        async function handleAuth(mode) {
+            if(mode === 'signup') {
+                const n = document.getElementById('s-name').value, 
+                      e = document.getElementById('s-email').value.toLowerCase().trim(), 
+                      s = document.getElementById('s-dept').value, 
+                      p = document.getElementById('s-pass').value;
+                if(!n || !e || !p) return alert("Preencha tudo.");
+                const btn = document.getElementById('btn-signup');
+                btn.innerText = "Cadastrando...";
+                try {
+                    const response = await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p}) });
+                    const result = await response.text();
+                    if(result === "Email ja existe") alert("E-mail já cadastrado!");
+                    else { alert("Sucesso! Faça login."); toggleAuth(); }
+                } catch(err) { alert("Erro de conexão."); }
+                btn.innerText = "Finalizar Cadastro";
             } else {
-                alert("Cadastro realizado! Agora você pode entrar.");
-                toggleAuth();
+                const e = document.getElementById('l-email').value.toLowerCase().trim(), 
+                      p = document.getElementById('l-pass').value;
+                const btn = document.getElementById('btn-login');
+                btn.innerText = "Verificando...";
+                try {
+                    const resp = await fetch(`${URL}?action=login_verify&email=${e}&pass=${p}`);
+                    const resTxt = await resp.text();
+                    if(resTxt === "Erro") alert("E-mail ou senha incorretos.");
+                    else { user = JSON.parse(resTxt); user.email = e; localStorage.setItem('v_user', JSON.stringify(user)); start(); }
+                } catch(err) { alert("Erro no servidor."); }
+                btn.innerText = "Entrar";
             }
-        } catch(err) {
-            alert("Erro de conexão. Verifique se a URL do Script está correta.");
         }
-    } else {
-        const e = document.getElementById('l-email').value.toLowerCase().trim(), 
-              p = document.getElementById('l-pass').value;
-        const btn = document.getElementById('btn-login');
-        btn.innerText = "Verificando...";
-        
-        try {
-            const resp = await fetch(`${URL_SCRIPT}?action=login_verify&email=${e}&pass=${p}`);
-            const resTxt = await resp.text();
-            
-            if(resTxt === "Erro") { 
-                alert("Dados incorretos."); 
-                btn.innerText = "Entrar"; 
-            } else {
-                user = JSON.parse(resTxt); 
-                user.email = e; 
-                localStorage.setItem('v_user', JSON.stringify(user)); 
-                start(); 
-            }
-        } catch(err) {
-            alert("Erro ao conectar com o servidor.");
-            btn.innerText = "Entrar";
-        }
-    }
-}
 
         function start() { 
             document.getElementById('auth-screen').style.display='none'; 
@@ -236,54 +185,30 @@ async function handleAuth(mode) {
 
         async function load() {
             document.getElementById('loader-container').style.display='block';
-            try { const res=await fetch(URL); data=await res.json(); render(); } catch(e){}
+            try { const res = await fetch(URL); data = await res.json(); render(); } catch(e){}
             document.getElementById('loader-container').style.display='none';
         }
 
-        function setRoom(n) { room=n; document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i+1===n)); document.getElementById('room-title').innerText = `Sala de Reunião 0${n}`; render(); }
+        function setRoom(n) { room = n; document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active',i+1===n)); document.getElementById('room-title').innerText = `Sala de Reunião 0${n}`; render(); }
 
         function render() {
             const list = document.getElementById('list'); list.innerHTML = "";
             const todayStr = new Date().toISOString().split('T')[0];
-            const nowTime = new Date().getHours() * 60 + new Date().getMinutes();
-
             const filtered = data.filter(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                const itemDate = (m.date || m.data || "").split('T')[0];
-                return String(m.room || m.sala) === String(room) && itemDate >= todayStr;
+                return String(m.room) === String(room) && m.date.split('T')[0] >= todayStr;
             });
-
-            document.getElementById('empty-msg').style.display = filtered.length ? 'none' : 'block';
-
-            filtered.sort((a,b) => (a.Start || a.Início) > (b.Start || b.Início) ? 1 : -1).forEach(i => {
+            filtered.forEach(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                const isMe = (m.createdby || "").toLowerCase() === user.email.toLowerCase();
-                const itemDate = (m.date || m.data || "").split('T')[0];
-                
-                let statusClass = "status-future", statusText = "Agendada";
-                if(itemDate === todayStr) {
-                    const [hS, mS] = m.start.split(':').map(Number);
-                    const [hE, mE] = m.end.split(':').map(Number);
-                    const startMin = hS * 60 + mS, endMin = hE * 60 + mE;
-                    if(nowTime >= startMin && nowTime <= endMin) { statusClass = "status-now"; statusText = "Agora"; }
-                    else if(nowTime < startMin) { statusClass = "status-today"; statusText = "Hoje"; }
-                }
-
-                const sClass = `sector-${(m.dept || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`;
-
-                const div = document.createElement('div'); div.className = `card ${sClass}`;
+                const isMe = m.createdby === user.email;
+                const div = document.createElement('div');
+                div.className = `card sector-${m.dept.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`;
                 div.innerHTML = `
-                    <div class="status-badge ${statusClass}">${statusText}</div>
                     <div class="card-header"><i data-lucide="clock"></i> ${m.start} - ${m.end}</div>
-                    <div class="info-row"><span class="info-label">Data</span><span class="info-value"><i data-lucide="calendar"></i> ${itemDate.split('-').reverse().join('/')}</span></div>
-                    <div class="info-row"><span class="info-label">Cliente</span><span class="info-value"><i data-lucide="briefcase"></i> ${m.client||m.cliente}</span></div>
-                    <div class="info-row"><span class="info-label">Host</span><span class="info-value"><i data-lucide="user"></i> ${m.host||m.condutor} (${m.dept||'Geral'})</span></div>
-                    ${isMe ? `
-                        <div class="actions">
-                            <button class="act-btn edit-btn" onclick="edit('${m.id}')"><i data-lucide="pencil"></i></button>
-                            <button class="act-btn del-btn" onclick="del('${m.id}')"><i data-lucide="trash"></i></button>
-                        </div>
-                    ` : ''}
+                    <div class="info-row"><span class="info-label">Data</span><span class="info-value">${m.date.split('T')[0].split('-').reverse().join('/')}</span></div>
+                    <div class="info-row"><span class="info-label">Cliente</span><span class="info-value">${m.client}</span></div>
+                    <div class="info-row"><span class="info-label">Host</span><span class="info-value">${m.host}</span></div>
+                    ${isMe ? `<div class="actions"><button class="act-btn del-btn" onclick="del('${m.id}')"><i data-lucide="trash"></i></button></div>` : ''}
                 `;
                 list.appendChild(div);
             });
@@ -291,45 +216,16 @@ async function handleAuth(mode) {
         }
 
         async function save() {
-            const entry = { id: document.getElementById('f-id').value || "ID-"+Date.now(), room, date: document.getElementById('f-date').value, start: document.getElementById('f-start').value, end: document.getElementById('f-end').value, client: document.getElementById('f-client').value, host: document.getElementById('f-host').value, createdBy: user.email, dept: user.dept };
-            if(!entry.date||!entry.start||!entry.end||!entry.client) return alert("Preencha todos os campos.");
-            
-            // Verificação de Conflito
-            const nS = entry.start.split(':').map(Number).reduce((h, m) => h * 60 + m);
-            const nE = entry.end.split(':').map(Number).reduce((h, m) => h * 60 + m);
-            const conflict = data.find(i => {
-                const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                if (String(m.room) !== String(room) || m.date.split('T')[0] !== entry.date || m.id === entry.id) return false;
-                const eS = m.start.split(':').map(Number).reduce((h, m) => h * 60 + m);
-                const eE = m.end.split(':').map(Number).reduce((h, m) => h * 60 + m);
-                return (nS < eE && nE > eS);
-            });
-
-            if(conflict) return alert(`Conflito! Esta sala já está ocupada por ${conflict.Host || conflict.Condutor}.`);
-
+            const entry = { id: "ID-"+Date.now(), room, date: document.getElementById('f-date').value, start: document.getElementById('f-start').value, end: document.getElementById('f-end').value, client: document.getElementById('f-client').value, host: document.getElementById('f-host').value, createdBy: user.email, dept: user.dept };
+            if(!entry.date || !entry.start || !entry.client) return alert("Preencha tudo.");
             closeMod(); document.getElementById('loader-container').style.display='block';
-            await fetch(URL, {method:'POST', body:new URLSearchParams({action:'create', ...entry}), mode:'no-cors'});
-            setTimeout(load, 1200);
+            await fetch(URL, {method:'POST', body:new URLSearchParams({action:'create', ...entry})});
+            setTimeout(load, 1500);
         }
 
-        function edit(id) {
-            const item = data.find(i => (i.Id || i.id) === id);
-            const m = {}; for(let k in item) m[k.toLowerCase().trim()] = item[k];
-            document.getElementById('f-id').value = m.id;
-            document.getElementById('f-date').value = m.date.split('T')[0];
-            document.getElementById('f-start').value = m.start;
-            document.getElementById('f-end').value = m.end;
-            document.getElementById('f-client').value = m.client || m.cliente;
-            document.getElementById('f-host').value = m.host || m.condutor;
-            document.getElementById('modal-title').innerText = "Editar Agendamento";
-            openMod();
-        }
-
-        async function del(id) { if(confirm("Excluir?")) { await fetch(URL, {method:'POST', body:new URLSearchParams({action:'delete', id}), mode:'no-cors'}); setTimeout(load, 800); } }
+        async function del(id) { if(confirm("Excluir?")) { await fetch(URL, {method:'POST', body:new URLSearchParams({action:'delete', id})}); setTimeout(load, 1000); } }
         function openMod() { document.getElementById('overlay').style.display='flex'; }
-        function closeMod() { document.getElementById('overlay').style.display='none'; document.getElementById('f-id').value = ""; document.getElementById('modal-title').innerText = "Novo Agendamento"; }
+        function closeMod() { document.getElementById('overlay').style.display='none'; }
     </script>
 </body>
 </html>
-
-
