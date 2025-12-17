@@ -5,127 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verdi & Oelke | Gestão</title>
     
-    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=11">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=11">
-    
+    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=12">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        :root { 
-            --primary: #064e3b; 
-            --accent: #10b981; 
-            --gold: #c5a059;
-            --bg: #f8fafc; 
-            --text: #1e293b;
-        }
-
+        :root { --primary: #064e3b; --accent: #10b981; --gold: #c5a059; --bg: #f8fafc; --text: #1e293b; }
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; }
 
-        header { 
-            background: var(--primary); padding: 15px 30px; 
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+        header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .logo-header { height: 35px; filter: brightness(0) invert(1); }
-        .user-pill { 
-            background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 50px;
-            color: white; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.15);
-        }
-        .user-pill span { color: var(--gold); font-weight: 700; cursor: pointer; margin-left: 10px; }
+        .user-pill { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 50px; color: white; font-size: 0.75rem; }
 
         .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
-        .tab { 
-            padding: 18px 0; cursor: pointer; font-weight: 600; color: #94a3b8; 
-            font-size: 0.75rem; letter-spacing: 1px; border-bottom: 3px solid transparent; transition: 0.3s;
-        }
+        .tab { padding: 18px 0; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.75rem; border-bottom: 3px solid transparent; }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
 
-        .content { max-width: 1100px; margin: 30px auto; padding: 0 20px; min-height: 300px; position: relative; }
+        .content { max-width: 1100px; margin: 30px auto; padding: 0 20px; position: relative; }
         .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .hero h2 { font-size: 1.4rem; color: var(--primary); margin: 0; }
-
-        .btn-main { 
-            background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; 
-            font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s;
-        }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        .card { 
-            background: white; border-radius: 20px; padding: 24px; position: relative;
-            border: 1px solid #edf2f7; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-        .card-time { 
-            background: #f0fdf4; color: var(--accent); padding: 6px 12px; border-radius: 8px; 
-            font-weight: 700; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px;
-        }
-        .card-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; font-size: 0.9rem; }
-        .card-row i { color: var(--gold); width: 16px; height: 16px; }
-        .card-row strong { color: #64748b; font-size: 0.7rem; text-transform: uppercase; width: 75px; }
+        .card { background: white; border-radius: 20px; padding: 24px; position: relative; border: 1px solid #edf2f7; }
+        .del-btn { position: absolute; top: 20px; right: 20px; background: #fff1f2; color: #ef4444; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; }
 
-        .del-btn { 
-            position: absolute; top: 20px; right: 20px; background: #fff1f2; color: #ef4444; 
-            border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
+        /* AUTH SCREEN */
+        #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 3000; display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: 20px; }
+        .auth-box { background: white; padding: 35px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; }
+        
+        /* NOVO LAYOUT CHECKBOX */
+        .keep-row { 
+            display: flex; align-items: center; justify-content: space-between; 
+            background: #f1f5f9; padding: 12px 18px; border-radius: 12px; 
+            margin: 15px 0 20px 0; cursor: pointer; border: 1px solid #e2e8f0;
         }
+        .keep-row span { font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+        .keep-row input { width: 22px; height: 22px; cursor: pointer; accent-color: var(--primary); margin: 0; }
 
-        /* LOGIN SCREEN */
-        #login-screen { 
-            position: fixed; inset: 0; background: var(--primary); z-index: 3000; 
-            display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 40px 20px;
-        }
-        .login-box { 
-            background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; 
-            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); margin-top: 20px; margin-bottom: 40px;
-        }
-        .keep-connected { 
-            display: flex; align-items: center; gap: 8px; font-size: 0.8rem; 
-            color: #64748b; margin: 10px 0 20px 0; justify-content: center; cursor: pointer;
-        }
+        .toggle-link { margin-top: 20px; font-size: 0.85rem; color: #64748b; }
+        .toggle-link b { color: var(--primary); cursor: pointer; text-decoration: underline; }
 
-        /* LOADING INDICATOR */
-        #loader {
-            display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; color: var(--primary); z-index: 500;
-        }
-        .spinner {
-            width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold);
-            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px;
-        }
+        #loader { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin: auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* MENSAGEM VAZIA */
-        #empty-msg {
-            display: none; text-align: center; padding: 60px 20px; color: #94a3b8; font-weight: 500;
-        }
+        #empty-msg { display: none; text-align: center; padding: 40px; color: #94a3b8; }
 
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
         .modal { background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 420px; }
-        
-        input, select { width: 100%; padding: 12px; margin: 6px 0 15px 0; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.95rem; }
+        input, select { width: 100%; padding: 12px; margin: 6px 0 15px 0; border: 1.5px solid #e2e8f0; border-radius: 10px; }
         label { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; display: block; text-align: left; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 160px; filter: contrast(0.1) brightness(0.2); margin-bottom: 25px;">
-            <label>Nome Completo</label><input type="text" id="u-name" placeholder="Ex: João Silva">
-            <label>E-mail Corporativo</label><input type="email" id="u-email" placeholder="nome@verdicontadores.com.br">
+    <div id="auth-screen">
+        <div class="auth-box" id="box-signup">
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 140px; filter: contrast(0.1) brightness(0.2); margin-bottom: 20px;">
+            <h3 style="margin-bottom:20px">Criar Minha Conta</h3>
+            <label>Nome Completo</label><input type="text" id="s-name" placeholder="Ex: João Silva">
+            <label>E-mail Corporativo</label><input type="email" id="s-email" placeholder="nome@verdicontadores.com.br">
             <label>Setor</label>
-            <select id="u-dept">
-                <option value="Fiscal">Fiscal</option>
-                <option value="Contabil">Contábil</option>
-                <option value="Pessoal">Pessoal</option>
-                <option value="Societario">Societário</option>
-                <option value="Comercial">Comercial</option>
-                <option value="Diretoria">Diretoria</option>
+            <select id="s-dept">
+                <option value="Fiscal">Fiscal</option><option value="Contabil">Contábil</option>
+                <option value="Pessoal">Pessoal</option><option value="Societario">Societário</option>
+                <option value="Comercial">Comercial</option><option value="Diretoria">Diretoria</option>
             </select>
-            <label>Senha</label><input type="password" id="u-pass" placeholder="••••••••">
-            <label class="keep-connected"><input type="checkbox" id="u-keep" checked> Manter-me conectado</label>
-            <button class="btn-main" id="btn-login" style="width:100%; justify-content:center; padding: 15px;" onclick="login()">Acessar Sistema</button>
+            <label>Crie uma Senha</label><input type="password" id="s-pass" placeholder="••••••••">
+            <button class="btn-main" style="width:100%; justify-content:center; padding:15px" onclick="handleAuth('signup')">Finalizar Cadastro</button>
+            <p class="toggle-link">Já tem uma conta? <b onclick="toggleAuth()">Entrar agora</b></p>
+        </div>
+
+        <div class="auth-box" id="box-login" style="display:none">
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 140px; filter: contrast(0.1) brightness(0.2); margin-bottom: 20px;">
+            <h3 style="margin-bottom:20px">Acessar Sistema</h3>
+            <label>E-mail</label><input type="email" id="l-email" placeholder="nome@verdicontadores.com.br">
+            <label>Senha</label><input type="password" id="l-pass" placeholder="••••••••">
+            
+            <div class="keep-row" onclick="document.getElementById('u-keep').click()">
+                <span>Manter-me conectado</span>
+                <input type="checkbox" id="u-keep" checked onclick="event.stopPropagation()">
+            </div>
+
+            <button class="btn-main" id="btn-login" style="width:100%; justify-content:center; padding:15px" onclick="handleAuth('login')">Entrar</button>
+            <p class="toggle-link">Ainda não tem conta? <b onclick="toggleAuth()">Cadastrar-se</b></p>
         </div>
     </div>
 
@@ -141,23 +104,14 @@
 
     <div class="content">
         <div id="loader"><div class="spinner"></div><p>Carregando...</p></div>
-        
-        <div class="hero">
-            <h2 id="room-title">Sala de Reunião 01</h2>
-            <button class="btn-main" onclick="openMod()">+ Agendar</button>
-        </div>
-
-        <div id="empty-msg">
-            <i data-lucide="calendar-x" style="width: 48px; height: 48px; margin-bottom: 10px;"></i>
-            <p>Nenhuma reunião agendada para esta sala.</p>
-        </div>
-
+        <div class="hero"><h2 id="room-title">Sala de Reunião 01</h2><button class="btn-main" onclick="openMod()">+ Agendar</button></div>
+        <div id="empty-msg"><p>Nenhuma reunião agendada para esta sala.</p></div>
         <div id="list" class="grid"></div>
     </div>
 
     <div id="overlay" class="overlay">
         <div class="modal">
-            <h3 style="margin-top:0; color: var(--primary)">Nova Reserva</h3>
+            <h3>Nova Reserva</h3>
             <label>Data</label><input type="date" id="f-date">
             <div style="display:flex; gap:10px">
                 <div style="flex:1"><label>Início</label><input type="time" id="f-start"></div>
@@ -180,145 +134,84 @@
             lucide.createIcons();
         };
 
-        function login() {
-            const n = document.getElementById('u-name').value;
-            const e = document.getElementById('u-email').value.toLowerCase().trim();
-            const s = document.getElementById('u-dept').value;
-            const k = document.getElementById('u-keep').checked;
+        function toggleAuth() {
+            const s = document.getElementById('box-signup'), l = document.getElementById('box-login');
+            s.style.display = s.style.display === 'none' ? 'block' : 'none';
+            l.style.display = l.style.display === 'none' ? 'block' : 'none';
+        }
 
-            if(!n || !e) return alert("Por favor, preencha Nome e E-mail.");
-
-            const dominioObrigatorio = "@verdicontadores.com.br";
-            const emailMestre = "heitor.verdi@gmail.com";
-
-            if (!e.endsWith(dominioObrigatorio) && e !== emailMestre) {
-                alert("ACESSO NEGADO: Use o e-mail @verdicontadores.com.br");
-                return;
+        async function handleAuth(mode) {
+            const domain = "@verdicontadores.com.br", master = "heitor.verdi@gmail.com";
+            
+            if (mode === 'signup') {
+                const n = document.getElementById('s-name').value, e = document.getElementById('s-email').value.toLowerCase().trim(), s = document.getElementById('s-dept').value, p = document.getElementById('s-pass').value;
+                if(!n || !e || !p) return alert("Preencha todos os campos!");
+                if(!e.endsWith(domain) && e !== master) return alert("E-mail não permitido!");
+                
+                await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p}), mode: 'no-cors' });
+                alert("Cadastro realizado! Agora faça o login.");
+                toggleAuth();
+            } else {
+                const e = document.getElementById('l-email').value.toLowerCase().trim(), p = document.getElementById('l-pass').value, k = document.getElementById('u-keep').checked;
+                if(!e || !p) return alert("Preencha e-mail e senha!");
+                
+                document.getElementById('btn-login').innerText = "Verificando...";
+                const resp = await fetch(URL + "?action=login_verify&email=" + e + "&pass=" + p);
+                const result = await resp.text();
+                
+                if (result === "Erro") {
+                    alert("E-mail ou senha incorretos.");
+                    document.getElementById('btn-login').innerText = "Entrar";
+                } else {
+                    user = JSON.parse(result);
+                    user.email = e;
+                    if(k) localStorage.setItem('v_user', JSON.stringify(user));
+                    else sessionStorage.setItem('v_user', JSON.stringify(user));
+                    
+                    fetch(URL, { method: 'POST', body: new URLSearchParams({action:'log', user: user.name, email: e}), mode: 'no-cors' });
+                    start();
+                }
             }
-
-            document.getElementById('btn-login').innerHTML = "Processando...";
-            user = { name: n, email: e, dept: s };
-            if(k) localStorage.setItem('v_user', JSON.stringify(user));
-            else sessionStorage.setItem('v_user', JSON.stringify(user));
-
-            fetch(URL, { method: 'POST', body: new URLSearchParams({action:'log', user: n, email: e}), mode: 'no-cors' });
-            start();
         }
 
-        function start() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('user-display').innerHTML = `<b>${user.dept}</b>: ${user.name} <span onclick="logout()" style="cursor:pointer;margin-left:10px;color:var(--gold)">Sair</span>`;
-            load();
-        }
-
+        function start() { document.getElementById('auth-screen').style.display = 'none'; document.getElementById('user-display').innerHTML = `<b>${user.dept}</b>: ${user.name} <span onclick="logout()" style="cursor:pointer;margin-left:10px;color:var(--gold)">Sair</span>`; load(); }
         function logout() { localStorage.clear(); sessionStorage.clear(); location.reload(); }
 
         async function load() {
-            showLoading(true);
-            try {
-                const res = await fetch(URL);
-                data = await res.json();
-                render();
-            } catch(e) {
-                console.error("Erro ao carregar");
-            } finally {
-                showLoading(false);
-            }
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('list').style.opacity = '0.3';
+            try { const res = await fetch(URL); data = await res.json(); render(); } catch(e){}
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('list').style.opacity = '1';
         }
 
-        function showLoading(show) {
-            document.getElementById('loader').style.display = show ? 'block' : 'none';
-            document.getElementById('list').style.opacity = show ? '0.3' : '1';
-            document.getElementById('empty-msg').style.display = 'none';
-        }
-
-        function setRoom(n) {
-            room = n;
-            document.getElementById('tab1').classList.toggle('active', n===1);
-            document.getElementById('tab2').classList.toggle('active', n===2);
-            document.getElementById('room-title').innerText = `Sala de Reunião 0${n}`;
-            render();
-        }
+        function setRoom(n) { room = n; document.getElementById('tab1').classList.toggle('active', n===1); document.getElementById('tab2').classList.toggle('active', n===2); document.getElementById('room-title').innerText = `Sala de Reunião 0${n}`; render(); }
 
         function render() {
-            const list = document.getElementById('list');
-            const emptyMsg = document.getElementById('empty-msg');
-            list.innerHTML = "";
-            
+            const list = document.getElementById('list'); list.innerHTML = "";
             const filtered = data.filter(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
                 return String(m.room || m.sala) === String(room);
             });
-
-            if(filtered.length === 0) {
-                emptyMsg.style.display = 'block';
-                return;
-            } else {
-                emptyMsg.style.display = 'none';
-            }
-
-            filtered.sort((a,b) => {
-                const m1 = {}; for(let k in a) m1[k.toLowerCase().trim()] = a[k];
-                const m2 = {}; for(let k in b) m2[k.toLowerCase().trim()] = b[k];
-                return String(m1.start).localeCompare(String(m2.start));
-            }).forEach(i => {
+            document.getElementById('empty-msg').style.display = filtered.length ? 'none' : 'block';
+            filtered.forEach(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                let d = String(m.date || m.data || "").split('T')[0].split('-').reverse().join('/');
-                const creator = (m.createdby || m.email || "").toLowerCase().trim();
-                const isMe = creator === user.email;
-
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.innerHTML = `
-                    <div class="card-time"><i data-lucide="clock"></i> ${m.start} - ${m.end}</div>
-                    <div class="card-row"><i data-lucide="calendar"></i> <strong>Data</strong> <b>${d}</b></div>
-                    <div class="card-row"><i data-lucide="briefcase"></i> <strong>Cliente</strong> <b>${m.client || m.cliente}</b></div>
-                    <div class="card-row"><i data-lucide="user"></i> <strong>Host</strong> <b>${m.host || m.condutor}</b></div>
-                    ${isMe ? `<button class="del-btn" onclick="del('${m.id}')"><i data-lucide="trash-2"></i></button>` : ''}
-                `;
+                const isMe = (m.createdby || "").toLowerCase() === user.email.toLowerCase();
+                const div = document.createElement('div'); div.className = 'card';
+                div.innerHTML = `<div class="card-time"><i data-lucide="clock"></i> ${m.start} - ${m.end}</div><div class="card-row"><strong>Cliente</strong> <b>${m.client || m.cliente}</b></div><div class="card-row"><strong>Host</strong> <b>${m.host || m.condutor}</b></div>${isMe ? `<button class="del-btn" onclick="del('${m.id}')"><i data-lucide="trash-2"></i></button>` : ''}`;
                 list.appendChild(div);
             });
             lucide.createIcons();
         }
 
         async function save() {
-            const entry = {
-                id: "ID-"+Date.now(), room, date: document.getElementById('f-date').value,
-                start: document.getElementById('f-start').value, end: document.getElementById('f-end').value,
-                client: document.getElementById('f-client').value, host: document.getElementById('f-host').value,
-                createdBy: user.email
-            };
-            
-            if(!entry.date || !entry.start || !entry.end) return alert("Preencha data e horários!");
-
-            const conflict = data.some(m => {
-                const ex = {}; for(let k in m) ex[k.toLowerCase().trim()] = m[k];
-                let exD = String(ex.date || ex.data || "").split('T')[0];
-                return String(ex.room) === String(room) && exD === entry.date && (entry.start < ex.end && entry.end > ex.start);
-            });
-            
-            if(conflict) return alert("Horário indisponível!");
-
-            showLoading(true);
-            closeMod();
-            
+            const entry = { id: "ID-"+Date.now(), room, date: document.getElementById('f-date').value, start: document.getElementById('f-start').value, end: document.getElementById('f-end').value, client: document.getElementById('f-client').value, host: document.getElementById('f-host').value, createdBy: user.email };
             await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'create', ...entry}), mode: 'no-cors' });
-            
-            // Recarrega para garantir que pegamos os dados reais do servidor
-            setTimeout(load, 1000); 
+            closeMod(); setTimeout(load, 1000);
         }
 
-        async function del(id) {
-            if(!confirm("Excluir esta reserva?")) return;
-            showLoading(true);
-            await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'delete', id}), mode: 'no-cors' });
-            setTimeout(load, 1000);
-        }
-
-        function openMod() { 
-            document.getElementById('f-date').value = new Date().toISOString().split('T')[0]; 
-            document.getElementById('overlay').style.display='flex'; 
-        }
+        async function del(id) { if(!confirm("Excluir?")) return; await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'delete', id}), mode: 'no-cors' }); setTimeout(load, 1000); }
+        function openMod() { document.getElementById('f-date').value = new Date().toISOString().split('T')[0]; document.getElementById('overlay').style.display='flex'; }
         function closeMod() { document.getElementById('overlay').style.display='none'; }
     </script>
 </body>
