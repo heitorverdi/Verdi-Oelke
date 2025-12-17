@@ -5,119 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verdi & Oelke - Gestão</title>
     
-    <link rel="icon" type="image/png" href="https://i.ibb.co/fYDZ9RF2/verdi-branco.png">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/fYDZ9RF2/verdi-branco.png">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=2">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=2">
     
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Verdi Gestão">
     <meta name="theme-color" content="#064e3b">
-
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZlcmRpICYgT2Vsa2UgLSBHZXN0w6NvIiwKICAic2hvcnRfbmFtZSI6ICJWZXJkaSBHZXN0w6NvIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNjRlM2IiLAogICJ0aGVtZV9jb2xvciI6ICIjMDY0ZTNiIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9pLmliYi5jby9mWURaOVJGMi92ZXJkaS1icmFuY28ucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAicHVycG9zZSI6ICJhbnkiCiAgICB9CiAgXQp9">
 
     <style>
         :root { --emerald: #065f46; --forest: #064e3b; --soft-bg: #f8fafc; --white: #ffffff; --danger: #ef4444; --text-main: #1e293b; }
         * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background-color: var(--soft-bg); margin: 0; color: var(--text-main); }
-
         header { background-color: var(--forest); color: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; }
         .brand-container { display: flex; align-items: center; gap: 12px; }
         .brand-logo { height: 32px; filter: brightness(0) invert(1); }
-        .brand-text h1 { margin: 0; font-size: 1rem; letter-spacing: 3px; font-weight: 300; text-transform: uppercase; line-height: 1; }
-        .brand-text p { margin: 0; font-size: 0.5rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 2px; }
-        
+        .brand-text h1 { margin: 0; font-size: 1rem; letter-spacing: 3px; font-weight: 300; text-transform: uppercase; }
         .user-meta { font-size: 0.85rem; }
         .user-meta span { cursor: pointer; text-decoration: underline; margin-left: 10px; font-weight: 600; color: #fbbf24; }
-
         .tabs { background: white; display: flex; padding: 0 40px; border-bottom: 1px solid #e2e8f0; gap: 30px; }
-        .tab { padding: 20px 5px; cursor: pointer; font-weight: 600; color: #94a3b8; border-bottom: 3px solid transparent; font-size: 0.85rem; transition: 0.3s; text-transform: uppercase; }
+        .tab { padding: 20px 5px; cursor: pointer; font-weight: 600; color: #94a3b8; border-bottom: 3px solid transparent; font-size: 0.85rem; text-transform: uppercase; }
         .tab.active { color: var(--emerald); border-bottom-color: var(--emerald); }
-
         .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; }
-        .top-bar h2 { color: var(--forest); margin: 0; font-size: 1.6rem; font-weight: 500; }
-        
-        .btn-add { background-color: var(--emerald); color: white; border: none; padding: 12px 28px; border-radius: 50px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .btn-add:hover { background-color: var(--forest); transform: translateY(-2px); }
-
+        .btn-add { background-color: var(--emerald); color: white; border: none; padding: 12px 28px; border-radius: 50px; font-weight: 600; cursor: pointer; }
         .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
         .card { background: white; border-radius: 20px; padding: 25px; position: relative; box-shadow: 0 2px 15px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
-        .card h3 { margin: 0 0 15px 0; font-size: 1.4rem; color: var(--emerald); border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
-        .card p { margin: 8px 0; font-size: 0.9rem; color: #475569; }
-        .card .owner-tag { font-size: 0.7rem; color: #94a3b8; margin-top: 10px; display: block; border-top: 1px dashed #e2e8f0; padding-top: 8px; }
-        
-        .delete-x { position: absolute; top: 20px; right: 20px; background: #fff1f2; color: var(--danger); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: 0.2s; z-index: 10; }
-        .delete-x:hover { background: var(--danger); color: white; }
-
-        #login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, var(--forest), #065f46); display: flex; justify-content: center; align-items: center; z-index: 2000; }
-        .login-card { background: var(--white); padding: 40px; border-radius: 30px; width: 450px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
-        .login-card img { width: 100%; max-width: 220px; height: auto; margin-bottom: 10px; }
-        .login-card input, .login-card select { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #f1f5f9; border-radius: 12px; font-size: 1rem; }
-        .login-card label { display: block; text-align: left; font-size: 0.8rem; font-weight: 700; color: #64748b; margin-top: 10px; }
-
-        .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); align-items: center; justify-content: center; z-index: 1000; }
-        .modal-body { background: white; padding: 40px; border-radius: 24px; width: 450px; }
-        input[type="date"], input[type="time"], input[type="text"] { width: 100%; padding: 14px; margin: 8px 0 20px 0; border: 1px solid #e2e8f0; border-radius: 10px; }
-        label { font-weight: 600; color: #64748b; font-size: 0.85rem; text-transform: uppercase; }
+        .card h3 { margin: 0 0 15px 0; color: var(--emerald); }
+        .delete-x { position: absolute; top: 20px; right: 20px; background: #fff1f2; color: var(--danger); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
+        #login-screen { position: fixed; inset: 0; background: var(--forest); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+        .login-card { background: white; padding: 40px; border-radius: 30px; width: 400px; text-align: center; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-body { background: white; padding: 40px; border-radius: 24px; width: 400px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
     </style>
 </head>
 <body>
+
     <div id="login-screen">
         <div class="login-card">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="filter: brightness(0) saturate(100%) invert(21%) sepia(35%) saturate(1054%) hue-rotate(114deg) brightness(93%) contrast(97%);">
-            <p style="font-size: 0.6rem; color: #64748b; margin-bottom: 20px; letter-spacing: 2px;">CONTADORES ASSOCIADOS</p>
-            <label>NOME COMPLETO</label>
-            <input type="text" id="user-name" placeholder="Ex: João Silva">
-            <label>E-MAIL CORPORATIVO</label>
-            <input type="email" id="user-email" placeholder="email@verdi.com.br">
-            <label>SETOR</label>
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 200px; filter: invert(1) brightness(0.2);">
+            <input type="text" id="user-name" placeholder="Nome Completo">
+            <input type="email" id="user-email" placeholder="E-mail Corporativo">
             <select id="user-dept">
                 <option value="Fiscal">Fiscal</option>
                 <option value="Contabil">Contábil</option>
                 <option value="Pessoal">Pessoal</option>
                 <option value="Societario">Societário</option>
-                <option value="Comercial">Comercial</option>
             </select>
-            <button class="btn-add" style="width:100%; padding: 18px; margin-top: 20px;" onclick="login()">Acessar Sistema</button>
+            <button class="btn-add" style="width:100%" onclick="login()">Acessar</button>
         </div>
     </div>
 
     <header>
         <div class="brand-container">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" class="brand-logo">
-            <div class="brand-text">
-                <h1>VERDI & OELKE</h1>
-                <p>CONTADORES ASSOCIADOS</p>
-            </div>
+            <div class="brand-text"><h1>VERDI & OELKE</h1></div>
         </div>
         <div id="header-user" class="user-meta"></div>
     </header>
 
     <div class="tabs">
-        <div class="tab active" id="tab1" onclick="switchTab(1)">Sala de Reunião 01</div>
-        <div class="tab" id="tab2" onclick="switchTab(2)">Sala de Reunião 02</div>
+        <div class="tab active" id="tab1" onclick="switchTab(1)">Sala 01</div>
+        <div class="tab" id="tab2" onclick="switchTab(2)">Sala 02</div>
     </div>
 
     <div class="container">
-        <div class="top-bar">
-            <h2 id="title">Agendamentos - Sala 01</h2>
-            <button class="btn-add" onclick="showModal()">+ Agendar Reunião</button>
-        </div>
+        <div class="top-bar"><h2 id="title">Sala 01</h2><button class="btn-add" onclick="showModal()">+ Agendar</button></div>
         <div id="meetings-list" class="list"></div>
     </div>
 
     <div id="modal" class="modal">
         <div class="modal-body">
-            <h3>Nova Reunião</h3>
+            <h3>Novo Agendamento</h3>
             <label>Data</label><input type="date" id="f-date">
-            <div style="display:flex; gap:15px">
-                <div style="flex:1"><label>Início</label><input type="time" id="f-start"></div>
-                <div style="flex:1"><label>Fim</label><input type="time" id="f-end"></div>
-            </div>
-            <label>Cliente / Empresa</label><input type="text" id="f-client">
-            <label>Condutor / Contador</label><input type="text" id="f-host">
-            <button class="btn-add" style="width:100%; margin-top:10px" onclick="save()">Salvar Agendamento</button>
-            <button class="btn-add" style="width:100%; margin-top:12px; background:#f8fafc; color: #94a3b8;" onclick="hideModal()">Cancelar</button>
+            <label>Início</label><input type="time" id="f-start">
+            <label>Fim</label><input type="time" id="f-end">
+            <input type="text" id="f-client" placeholder="Cliente">
+            <input type="text" id="f-host" placeholder="Condutor">
+            <button class="btn-add" style="width:100%" onclick="save()">Salvar</button>
+            <button onclick="hideModal()" style="width:100%; margin-top:10px; border:none; background:none;">Cancelar</button>
         </div>
     </div>
 
@@ -128,157 +93,85 @@
 
         window.onload = () => {
             const saved = localStorage.getItem('v_user_data');
-            if(saved) {
-                currentUser = JSON.parse(saved);
-                finishLogin();
-            }
+            if(saved) { currentUser = JSON.parse(saved); finishLogin(); }
         };
 
         function login() {
             const name = document.getElementById('user-name').value;
             const email = document.getElementById('user-email').value;
-            const dept = document.getElementById('user-dept').value;
-            if(!name || !email) return alert("Preencha nome e e-mail.");
-            currentUser = { name: name.trim(), email: email.trim().toLowerCase(), dept };
+            if(!name || !email) return alert("Preencha tudo");
+            currentUser = { name, email: email.toLowerCase(), dept: document.getElementById('user-dept').value };
             localStorage.setItem('v_user_data', JSON.stringify(currentUser));
             finishLogin();
         }
 
         function finishLogin() {
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('header-user').innerHTML = `${currentUser.name} (${currentUser.dept}) <span onclick="logout()">Sair</span>`;
+            document.getElementById('header-user').innerHTML = `${currentUser.name} <span onclick="logout()">Sair</span>`;
             load();
         }
 
-        function logout() {
-            localStorage.removeItem('v_user_data');
-            location.reload();
-        }
+        function logout() { localStorage.removeItem('v_user_data'); location.reload(); }
 
         function switchTab(n) {
             room = n;
-            document.getElementById('tab1').classList.toggle('active', n === 1);
-            document.getElementById('tab2').classList.toggle('active', n === 2);
-            document.getElementById('title').innerText = `Agendamentos - Sala 0${n}`;
+            document.getElementById('tab1').classList.toggle('active', n===1);
+            document.getElementById('tab2').classList.toggle('active', n===2);
             load();
         }
 
         async function load() {
             const list = document.getElementById('meetings-list');
-            list.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>Sincronizando...</p>";
+            list.innerHTML = "Sincronizando...";
+            const res = await fetch(URL);
+            const data = await res.json();
+            list.innerHTML = "";
             
-            try {
-                const res = await fetch(URL);
-                const rawData = await res.json();
-                list.innerHTML = "";
+            data.forEach(m => {
+                if(String(m.Room || m.sala) !== String(room)) return;
+                
+                // Correção da Data desformatada
+                let dataExibicao = m.Date || m.data;
+                if(dataExibicao.includes('T')) dataExibicao = dataExibicao.split('T')[0].split('-').reverse().join('/');
 
-                const today = new Date();
-                today.setHours(0,0,0,0);
-
-                const filtered = rawData.filter(item => {
-                    const m = {};
-                    for (let key in item) { 
-                        let cleanKey = key.toString().toLowerCase().trim().replace(/[\s_]/g, '');
-                        m[cleanKey] = item[key]; 
-                    }
-                    const mroom = m.room || m.sala || 1;
-                    const mdate = m.date || m.data || "";
-                    
-                    if(!mdate || String(mroom) !== String(room)) return false;
-
-                    let mDateObj = mdate.toString().includes('/') 
-                        ? new Date(mdate.split('/')[2], mdate.split('/')[1]-1, mdate.split('/')[0])
-                        : new Date(mdate);
-                    
-                    mDateObj.setHours(0,0,0,0);
-                    return mDateObj >= today;
-                });
-
-                if(filtered.length === 0) {
-                    list.innerHTML = "<p id='empty-msg' style='grid-column: 1/-1; text-align:center; color:#9ca3af; margin-top: 40px;'>Nenhuma reunião agendada.</p>";
-                } else {
-                    filtered.forEach(item => {
-                        const m = {};
-                        for (let key in item) { m[key.toString().toLowerCase().trim().replace(/[\s_]/g, '')] = item[key]; }
-                        renderCard({
-                            id: m.id,
-                            start: m.start || m.inicio || "00:00",
-                            end: m.end || m.fim || "00:00",
-                            date: m.date,
-                            client: m.client || m.cliente || "N/A",
-                            host: m.host || m.condutor || "N/A",
-                            createdby: m.createdby || m.criadopor || m.email || ""
-                        });
-                    });
-                }
-            } catch (e) { console.error("Erro no load:", e); }
-        }
-
-        function renderCard(m) {
-            const list = document.getElementById('meetings-list');
-            const isOwner = m.createdby.toLowerCase() === currentUser.email.toLowerCase();
-
-            const div = document.createElement('div');
-            div.className = 'card';
-            div.id = `card-${m.id}`;
-            div.innerHTML = `
-                <h3>${m.start} - ${m.end}</h3>
-                <p><strong>📅 Data:</strong> ${m.date}</p>
-                <p><strong>👤 Cliente:</strong> ${m.client}</p>
-                <p><strong>💼 Condutor:</strong> ${m.host}</p>
-                <span class="owner-tag">Criado por: ${m.createdby || 'Sistema'}</span>
-                ${isOwner ? `<button class="delete-x" onclick="remove('${m.id}')">✕</button>` : ''}
-            `;
-            list.appendChild(div);
+                const isOwner = (m.CreatedBy || m.email || "").toLowerCase() === currentUser.email;
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <h3>${m.Start} - ${m.End}</h3>
+                    <p>📅 ${dataExibicao}</p>
+                    <p>👤 ${m.Client || m.cliente}</p>
+                    <p>💼 ${m.Host || m.condutor}</p>
+                    ${isOwner ? `<button class="delete-x" onclick="remove('${m.ID || m.id}')">✕</button>` : ''}
+                `;
+                list.appendChild(div);
+            });
         }
 
         async function save() {
-            const dateInput = document.getElementById('f-date').value;
-            const start = document.getElementById('f-start').value;
-            const end = document.getElementById('f-end').value;
-            const client = document.getElementById('f-client').value;
-            const host = document.getElementById('f-host').value;
-
-            if(!dateInput || !start || !end || !client) return alert("Preencha tudo!");
-
-            const fixedId = "ID-" + Date.now();
-            hideModal();
-
             const params = new URLSearchParams({
                 action: 'create',
-                id: fixedId, 
-                room: room, 
-                date: dateInput, 
-                start: start, 
-                end: end, 
-                client: client, 
-                host: host, 
+                id: "ID-" + Date.now(),
+                room: room,
+                date: document.getElementById('f-date').value,
+                start: document.getElementById('f-start').value,
+                end: document.getElementById('f-end').value,
+                client: document.getElementById('f-client').value,
+                host: document.getElementById('f-host').value,
                 createdBy: currentUser.email
             });
-
-            try {
-                await fetch(URL, { method: 'POST', body: params, mode: 'no-cors' });
-                setTimeout(load, 1500); 
-            } catch (e) { alert("Erro ao salvar no servidor."); }
+            await fetch(URL, { method: 'POST', body: params, mode: 'no-cors' });
+            hideModal();
+            setTimeout(load, 1500);
         }
 
         async function remove(id) {
-            if(!confirm("Tem certeza que deseja excluir esta reunião definitivamente?")) return;
-            document.getElementById(`card-${id}`)?.remove();
-            const params = new URLSearchParams({ action: 'delete', id: id });
-            try {
-                await fetch(URL, { method: 'POST', body: params, mode: 'no-cors' });
-                setTimeout(load, 2000);
-            } catch (e) { 
-                alert("Erro ao excluir. Tente novamente.");
-                load(); 
-            }
+            if(!confirm("Excluir?")) return;
+            await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'delete', id: id}), mode: 'no-cors' });
+            setTimeout(load, 1500);
         }
 
-        function showModal() { 
-            document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('modal').style.display = 'flex'; 
-        }
+        function showModal() { document.getElementById('modal').style.display = 'flex'; }
         function hideModal() { document.getElementById('modal').style.display = 'none'; }
     </script>
 </body>
