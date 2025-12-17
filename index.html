@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verdi & Oelke | Gestão</title>
     
-    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=8">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=8">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=9">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=9">
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -21,19 +21,17 @@
         }
 
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg); margin: 0; color: var(--text); }
+        body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; }
 
         header { 
-            background: var(--primary); padding: 15px 40px; 
+            background: var(--primary); padding: 15px 30px; 
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-
-        .logo-header { height: 38px; filter: brightness(0) invert(1); }
-        
+        .logo-header { height: 35px; filter: brightness(0) invert(1); }
         .user-pill { 
             background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 50px;
-            color: white; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.15);
+            color: white; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.15);
         }
         .user-pill span { color: var(--gold); font-weight: 700; cursor: pointer; margin-left: 10px; }
 
@@ -44,32 +42,27 @@
         }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
 
-        .content { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-        .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .hero h2 { font-size: 1.6rem; color: var(--primary); margin: 0; }
+        .content { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .hero h2 { font-size: 1.4rem; color: var(--primary); margin: 0; }
 
         .btn-main { 
             background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; 
             font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s;
         }
-        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(6, 78, 59, 0.2); }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        
         .card { 
             background: white; border-radius: 20px; padding: 24px; position: relative;
             border: 1px solid #edf2f7; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
-        
         .card-time { 
             background: #f0fdf4; color: var(--accent); padding: 6px 12px; border-radius: 8px; 
             font-weight: 700; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px;
         }
-
         .card-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; font-size: 0.9rem; }
         .card-row i { color: var(--gold); width: 16px; height: 16px; }
-        .card-row strong { color: #64748b; font-size: 0.7rem; text-transform: uppercase; width: 70px; }
+        .card-row strong { color: #64748b; font-size: 0.7rem; text-transform: uppercase; width: 75px; }
 
         .del-btn { 
             position: absolute; top: 20px; right: 20px; background: #fff1f2; color: #ef4444; 
@@ -77,25 +70,45 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Modais */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
-        .modal { background: white; padding: 35px; border-radius: 24px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        
-        input, select { width: 100%; padding: 14px; margin: 8px 0 18px 0; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 0.95rem; }
-        label { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; }
+        /* LOGIN SCREEN - SCROLL ATIVADO */
+        #login-screen { 
+            position: fixed; inset: 0; background: var(--primary); z-index: 3000; 
+            display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 40px 20px;
+        }
+        .login-box { 
+            background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; 
+            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); margin-bottom: 40px;
+        }
+        .keep-connected { 
+            display: flex; align-items: center; gap: 8px; font-size: 0.8rem; 
+            color: #64748b; margin: 10px 0 20px 0; justify-content: center; cursor: pointer;
+        }
 
-        #login-screen { position: fixed; inset: 0; background: var(--primary); z-index: 3000; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: white; padding: 40px; border-radius: 24px; width: 360px; text-align: center; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
+        .modal { background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 420px; }
+        
+        input, select { width: 100%; padding: 12px; margin: 6px 0 15px 0; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.95rem; }
+        label { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; display: block; text-align: left; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-box">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 180px; filter: contrast(0.1) brightness(0.2); margin-bottom: 30px;">
-            <input type="text" id="u-name" placeholder="Seu Nome">
-            <input type="email" id="u-email" placeholder="E-mail Corporativo">
-            <button class="btn-main" style="width:100%; justify-content:center" onclick="login()">Entrar</button>
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 160px; filter: contrast(0.1) brightness(0.2); margin-bottom: 25px;">
+            <label>Nome Completo</label><input type="text" id="u-name" placeholder="João Silva">
+            <label>E-mail Corporativo</label><input type="email" id="u-email" placeholder="nome@verdioelke.com.br">
+            <label>Setor</label>
+            <select id="u-dept">
+                <option value="Fiscal">Fiscal</option>
+                <option value="Contabil">Contábil</option>
+                <option value="Pessoal">Pessoal</option>
+                <option value="Societario">Societário</option>
+                <option value="Comercial">Comercial</option>
+            </select>
+            <label>Senha</label><input type="password" id="u-pass" placeholder="••••••••">
+            <label class="keep-connected"><input type="checkbox" id="u-keep" checked> Manter-me conectado</label>
+            <button class="btn-main" style="width:100%; justify-content:center; padding: 15px;" onclick="login()">Acessar Sistema</button>
         </div>
     </div>
 
@@ -119,7 +132,7 @@
 
     <div id="overlay" class="overlay">
         <div class="modal">
-            <h3 style="margin-top:0">Nova Reserva</h3>
+            <h3 style="margin-top:0; color: var(--primary)">Nova Reserva</h3>
             <label>Data</label><input type="date" id="f-date">
             <div style="display:flex; gap:10px">
                 <div style="flex:1"><label>Início</label><input type="time" id="f-start"></div>
@@ -137,24 +150,29 @@
         let room = 1, user = null, data = [];
 
         window.onload = () => {
-            const s = localStorage.getItem('v_user');
-            if(s) { user = JSON.parse(s); start(); }
+            const saved = localStorage.getItem('v_user') || sessionStorage.getItem('v_user');
+            if(saved) { user = JSON.parse(saved); start(); }
             lucide.createIcons();
         };
 
         function login() {
             const n = document.getElementById('u-name').value, e = document.getElementById('u-email').value;
-            if(!n || !e) return alert("Preencha os campos.");
-            user = { name: n, email: e.toLowerCase().trim() };
-            localStorage.setItem('v_user', JSON.stringify(user));
+            const s = document.getElementById('u-dept').value, k = document.getElementById('u-keep').checked;
+            if(!n || !e) return alert("Preencha Nome e E-mail.");
+            user = { name: n, email: e.toLowerCase().trim(), dept: s };
+            if(k) localStorage.setItem('v_user', JSON.stringify(user));
+            else sessionStorage.setItem('v_user', JSON.stringify(user));
+            fetch(URL, { method: 'POST', body: new URLSearchParams({action:'log', user: n, email: e}), mode: 'no-cors' });
             start();
         }
 
         function start() {
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('user-display').innerHTML = `${user.name} <span onclick="localStorage.clear();location.reload()">Sair</span>`;
+            document.getElementById('user-display').innerHTML = `<b>${user.dept}</b>: ${user.name} <span onclick="logout()" style="cursor:pointer;margin-left:10px;color:var(--gold)">Sair</span>`;
             load();
         }
+
+        function logout() { localStorage.clear(); sessionStorage.clear(); location.reload(); }
 
         async function load() {
             const res = await fetch(URL);
@@ -181,7 +199,8 @@
             filtered.forEach(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
                 let d = String(m.date || m.data || "").split('T')[0].split('-').reverse().join('/');
-                const isMe = (m.createdby || m.email || "").toLowerCase().trim() === user.email;
+                const creator = (m.createdby || m.email || "").toLowerCase().trim();
+                const isMe = creator === user.email;
 
                 const div = document.createElement('div');
                 div.className = 'card';
@@ -204,23 +223,22 @@
                 client: document.getElementById('f-client').value, host: document.getElementById('f-host').value,
                 createdBy: user.email
             };
-
-            // Trava de Conflito
             const conflict = data.some(m => {
                 const ex = {}; for(let k in m) ex[k.toLowerCase().trim()] = m[k];
                 let exD = String(ex.date || ex.data || "").split('T')[0];
                 return String(ex.room) === String(room) && exD === entry.date && (entry.start < ex.end && entry.end > ex.start);
             });
-
-            if(conflict) return alert("Horário indisponível nesta sala!");
-
+            if(conflict) return alert("Horário indisponível!");
             data.push(entry); render(); closeMod();
             await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'create', ...entry}), mode: 'no-cors' });
         }
 
         async function del(id) {
             if(!confirm("Excluir?")) return;
-            data = data.filter(i => String(i.id || i.ID) !== String(id));
+            data = data.filter(i => {
+                const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
+                return String(m.id) !== String(id);
+            });
             render();
             await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'delete', id}), mode: 'no-cors' });
         }
