@@ -8,112 +8,156 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --primary: #064e3b; --gold: #c5a059; --bg: #f1f5f9; --text: #1e293b; }
-        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        :root { 
+            --primary: #064e3b; --gold: #c5a059; --bg: #f8fafc; --text: #0f172a; 
+            --fiscal: #2563eb; --contabil: #4f46e5; --comercial: #10b981; 
+            --pessoal: #f59e0b; --societario: #db2777;
+        }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s ease; }
         body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; overflow: hidden; }
         
-        /* AUTH SCREEN */
-        #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .auth-box { background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        .check-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; font-size: 0.85rem; cursor: pointer; }
+        /* AUTH SECTION */
+        #auth-screen { position: fixed; inset: 0; background: linear-gradient(135deg, var(--primary) 0%, #022c22 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .auth-box { background: white; padding: 40px; border-radius: 28px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .check-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 15px 0 25px 0; font-size: 0.85rem; font-weight: 600; color: #64748b; cursor: pointer; }
         
-        /* INPUTS */
-        input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 14px; }
-        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
-        .btn-main:hover { opacity: 0.9; }
+        /* UI ELEMENTS */
+        header { background: var(--primary); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .tabs { background: white; display: flex; justify-content: center; gap: 50px; border-bottom: 1px solid #e2e8f0; }
+        .tab { padding: 20px 0; cursor: pointer; font-weight: 700; color: #94a3b8; font-size: 0.8rem; border-bottom: 3px solid transparent; letter-spacing: 1px; }
+        .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
+        
+        .content { max-width: 1200px; margin: auto; padding: 30px; height: calc(100vh - 210px); overflow-y: auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
 
-        /* APP HEADER */
-        header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
-        .user-pill { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 50px; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; }
+        /* CARDS */
+        .card { background: white; border-radius: 20px; padding: 24px; position: relative; border-left: 10px solid #cbd5e1; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .card-header { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--primary); border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 15px; font-size: 1.1rem; }
+        .info-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+        .info-label { font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; display: block; }
+        .info-value { font-size: 0.95rem; font-weight: 600; color: var(--text); }
 
-        /* GRID & CARDS */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: white; border-radius: 16px; padding: 20px; position: relative; border-left: 8px solid #64748b; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card-header { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--primary); padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; }
-        .info-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
-        .info-label { font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
-        .info-value { font-size: 0.95rem; font-weight: 600; }
+        /* ACTIONS */
+        .actions { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; }
+        .act-btn { border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .del-btn { background: #fff1f2; color: #ef4444; }
+        .edit-btn { background: #f0f9ff; color: #0ea5e9; }
+        .del-btn:hover { background: #ef4444; color: white; }
+        .edit-btn:hover { background: #0ea5e9; color: white; }
 
-        /* LOADER */
-        #loader { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 10001; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { width: 30px; height: 30px; border: 3px solid #e2e8f0; border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* LEGEND */
+        .legend-box { position: fixed; bottom: 25px; left: 25px; background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
+        .legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 0.7rem; font-weight: 700; color: #475569; }
+        .dot { width: 10px; height: 10px; border-radius: 3px; }
 
-        /* SETORES COLORS */
-        .sector-fiscal { border-left-color: #3b82f6 !important; }
-        .sector-contabil { border-left-color: #6366f1 !important; }
-        .sector-comercial { border-left-color: #10b981 !important; }
-        .sector-pessoal { border-left-color: #f59e0b !important; }
-        .sector-societario { border-left-color: #ec4899 !important; }
+        /* MODAL */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
+        .modal { background: white; padding: 35px; border-radius: 24px; width: 95%; max-width: 450px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        input, select { width: 100%; padding: 14px; margin: 8px 0 18px 0; border: 1.5px solid #e2e8f0; border-radius: 12px; font-weight: 500; font-size: 0.9rem; }
+        input:focus { border-color: var(--gold); outline: none; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 14px 28px; border-radius: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 4px 6px rgba(6, 78, 59, 0.2); }
+        .btn-main:hover { background: #042f24; transform: scale(1.02); }
+
+        /* SETORES CORES */
+        .sector-fiscal { border-left-color: var(--fiscal) !important; }
+        .sector-contabil { border-left-color: var(--contabil) !important; }
+        .sector-comercial { border-left-color: var(--comercial) !important; }
+        .sector-pessoal { border-left-color: var(--pessoal) !important; }
+        .sector-societario { border-left-color: var(--societario) !important; }
     </style>
 </head>
 <body>
 
-    <div id="loader"><div class="spinner"></div><p style="font-weight:600; margin-top:10px">Processando...</p></div>
-
     <div id="auth-screen">
         <div class="auth-box" id="box-login">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:140px; filter:brightness(0); margin-bottom:20px">
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:160px; filter:brightness(0); margin-bottom:25px">
             <input type="email" id="l-email" placeholder="E-mail Corporativo">
             <input type="password" id="l-pass" placeholder="Senha">
             <div class="check-container" onclick="document.getElementById('l-remember').click()">
                 <span>Manter-me conectado</span>
-                <input type="checkbox" id="l-remember" style="width:auto; margin:0">
+                <input type="checkbox" id="l-remember" style="width:18px; height:18px; margin:0">
             </div>
-            <button class="btn-main" style="width:100%" onclick="handleAuth('login')">Entrar</button>
-            <p style="font-size:0.8rem; margin-top:20px">Não tem conta? <a href="javascript:void(0)" onclick="toggleAuth(true)" style="color:var(--gold); font-weight:700; text-decoration:none">Cadastre-se</a></p>
+            <button class="btn-main" style="width:100%" onclick="handleAuth('login')">Entrar no Sistema</button>
+            <p style="font-size:0.85rem; margin-top:25px; font-weight:500">Novo por aqui? <a href="javascript:void(0)" onclick="toggleAuth(true)" style="color:var(--gold); text-decoration:none; font-weight:700">Crie sua conta</a></p>
         </div>
 
         <div class="auth-box" id="box-signup" style="display:none">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:120px; filter:brightness(0); margin-bottom:20px">
-            <h3 style="margin-top:0">Criar Conta</h3>
+            <h3 style="margin-top:0; color:var(--primary); font-size:1.5rem">Cadastro de Usuário</h3>
             <input type="text" id="s-name" placeholder="Nome Completo">
             <input type="email" id="s-email" placeholder="E-mail Corporativo">
             <select id="s-dept">
                 <option value="">Selecione seu Setor</option>
                 <option>Fiscal</option><option>Contábil</option><option>Comercial</option><option>Pessoal</option><option>Societário</option>
             </select>
-            <input type="password" id="s-pass" placeholder="Criar Senha">
+            <input type="password" id="s-pass" placeholder="Defina sua Senha">
             <button class="btn-main" style="width:100%" onclick="handleAuth('signup')">Finalizar Cadastro</button>
-            <p style="font-size:0.8rem; margin-top:20px">Já tem conta? <a href="javascript:void(0)" onclick="toggleAuth(false)" style="color:var(--gold); font-weight:700; text-decoration:none">Entrar</a></p>
+            <p style="font-size:0.85rem; margin-top:25px; font-weight:500">Já tem acesso? <a href="javascript:void(0)" onclick="toggleAuth(false)" style="color:var(--gold); text-decoration:none; font-weight:700">Fazer Login</a></p>
         </div>
     </div>
 
     <header>
-        <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="height:35px; filter:brightness(0) invert(1);">
-        <div style="display:flex; align-items:center; gap:15px;">
-            <div class="user-pill"><i data-lucide="user" size="14"></i><span id="user-display">Usuário</span></div>
-            <button onclick="logout()" style="background:none; border:none; color:#fda4af; cursor:pointer; font-weight:700; font-size:12px;">SAIR</button>
+        <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="height:40px; filter:brightness(0) invert(1);">
+        <div style="display:flex; align-items:center; gap:20px;">
+            <div style="background:rgba(255,255,255,0.15); padding:10px 20px; border-radius:50px; font-size:0.85rem; font-weight:600; color:white; display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,0.1);">
+                <i data-lucide="user-circle" size="18"></i><span id="user-display">Carregando...</span>
+            </div>
+            <button onclick="logout()" style="background:none; border:none; color:#fda4af; cursor:pointer; font-weight:800; font-size:0.75rem; letter-spacing:1px">SAIR</button>
         </div>
     </header>
 
-    <div style="background:white; display:flex; justify-content:center; gap:40px; border-bottom:1px solid #e2e8f0;">
-        <div class="tab active" id="tab1" onclick="setRoom(1)" style="padding:18px 0; cursor:pointer; font-weight:600; font-size:12px; border-bottom:3px solid var(--gold); color:var(--primary)">SALA 01</div>
-        <div class="tab" id="tab2" onclick="setRoom(2)" style="padding:18px 0; cursor:pointer; font-weight:600; font-size:12px; border-bottom:3px solid transparent; color:#94a3b8">SALA 02</div>
+    <div class="tabs">
+        <div class="tab active" id="t1" onclick="setRoom(1)">SALA DE REUNIÃO 01</div>
+        <div class="tab" id="t2" onclick="setRoom(2)">SALA DE REUNIÃO 02</div>
     </div>
 
-    <div class="content" style="max-width:1200px; margin:auto; padding:20px; height: calc(100vh - 180px); overflow-y:auto;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 id="room-title" style="margin:0">Sala de Reunião 01</h2>
-            <button class="btn-main" onclick="openMod()"><i data-lucide="plus"></i> Agendar</button>
+    <div class="content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2 id="room-title" style="margin:0; font-weight:800; color:var(--primary); font-size:1.6rem">Sala 01</h2>
+            <button class="btn-main" onclick="openMod()"><i data-lucide="calendar-plus"></i> Novo Agendamento</button>
         </div>
         <div id="list" class="grid"></div>
     </div>
 
+    <div class="legend-box">
+        <div class="legend-item"><div class="dot" style="background:var(--fiscal)"></div> FISCAL</div>
+        <div class="legend-item"><div class="dot" style="background:var(--contabil)"></div> CONTÁBIL</div>
+        <div class="legend-item"><div class="dot" style="background:var(--comercial)"></div> COMERCIAL</div>
+        <div class="legend-item"><div class="dot" style="background:var(--pessoal)"></div> PESSOAL</div>
+        <div class="legend-item"><div class="dot" style="background:var(--societario)"></div> SOCIETÁRIO</div>
+    </div>
+
+    <div id="overlay" class="overlay">
+        <div class="modal">
+            <h3 id="modal-title" style="margin-top:0; color:var(--primary); font-size:1.4rem">Agendar</h3>
+            <input type="hidden" id="f-id">
+            
+            <label class="info-label">Data da Reunião</label>
+            <input type="date" id="f-date">
+            
+            <div style="display:flex; gap:15px">
+                <div style="flex:1"><label class="info-label">Início</label><input type="time" id="f-start"></div>
+                <div style="flex:1"><label class="info-label">Término</label><input type="time" id="f-end"></div>
+            </div>
+            
+            <label class="info-label">Cliente ou Assunto</label>
+            <input type="text" id="f-client" placeholder="Ex: Reunião de Planejamento">
+            
+            <label class="info-label">Responsável (Host)</label>
+            <input type="text" id="f-host">
+            
+            <button class="btn-main" style="width:100%; margin-top:10px" onclick="save()">Confirmar e Salvar</button>
+            <button onclick="closeMod()" style="width:100%; background:none; border:none; margin-top:15px; color:#94a3b8; font-weight:700; cursor:pointer">Voltar / Cancelar</button>
+        </div>
+    </div>
+
     <script>
-        // --- COLOQUE SUA URL ABAIXO ---
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxpLGj3hZfZ_FFBmwlTKEvpPVCO89lshqouY3ZmJ0fwNwKEPiPIIaWblfNyedwPHRbf/exec"; 
-        
-        let user = null; 
-        let currentRoom = 1; 
-        let allMeetings = [];
+        const API_URL = "https://script.google.com/macros/s/AKfycbyoRd4TELlnmx7Hlkj2xzzpYdgWFvY3QJk9SBHmxJOv1EktysHAVofKX-yACC4nETLX/exec"; 
+        let user = null; let room = 1; let meetingsData = [];
 
         window.onload = () => {
             const saved = localStorage.getItem('v_user') || sessionStorage.getItem('v_user');
-            if(saved) { 
-                user = JSON.parse(saved); 
-                startDashboard(); 
-            }
+            if(saved) { user = JSON.parse(saved); startApp(); }
             lucide.createIcons();
         };
 
@@ -122,114 +166,137 @@
             document.getElementById('box-signup').style.display = showSignup ? 'block' : 'none';
         }
 
-        async function handleAuth(type) {
-            const loader = document.getElementById('loader');
-            loader.style.display = 'flex';
-
-            try {
-                if(type === 'login') {
-                    const email = document.getElementById('l-email').value.toLowerCase().trim();
-                    const pass = document.getElementById('l-pass').value;
-                    const remember = document.getElementById('l-remember').checked;
-
-                    if(!email || !pass) throw new Error("Preencha todos os campos!");
-
-                    const resp = await fetch(`${WEB_APP_URL}?action=login_verify&email=${email}&pass=${pass}`);
-                    const result = await resp.text();
-
-                    if(result === "Erro") {
-                        alert("E-mail ou senha incorretos.");
-                    } else {
-                        user = JSON.parse(result);
-                        user.email = email;
-                        const storage = remember ? localStorage : sessionStorage;
-                        storage.setItem('v_user', JSON.stringify(user));
-                        startDashboard();
-                    }
-                } else {
-                    // CADASTRO
-                    const name = document.getElementById('s-name').value;
-                    const email = document.getElementById('s-email').value.toLowerCase().trim();
-                    const dept = document.getElementById('s-dept').value;
-                    const pass = document.getElementById('s-pass').value;
-
-                    if(!name || !email || !dept || !pass) throw new Error("Preencha todos os campos!");
-
-                    const params = new URLSearchParams({ action: 'signup', user: name, email: email, dept: dept, pass: pass });
-                    const resp = await fetch(WEB_APP_URL, { method: 'POST', body: params });
-                    const result = await resp.text();
-
-                    if(result === "Sucesso") {
-                        alert("Cadastro realizado! Agora faça login.");
-                        toggleAuth(false);
-                    } else {
-                        alert(result);
-                    }
-                }
-            } catch (err) {
-                alert(err.message);
-            } finally {
-                loader.style.display = 'none';
+        async function handleAuth(mode) {
+            if(mode === 'login') {
+                const e = document.getElementById('l-email').value.toLowerCase().trim();
+                const p = document.getElementById('l-pass').value;
+                if(!e || !p) return alert("Preencha e-mail e senha.");
+                
+                const resp = await fetch(`${API_URL}?action=login_verify&email=${e}&pass=${p}`);
+                const txt = await resp.text();
+                if(txt === "Erro") return alert("Acesso negado. Verifique os dados.");
+                
+                user = JSON.parse(txt); user.email = e;
+                (document.getElementById('l-remember').checked ? localStorage : sessionStorage).setItem('v_user', JSON.stringify(user));
+                startApp();
+            } else {
+                const n = document.getElementById('s-name').value;
+                const e = document.getElementById('s-email').value.toLowerCase().trim();
+                const d = document.getElementById('s-dept').value;
+                const p = document.getElementById('s-pass').value;
+                if(!n || !e || !d || !p) return alert("Preencha todos os campos do cadastro.");
+                
+                const resp = await fetch(API_URL, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:d, pass:p})});
+                const resTxt = await resp.text();
+                if(resTxt === "Sucesso") { alert("Cadastro realizado! Faça seu login."); toggleAuth(false); } else alert(resTxt);
             }
         }
 
-        function startDashboard() {
+        function startApp() {
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('user-display').innerText = `${user.dept} | ${user.name}`;
-            loadMeetings();
+            loadData();
         }
 
-        async function loadMeetings() {
-            try {
-                const resp = await fetch(WEB_APP_URL);
-                allMeetings = await resp.json();
-                renderMeetings();
-            } catch (e) { console.error("Erro ao carregar:", e); }
+        async function loadData() {
+            const r = await fetch(API_URL);
+            meetingsData = await r.json();
+            render();
         }
 
-        function renderMeetings() {
+        function render() {
             const list = document.getElementById('list');
             list.innerHTML = "";
-            const todayStr = new Date().toISOString().split('T')[0];
-            
-            const filtered = allMeetings.filter(m => 
-                String(m.ROOM || m.room) === String(currentRoom) && 
-                (m.DATE || m.date).split('T')[0] >= todayStr
-            );
+            const today = new Date().toISOString().split('T')[0];
+            const filtered = meetingsData.filter(m => String(m.ROOM) === String(room) && m.DATE.split('T')[0] >= today);
 
-            filtered.forEach(m => {
-                const d = m.dept || m.DEPT || 'default';
-                const sector = d.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                const div = document.createElement('div');
-                div.className = `card sector-${sector}`;
-                div.innerHTML = `
-                    <div class="card-header"><i data-lucide="clock" size="18"></i> <span>${(m.START || m.start).substring(0,5)} - ${(m.END || m.end).substring(0,5)}</span></div>
-                    <div class="info-row"><i data-lucide="calendar" size="16" color="#94a3b8"></i><div><span class="info-label">Data</span><div class="info-value">${(m.DATE || m.date).split('T')[0].split('-').reverse().join('/')}</div></div></div>
-                    <div class="info-row"><i data-lucide="briefcase" size="16" color="#94a3b8"></i><div><span class="info-label">Cliente</span><div class="info-value">${m.CLIENT || m.client}</div></div></div>
-                    <div class="info-row"><i data-lucide="user-check" size="16" color="#94a3b8"></i><div><span class="info-label">Host</span><div class="info-value">${m.HOST || m.host}</div></div></div>
-                `;
-                list.appendChild(div);
-            });
+            if(filtered.length === 0) {
+                list.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:100px 0; color:#94a3b8"><i data-lucide="calendar-off" size="60" style="margin-bottom:15px"></i><p style="font-weight:700">Nenhum agendamento futuro encontrado.</p></div>`;
+            } else {
+                filtered.forEach(m => {
+                    const sector = m.DEPT ? m.DEPT.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default';
+                    const isOwner = m.CREATEDBY === user.email;
+                    const div = document.createElement('div');
+                    div.className = `card sector-${sector}`;
+                    div.innerHTML = `
+                        <div class="card-header"><i data-lucide="clock" size="20"></i> <span>${m.START} - ${m.END}</span></div>
+                        <div class="info-row"><i data-lucide="calendar" size="18" color="#94a3b8"></i> <div><span class="info-label">Data</span><div class="info-value">${m.DATE.split('T')[0].split('-').reverse().join('/')}</div></div></div>
+                        <div class="info-row"><i data-lucide="briefcase" size="18" color="#94a3b8"></i> <div><span class="info-label">Cliente / Assunto</span><div class="info-value">${m.CLIENT}</div></div></div>
+                        <div class="info-row"><i data-lucide="user-check" size="18" color="#94a3b8"></i> <div><span class="info-label">Host Responsável</span><div class="info-value">${m.HOST}</div></div></div>
+                        ${isOwner ? `<div class="actions">
+                            <button class="act-btn edit-btn" onclick="editEvent('${m.ID}')"><i data-lucide="pencil" size="16"></i></button>
+                            <button class="act-btn del-btn" onclick="deleteEvent('${m.ID}')"><i data-lucide="trash-2" size="16"></i></button>
+                        </div>` : ''}
+                    `;
+                    list.appendChild(div);
+                });
+            }
             lucide.createIcons();
         }
 
-        function setRoom(n) {
-            currentRoom = n;
-            document.getElementById('room-title').innerText = `Sala de Reunião 0${n}`;
-            document.getElementById('tab1').style.borderBottomColor = n === 1 ? 'var(--gold)' : 'transparent';
-            document.getElementById('tab1').style.color = n === 1 ? 'var(--primary)' : '#94a3b8';
-            document.getElementById('tab2').style.borderBottomColor = n === 2 ? 'var(--gold)' : 'transparent';
-            document.getElementById('tab2').style.color = n === 2 ? 'var(--primary)' : '#94a3b8';
-            renderMeetings();
+        async function save() {
+            const dVal = document.getElementById('f-date').value;
+            if(!dVal) return alert("Selecione uma data.");
+            if(dVal < new Date().toISOString().split('T')[0]) return alert("Atenção: Não é possível agendar no passado.");
+
+            const entry = {
+                action: document.getElementById('f-id').value ? 'edit' : 'create',
+                id: document.getElementById('f-id').value || 'ID-'+Date.now(),
+                room, 
+                date: dVal,
+                start: document.getElementById('f-start').value,
+                end: document.getElementById('f-end').value,
+                client: document.getElementById('f-client').value,
+                host: document.getElementById('f-host').value,
+                createdBy: user.email,
+                dept: user.dept
+            };
+            
+            if(!entry.start || !entry.end || !entry.client) return alert("Preencha todos os campos.");
+            
+            await fetch(API_URL, {method:'POST', body:new URLSearchParams(entry)});
+            closeMod(); loadData();
         }
 
-        function logout() {
-            localStorage.clear();
-            sessionStorage.clear();
-            window.location.reload();
+        function editEvent(id) {
+            const m = meetingsData.find(x => x.ID === id);
+            document.getElementById('modal-title').innerText = "Editar Reunião";
+            document.getElementById('f-id').value = m.ID;
+            document.getElementById('f-date').value = m.DATE.split('T')[0];
+            document.getElementById('f-start').value = m.START;
+            document.getElementById('f-end').value = m.END;
+            document.getElementById('f-client').value = m.CLIENT;
+            document.getElementById('f-host').value = m.HOST;
+            document.getElementById('overlay').style.display = 'flex';
         }
-        
-        // As demais funções de agendamento (openMod, save) seguem a mesma lógica de validação de data do código anterior.
+
+        async function deleteEvent(id) {
+            if(confirm("Deseja realmente excluir este agendamento?")) {
+                await fetch(API_URL, {method:'POST', body:new URLSearchParams({action:'delete', id: id})});
+                loadData();
+            }
+        }
+
+        function openMod() { 
+            document.getElementById('modal-title').innerText = "Novo Agendamento";
+            document.getElementById('f-id').value = ""; 
+            document.getElementById('f-date').value = "";
+            document.getElementById('f-start').value = "";
+            document.getElementById('f-end').value = "";
+            document.getElementById('f-client').value = "";
+            document.getElementById('f-host').value = user.name;
+            document.getElementById('overlay').style.display = 'flex'; 
+        }
+
+        function closeMod() { document.getElementById('overlay').style.display = 'none'; }
+        function logout() { localStorage.clear(); sessionStorage.clear(); window.location.reload(); }
+        function setRoom(n) { 
+            room = n; 
+            document.getElementById('room-title').innerText = `Sala 0${n}`; 
+            document.getElementById('t1').classList.toggle('active', n==1); 
+            document.getElementById('t2').classList.toggle('active', n==2); 
+            render(); 
+        }
     </script>
 </body>
 </html>
