@@ -172,6 +172,8 @@
 
 async function handleAuth(mode) {
     const domain = "@verdicontadores.com.br";
+    const URL_SCRIPT = "SUA_NOVA_URL_AQUI"; // COLE A URL DO PASSO ANTERIOR AQUI
+
     if(mode === 'signup') {
         const n = document.getElementById('s-name').value, 
               e = document.getElementById('s-email').value.toLowerCase().trim(), 
@@ -181,36 +183,34 @@ async function handleAuth(mode) {
         if(!n || !e || !p) return alert("Preencha todos os campos.");
         if(!e.endsWith(domain) && e !== "heitor.verdi@gmail.com") return alert("Use e-mail corporativo.");
 
-        // Adicionamos um FormData para que o Apps Script receba o POST corretamente
-        const formData = new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p});
-        
         try {
-            const response = await fetch(URL, { method: 'POST', body: formData });
+            const response = await fetch(URL_SCRIPT, { 
+                method: 'POST', 
+                body: new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p}) 
+            });
             const result = await response.text();
             
             if(result === "Email ja existe") {
                 alert("Este e-mail já está cadastrado!");
             } else {
-                alert("Cadastro realizado com sucesso!");
+                alert("Cadastro realizado! Agora você pode entrar.");
                 toggleAuth();
             }
         } catch(err) {
-            alert("Erro ao cadastrar. Verifique a URL do Script.");
+            alert("Erro de conexão. Verifique se a URL do Script está correta.");
         }
     } else {
-        // LOGIN
         const e = document.getElementById('l-email').value.toLowerCase().trim(), 
               p = document.getElementById('l-pass').value;
-        
         const btn = document.getElementById('btn-login');
-        btn.innerText = "Entrando...";
+        btn.innerText = "Verificando...";
         
         try {
-            const resp = await fetch(`${URL}?action=login_verify&email=${e}&pass=${p}`);
+            const resp = await fetch(`${URL_SCRIPT}?action=login_verify&email=${e}&pass=${p}`);
             const resTxt = await resp.text();
             
-            if(resTxt === "Erro" || resTxt.includes("Erro:")) { 
-                alert("E-mail ou senha incorretos."); 
+            if(resTxt === "Erro") { 
+                alert("Dados incorretos."); 
                 btn.innerText = "Entrar"; 
             } else {
                 user = JSON.parse(resTxt); 
@@ -219,7 +219,7 @@ async function handleAuth(mode) {
                 start(); 
             }
         } catch(err) {
-            alert("Erro de conexão com o servidor.");
+            alert("Erro ao conectar com o servidor.");
             btn.innerText = "Entrar";
         }
     }
@@ -331,4 +331,5 @@ async function handleAuth(mode) {
     </script>
 </body>
 </html>
+
 
