@@ -3,326 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verdi & Oelke | Premium Management</title>
+    <title>Verdi & Oelke | Gestão</title>
     
-    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=7">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=7">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png">
+    <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png">
+    <meta name="apple-mobile-web-app-title" content="Verdi Gestão">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#064e3b">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         :root { 
             --primary: #064e3b; 
-            --primary-light: #0d6d54;
             --accent: #10b981; 
             --gold: #c5a059;
-            --bg: #fdfdfd; 
-            --card-bg: #ffffff;
-            --text-main: #1a1a1a;
-            --text-sub: #71717a;
-            --danger: #ef4444;
-            --radius: 16px;
+            --bg: #f8fafc; 
+            --text: #1e293b;
         }
 
-        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
-        body { background-color: var(--bg); margin: 0; color: var(--text-main); }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg); margin: 0; color: var(--text); }
 
-        /* Header de Alto Padrão */
         header { 
-            background: var(--primary); 
-            padding: 15px 50px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            position: sticky; top: 0; z-index: 1100;
+            background: var(--primary); padding: 15px 40px; 
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .logo-box img { height: 42px; filter: brightness(0) invert(1); }
+        .logo-header { height: 38px; filter: brightness(0) invert(1); }
         
-        .user-profile { 
-            display: flex; align-items: center; gap: 12px;
-            background: rgba(255,255,255,0.05); padding: 8px 18px; border-radius: 100px;
-            border: 1px solid rgba(255,255,255,0.1); color: white; font-size: 0.85rem;
+        .user-pill { 
+            background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 50px;
+            color: white; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.15);
         }
-        .user-profile span { color: var(--gold); font-weight: 700; cursor: pointer; }
+        .user-pill span { color: var(--gold); font-weight: 700; cursor: pointer; margin-left: 10px; }
 
-        /* Tabs Minimalistas */
-        .nav-container { background: white; border-bottom: 1px solid #f1f1f1; display: flex; justify-content: center; gap: 60px; }
+        .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
         .tab { 
-            padding: 20px 0; cursor: pointer; font-weight: 600; color: var(--text-sub); 
-            font-size: 0.75rem; letter-spacing: 1.5px; border-bottom: 2px solid transparent; transition: 0.3s;
+            padding: 18px 0; cursor: pointer; font-weight: 600; color: #94a3b8; 
+            font-size: 0.75rem; letter-spacing: 1px; border-bottom: 3px solid transparent; transition: 0.3s;
         }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
 
-        /* Layout */
-        .main-content { max-width: 1200px; margin: 40px auto; padding: 0 30px; }
-        
-        .hero-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .hero-section h2 { font-size: 2rem; font-weight: 700; color: var(--primary); margin: 0; }
-        
-        .btn-premium { 
-            background: var(--primary); color: white; border: none; padding: 14px 30px; border-radius: 12px; 
-            font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 8px 15px rgba(6, 78, 59, 0.15);
-        }
-        .btn-premium:hover { transform: translateY(-3px); box-shadow: 0 12px 20px rgba(6, 78, 59, 0.25); background: var(--primary-light); }
+        .content { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .hero h2 { font-size: 1.6rem; color: var(--primary); margin: 0; }
 
-        /* Grid de Reuniões Reativo */
-        .meeting-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
-        
-        .meeting-card { 
-            background: white; border-radius: var(--radius); padding: 25px; border: 1px solid #f1f1f1;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        .btn-main { 
+            background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; 
+            font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s;
         }
-        .meeting-card:hover { transform: translateY(-8px); box-shadow: 0 25px 40px -10px rgba(0,0,0,0.08); }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(6, 78, 59, 0.2); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
         
-        .time-tag { 
-            background: #f0fdf4; color: var(--accent); padding: 6px 14px; border-radius: 8px; 
-            font-weight: 700; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px;
+        .card { 
+            background: white; border-radius: 20px; padding: 24px; position: relative;
+            border: 1px solid #edf2f7; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.05); }
+        
+        .card-time { 
+            background: #f0fdf4; color: var(--accent); padding: 6px 12px; border-radius: 8px; 
+            font-weight: 700; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 15px;
         }
 
-        .info-row { display: flex; align-items: center; gap: 12px; margin: 12px 0; color: var(--text-main); font-size: 0.95rem; }
-        .info-row i { color: var(--gold); width: 18px; }
-        .info-row span.label { color: var(--text-sub); font-size: 0.75rem; text-transform: uppercase; font-weight: 600; min-width: 80px; }
+        .card-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; font-size: 0.9rem; }
+        .card-row i { color: var(--gold); width: 16px; height: 16px; }
+        .card-row strong { color: #64748b; font-size: 0.7rem; text-transform: uppercase; width: 70px; }
 
-        .btn-delete { 
-            position: absolute; top: 20px; right: 20px; background: #fff1f2; color: var(--danger); 
-            border: none; width: 35px; height: 35px; border-radius: 10px; cursor: pointer;
-            transition: 0.2s; display: flex; align-items: center; justify-content: center;
+        .del-btn { 
+            position: absolute; top: 20px; right: 20px; background: #fff1f2; color: #ef4444; 
+            border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
         }
-        .btn-delete:hover { background: var(--danger); color: white; }
 
-        /* Modais Modernos */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); align-items: center; justify-content: center; z-index: 2000; }
-        .modal-card { background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 480px; animation: slideUp 0.4s ease; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
+        .modal { background: white; padding: 35px; border-radius: 24px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         
-        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        input, select { width: 100%; padding: 14px; margin: 8px 0 18px 0; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 0.95rem; }
+        label { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; }
 
-        input, select { 
-            width: 100%; padding: 15px; margin: 8px 0 20px 0; border: 1.5px solid #eee; 
-            border-radius: 12px; font-size: 1rem; transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(6, 78, 59, 0.05); }
-        
-        label { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Login */
-        #login-screen { position: fixed; inset: 0; background: var(--primary); display: flex; align-items: center; justify-content: center; z-index: 3000; }
-        .login-box { background: white; padding: 50px; border-radius: 30px; width: 420px; text-align: center; }
-
+        #login-screen { position: fixed; inset: 0; background: var(--primary); z-index: 3000; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: white; padding: 40px; border-radius: 24px; width: 360px; text-align: center; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-box">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 200px; filter: contrast(0.1) brightness(0.2); margin-bottom: 40px;">
-            <input type="text" id="u-name" placeholder="Seu Nome Completo">
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 180px; filter: contrast(0.1) brightness(0.2); margin-bottom: 30px;">
+            <input type="text" id="u-name" placeholder="Seu Nome">
             <input type="email" id="u-email" placeholder="E-mail Corporativo">
-            <select id="u-dept">
-                <option value="Fiscal">Setor Fiscal</option>
-                <option value="Contabil">Setor Contábil</option>
-                <option value="Pessoal">Setor Pessoal</option>
-                <option value="Societario">Setor Societário</option>
-            </select>
-            <button class="btn-premium" style="width:100%; justify-content:center" onclick="login()">Acessar Plataforma</button>
+            <button class="btn-main" style="width:100%; justify-content:center" onclick="login()">Acessar Sistema</button>
         </div>
     </div>
 
     <header>
-        <div class="logo-box"><img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png"></div>
-        <div id="user-info" class="user-profile"></div>
+        <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" class="logo-header">
+        <div id="user-display" class="user-pill"></div>
     </header>
 
-    <div class="nav-container">
-        <div class="tab active" id="tab1" onclick="switchTab(1)">SALA EXECUTIVA 01</div>
-        <div class="tab" id="tab2" onclick="switchTab(2)">SALA EXECUTIVA 02</div>
+    <div class="tabs">
+        <div class="tab active" id="tab1" onclick="setRoom(1)">SALA 01</div>
+        <div class="tab" id="tab2" onclick="setRoom(2)">SALA 02</div>
     </div>
 
-    <main class="main-content">
-        <div class="hero-section">
-            <div>
-                <h2 id="title">Sala de Reunião 01</h2>
-                <p style="color:var(--text-sub); margin:5px 0 0 0; font-size:0.9rem;">Gestão de agendamentos em tempo real</p>
-            </div>
-            <button class="btn-premium" onclick="openModal()"><i data-lucide="plus-circle"></i> Novo Agendamento</button>
+    <div class="content">
+        <div class="hero">
+            <h2 id="room-title">Sala de Reunião 01</h2>
+            <button class="btn-main" onclick="openMod()">+ Agendar</button>
         </div>
+        <div id="list" class="grid"></div>
+    </div>
 
-        <div id="meeting-list" class="meeting-grid"></div>
-    </main>
-
-    <div id="modal" class="overlay">
-        <div class="modal-card">
-            <h2 style="margin-top:0; color:var(--primary)">Agendar Sala</h2>
-            
-            <label>Data do Compromisso</label>
-            <input type="date" id="f-date">
-            
-            <div style="display:flex; gap:20px">
+    <div id="overlay" class="overlay">
+        <div class="modal">
+            <h3 style="margin-top:0; color: var(--primary)">Nova Reserva</h3>
+            <label>Data</label><input type="date" id="f-date">
+            <div style="display:flex; gap:10px">
                 <div style="flex:1"><label>Início</label><input type="time" id="f-start"></div>
-                <div style="flex:1"><label>Término</label><input type="time" id="f-end"></div>
+                <div style="flex:1"><label>Fim</label><input type="time" id="f-end"></div>
             </div>
-            
-            <label>Cliente / Empresa</label>
-            <input type="text" id="f-client" placeholder="Nome do Cliente">
-            
-            <label>Condutor da Reunião</label>
-            <input type="text" id="f-host" placeholder="Responsável Verdi & Oelke">
-            
-            <button class="btn-premium" style="width:100%; justify-content:center" onclick="save()">Finalizar Reserva</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--text-sub); margin-top:15px; cursor:pointer; font-weight:600">Cancelar</button>
+            <label>Cliente</label><input type="text" id="f-client">
+            <label>Condutor</label><input type="text" id="f-host">
+            <button class="btn-main" style="width:100%; justify-content:center" onclick="save()">Confirmar Agendamento</button>
+            <button onclick="closeMod()" style="width:100%; border:none; background:none; margin-top:15px; color:#94a3b8; cursor:pointer">Voltar</button>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyLQlU9v824Xm6TDnRChMeGD0I4i8lrNyQZ1Isr4Gz0_mPfoBju-C62tfeit246KkJc/exec";
-        let currentRoom = 1;
-        let user = null;
-        let meetings = [];
+        const URL = "https://script.google.com/macros/s/AKfycbyLQlU9v824Xm6TDnRChMeGD0I4i8lrNyQZ1Isr4Gz0_mPfoBju-C62tfeit246KkJc/exec";
+        let room = 1, user = null, data = [];
 
         window.onload = () => {
-            const saved = localStorage.getItem('v_premium_user');
-            if(saved) { user = JSON.parse(saved); finishLogin(); }
+            const s = localStorage.getItem('v_user');
+            if(s) { user = JSON.parse(s); start(); }
             lucide.createIcons();
         };
 
         function login() {
-            const name = document.getElementById('u-name').value;
-            const email = document.getElementById('u-email').value;
-            if(!name || !email) return alert("Identifique-se para continuar.");
-            user = { name, email: email.toLowerCase().trim() };
-            localStorage.setItem('v_premium_user', JSON.stringify(user));
-            finishLogin();
+            const n = document.getElementById('u-name').value, e = document.getElementById('u-email').value;
+            if(!n || !e) return alert("Preencha os campos.");
+            user = { name: n, email: e.toLowerCase().trim() };
+            localStorage.setItem('v_user', JSON.stringify(user));
+            start();
         }
 
-        function finishLogin() {
+        function start() {
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('user-info').innerHTML = `Olá, ${user.name} <span onclick="logout()" style="margin-left:15px">Sair</span>`;
-            fetchData();
+            document.getElementById('user-display').innerHTML = `${user.name} <span onclick="localStorage.clear();location.reload()">Sair</span>`;
+            load();
         }
 
-        function logout() { localStorage.removeItem('v_premium_user'); location.reload(); }
-
-        async function fetchData() {
+        async function load() {
             try {
-                const res = await fetch(API_URL);
-                meetings = await res.json();
+                const res = await fetch(URL);
+                data = await res.json();
                 render();
-            } catch(e) { console.error("Erro ao carregar"); }
+            } catch(e) { console.error("Erro ao carregar dados."); }
         }
 
-        function switchTab(n) {
-            currentRoom = n;
+        function setRoom(n) {
+            room = n;
             document.getElementById('tab1').classList.toggle('active', n===1);
             document.getElementById('tab2').classList.toggle('active', n===2);
-            document.getElementById('title').innerText = `Sala de Reunião 0${n}`;
+            document.getElementById('room-title').innerText = `Sala de Reunião 0${n}`;
             render();
         }
 
-        function checkConflict(date, start, end, room) {
-            return meetings.some(m => {
-                const existing = {};
-                for (let key in m) { existing[key.toLowerCase().trim()] = m[key]; }
-                
-                // Tratar a data vinda do Google
-                let mDate = String(existing.date || existing.data || "");
-                if(mDate.includes('T')) mDate = mDate.split('T')[0];
-
-                if (String(existing.room || existing.sala) === String(room) && mDate === date) {
-                    // Checa sobreposição de horários
-                    return (start < existing.end && end > existing.start);
-                }
-                return false;
-            });
-        }
-
         function render() {
-            const list = document.getElementById('meeting-list');
+            const list = document.getElementById('list');
             list.innerHTML = "";
-            
-            const filtered = meetings.filter(item => {
-                const m = {};
-                for (let key in item) { m[key.toLowerCase().trim()] = item[key]; }
-                return String(m.room || m.sala) === String(currentRoom);
+            const filtered = data.filter(i => {
+                const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
+                return String(m.room || m.sala) === String(room);
             });
 
-            filtered.sort((a,b) => String(a.start).localeCompare(String(b.start))).forEach(item => {
-                const m = {};
-                for (let key in item) { m[key.toLowerCase().trim()] = item[key]; }
-                
-                let dStr = String(m.date || m.data || "");
-                if(dStr.includes('T')) dStr = dStr.split('T')[0];
-                if(dStr.includes('-')) dStr = dStr.split('-').reverse().join('/');
+            filtered.sort((a,b) => String(a.start).localeCompare(String(b.start))).forEach(i => {
+                const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
+                let d = String(m.date || m.data || "").split('T')[0].split('-').reverse().join('/');
+                const isMe = (m.createdby || m.email || "").toLowerCase().trim() === user.email;
 
-                const isOwner = (m.createdby || m.email || "").toLowerCase().trim() === user.email;
-                
-                const card = document.createElement('div');
-                card.className = 'meeting-card';
-                card.innerHTML = `
-                    <div class="time-tag"><i data-lucide="clock"></i> ${m.start} — ${m.end}</div>
-                    <div class="info-row"><i data-lucide="calendar"></i> <span class="label">Data</span> <b>${dStr}</b></div>
-                    <div class="info-row"><i data-lucide="briefcase"></i> <span class="label">Cliente</span> <b>${m.client || m.cliente}</b></div>
-                    <div class="info-row"><i data-lucide="user-check"></i> <span class="label">Host</span> <b>${m.host || m.condutor}</b></div>
-                    ${isOwner ? `<button class="btn-delete" onclick="remove('${m.id}')"><i data-lucide="trash-2" style="width:16px"></i></button>` : ''}
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <div class="card-time"><i data-lucide="clock"></i> ${m.start} - ${m.end}</div>
+                    <div class="card-row"><i data-lucide="calendar"></i> <strong>Data</strong> <b>${d}</b></div>
+                    <div class="card-row"><i data-lucide="briefcase"></i> <strong>Cliente</strong> <b>${m.client || m.cliente}</b></div>
+                    <div class="card-row"><i data-lucide="user"></i> <strong>Host</strong> <b>${m.host || m.condutor}</b></div>
+                    ${isMe ? `<button class="del-btn" onclick="del('${m.id}')"><i data-lucide="trash-2"></i></button>` : ''}
                 `;
-                list.appendChild(card);
+                list.appendChild(div);
             });
             lucide.createIcons();
         }
 
         async function save() {
-            const date = document.getElementById('f-date').value;
-            const start = document.getElementById('f-start').value;
-            const end = document.getElementById('f-end').value;
-            const client = document.getElementById('f-client').value;
-            const host = document.getElementById('f-host').value;
-
-            if(!date || !start || !end || !client) return alert("Por favor, preencha todos os campos essenciais.");
-            
-            // Validação de Conflito
-            if(checkConflict(date, start, end, currentRoom)) {
-                return alert("⚠️ CONFLITO DE HORÁRIO: Já existe uma reunião agendada nesta sala para este horário.");
-            }
-
-            const newMeeting = {
-                id: "ID-" + Date.now(),
-                room: currentRoom,
-                date: date,
-                start: start,
-                end: end,
-                client: client,
-                host: host,
+            const entry = {
+                id: "ID-"+Date.now(), room, date: document.getElementById('f-date').value,
+                start: document.getElementById('f-start').value, end: document.getElementById('f-end').value,
+                client: document.getElementById('f-client').value, host: document.getElementById('f-host').value,
                 createdBy: user.email
             };
 
-            // Update Otimista
-            meetings.push(newMeeting);
-            render();
-            closeModal();
-
-            // Sync Google
-            const p = new URLSearchParams({ action: 'create', ...newMeeting });
-            fetch(API_URL, { method: 'POST', body: p, mode: 'no-cors' });
-        }
-
-        async function remove(id) {
-            if(!confirm("Deseja cancelar esta reunião?")) return;
-            meetings = meetings.filter(m => {
-                const keyId = m.id || m.ID;
-                return String(keyId) !== String(id);
+            const conflict = data.some(m => {
+                const ex = {}; for(let k in m) ex[k.toLowerCase().trim()] = m[k];
+                let exD = String(ex.date || ex.data || "").split('T')[0];
+                return String(ex.room) === String(room) && exD === entry.date && (entry.start < ex.end && entry.end > ex.start);
             });
-            render();
-            await fetch(API_URL, { method: 'POST', body: new URLSearchParams({action:'delete', id: id}), mode: 'no-cors' });
+
+            if(conflict) return alert("Atenção: Já existe uma reunião neste horário nesta sala.");
+
+            data.push(entry); render(); closeMod();
+            await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'create', ...entry}), mode: 'no-cors' });
         }
 
-        function openModal() { 
-            document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('modal').style.display = 'flex'; 
+        async function del(id) {
+            if(!confirm("Tem certeza que deseja cancelar esta reunião?")) return;
+            data = data.filter(i => String(i.id || i.ID) !== String(id));
+            render();
+            await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'delete', id}), mode: 'no-cors' });
         }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+        function openMod() { document.getElementById('f-date').value = new Date().toISOString().split('T')[0]; document.getElementById('overlay').style.display='flex'; }
+        function closeMod() { document.getElementById('overlay').style.display='none'; }
     </script>
 </body>
 </html>
