@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verdi & Oelke - Gestão</title>
     
-    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/heitorverdi/Verdi-Oelke/main/verdi-quadrado.png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/heitorverdi/Verdi-Oelke/main/verdi-quadrado.png">
     
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -44,12 +44,12 @@
         .card p { margin: 8px 0; font-size: 0.9rem; color: #475569; }
         .card .owner-tag { font-size: 0.7rem; color: #94a3b8; margin-top: 10px; display: block; border-top: 1px dashed #e2e8f0; padding-top: 8px; }
         
-        .delete-x { position: absolute; top: 20px; right: 20px; background: #fff1f2; color: var(--danger); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .delete-x { position: absolute; top: 20px; right: 20px; background: #fff1f2; color: var(--danger); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: 0.2s; z-index: 10; }
         .delete-x:hover { background: var(--danger); color: white; }
 
         #login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, var(--forest), #065f46); display: flex; justify-content: center; align-items: center; z-index: 2000; }
         .login-card { background: var(--white); padding: 40px; border-radius: 30px; width: 450px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
-        .login-card img { max-width: 200px; margin-bottom: 20px; }
+        .login-card img { width: 100%; max-width: 220px; height: auto; margin-bottom: 10px; }
         .login-card input, .login-card select { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #f1f5f9; border-radius: 12px; font-size: 1rem; }
         .login-card label { display: block; text-align: left; font-size: 0.8rem; font-weight: 700; color: #64748b; margin-top: 10px; }
 
@@ -124,7 +124,6 @@
     <script>
         const URL = "https://script.google.com/macros/s/AKfycbxk11a6d94GXyZz_ovL-cLztS1wi1R70XHAjxI44QMd66qdaFZ0sfj9qsLTvnEx8SO6/exec";
         let room = 1;
-        let deletedIds = new Set();
         let currentUser = null;
 
         window.onload = () => {
@@ -161,83 +160,62 @@
             document.getElementById('tab1').classList.toggle('active', n === 1);
             document.getElementById('tab2').classList.toggle('active', n === 2);
             document.getElementById('title').innerText = `Agendamentos - Sala 0${n}`;
-            document.getElementById('meetings-list').innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>Sincronizando...</p>";
             load();
         }
 
         async function load() {
+            const list = document.getElementById('meetings-list');
+            list.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>Sincronizando...</p>";
+            
             try {
                 const res = await fetch(URL);
                 const rawData = await res.json();
-                const list = document.getElementById('meetings-list');
                 list.innerHTML = "";
 
                 const today = new Date();
                 today.setHours(0,0,0,0);
 
-                rawData.forEach(item => {
+                const filtered = rawData.filter(item => {
                     const m = {};
                     for (let key in item) { 
                         let cleanKey = key.toString().toLowerCase().trim().replace(/[\s_]/g, '');
                         m[cleanKey] = item[key]; 
                     }
-
-                    const mcreatedby = (m.createdby || m.criadopor || m.email || m.user || m.login || "").toString().trim();
                     const mroom = m.room || m.sala || 1;
                     const mdate = m.date || m.data || "";
-                    const mid = (m.id || Date.now()).toString();
-
-                    if(!mdate || String(mroom) !== String(room)) return;
-
-                    let mDateObj;
-                    let dateStr = mdate.toString();
                     
-                    if(dateStr.includes('/')) {
-                        const p = dateStr.split('/');
-                        mDateObj = new Date(p[2], p[1]-1, p[0]);
-                    } else {
-                        mDateObj = new Date(dateStr);
-                    }
-                    mDateObj.setHours(0,0,0,0);
+                    if(!mdate || String(mroom) !== String(room)) return false;
 
-                    if(mDateObj >= today && !deletedIds.has(mid)) {
-                        renderCard({
-                            id: mid,
-                            start: m.start || m.inicio || "00:00",
-                            end: m.end || m.fim || "00:00",
-                            date: mDateObj.toLocaleDateString('pt-BR'),
-                            client: m.client || m.cliente || "N/A",
-                            host: m.host || m.condutor || "N/A",
-                            createdby: mcreatedby
-                        });
-                    }
+                    let mDateObj = mdate.toString().includes('/') 
+                        ? new Date(mdate.split('/')[2], mdate.split('/')[1]-1, mdate.split('/')[0])
+                        : new Date(mdate);
+                    
+                    mDateObj.setHours(0,0,0,0);
+                    return mDateObj >= today;
                 });
 
-                if(list.innerHTML === "") {
+                if(filtered.length === 0) {
                     list.innerHTML = "<p id='empty-msg' style='grid-column: 1/-1; text-align:center; color:#9ca3af; margin-top: 40px;'>Nenhuma reunião agendada.</p>";
+                } else {
+                    filtered.forEach(item => {
+                        const m = {};
+                        for (let key in item) { m[key.toString().toLowerCase().trim().replace(/[\s_]/g, '')] = item[key]; }
+                        renderCard({
+                            id: m.id,
+                            start: m.start || m.inicio || "00:00",
+                            end: m.end || m.fim || "00:00",
+                            date: m.date,
+                            client: m.client || m.cliente || "N/A",
+                            host: m.host || m.condutor || "N/A",
+                            createdby: m.createdby || m.criadopor || m.email || ""
+                        });
+                    });
                 }
             } catch (e) { console.error("Erro no load:", e); }
         }
 
         function renderCard(m) {
             const list = document.getElementById('meetings-list');
-            if(document.getElementById(`card-${m.id}`)) {
-                const existing = document.getElementById(`card-${m.id}`);
-                const isOwner = m.createdby.toLowerCase() === currentUser.email.toLowerCase();
-                existing.querySelector('.owner-tag').innerText = `Criado por: ${m.createdby}`;
-                if(isOwner && !existing.querySelector('.delete-x')) {
-                    const btn = document.createElement('button');
-                    btn.className = 'delete-x';
-                    btn.innerHTML = '✕';
-                    btn.onclick = () => remove(m.id);
-                    existing.appendChild(btn);
-                }
-                return;
-            };
-
-            const emptyMsg = document.getElementById('empty-msg');
-            if(emptyMsg) emptyMsg.remove();
-
             const isOwner = m.createdby.toLowerCase() === currentUser.email.toLowerCase();
 
             const div = document.createElement('div');
@@ -264,22 +242,10 @@
             if(!dateInput || !start || !end || !client) return alert("Preencha tudo!");
 
             const fixedId = "ID-" + Date.now();
-            const [y, m, d] = dateInput.split('-');
-            const dateBR = `${d}/${m}/${y}`;
-
-            renderCard({
-                id: fixedId,
-                start: start,
-                end: end,
-                date: dateBR,
-                client: client,
-                host: host,
-                createdby: currentUser.email
-            });
-
             hideModal();
 
             const params = new URLSearchParams({
+                action: 'create',
                 id: fixedId, 
                 room: room, 
                 date: dateInput, 
@@ -292,15 +258,30 @@
 
             try {
                 await fetch(URL, { method: 'POST', body: params, mode: 'no-cors' });
-                setTimeout(load, 3000); 
-            } catch (e) { console.error("Erro ao salvar"); }
+                setTimeout(load, 1500); 
+            } catch (e) { alert("Erro ao salvar no servidor."); }
         }
 
         async function remove(id) {
-            if(!confirm("Excluir?")) return;
-            deletedIds.add(id);
+            if(!confirm("Tem certeza que deseja excluir esta reunião definitivamente?")) return;
+            
+            // Remove visualmente na hora
             document.getElementById(`card-${id}`)?.remove();
-            await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'delete', id:id}), mode: 'no-cors' });
+
+            const params = new URLSearchParams({
+                action: 'delete',
+                id: id
+            });
+
+            try {
+                await fetch(URL, { method: 'POST', body: params, mode: 'no-cors' });
+                console.log("Comando de exclusão enviado.");
+                // Recarrega após 2 segundos para confirmar a limpeza do banco de dados
+                setTimeout(load, 2000);
+            } catch (e) { 
+                alert("Erro ao excluir do banco de dados. Tente novamente.");
+                load(); 
+            }
         }
 
         function showModal() { 
