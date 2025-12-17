@@ -16,43 +16,39 @@
         #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .auth-box { background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); }
         
-        header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        /* APP UI */
+        header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
         .logo-header { height: 35px; filter: brightness(0) invert(1); }
         .user-info { display: flex; align-items: center; gap: 12px; color: white; }
         .user-pill { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 50px; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; gap: 8px; }
         .logout-btn { background: none; border: none; color: #fda4af; cursor: pointer; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
 
         .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
-        .tab { padding: 18px 0; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.75rem; letter-spacing: 1px; border-bottom: 3px solid transparent; transition: 0.3s; }
+        .tab { padding: 18px 0; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.75rem; border-bottom: 3px solid transparent; }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
         
         .content { max-width: 1200px; margin: 30px auto; padding: 0 20px 100px 20px; height: calc(100vh - 180px); overflow-y: auto; }
         .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; }
         
-        /* CARDS */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-        .card { background: var(--white); border-radius: 16px; padding: 20px; position: relative; border-left: 8px solid #64748b; }
-        .card-header { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; margin-bottom: 12px; }
+        .card { background: var(--white); border-radius: 16px; padding: 20px; position: relative; border-left: 8px solid #64748b; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .info-label { font-size: 0.6rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; display: block; margin-top: 8px; }
-        .info-value { font-size: 0.9rem; font-weight: 600; }
+        .info-value { font-size: 0.9rem; font-weight: 600; color: var(--text); }
 
-        /* ACTIONS */
         .actions { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; }
         .act-btn { border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .del-btn { background: #fff1f2; color: #ef4444; }
         .edit-btn { background: #f0f9ff; color: #0ea5e9; }
 
-        /* MODAL & LEGEND */
         .legend-box { position: fixed; bottom: 20px; left: 20px; background: white; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 0.65rem; }
         .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-weight: 600; }
         .dot { width: 8px; height: 8px; border-radius: 2px; }
+
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
         .modal { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
-        
-        /* INPUTS */
-        input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; }
-        
+        input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; }
+
         /* SECTORS */
         .sector-fiscal { border-left-color: #3b82f6 !important; }
         .sector-contabil { border-left-color: #6366f1 !important; }
@@ -72,19 +68,18 @@
     <div id="auth-screen">
         <div class="auth-box" id="box-login">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:140px; filter:brightness(0); margin-bottom:20px">
-            <h3 style="margin-bottom:20px">Acessar Painel</h3>
+            <h3>Acessar Painel</h3>
             <input type="email" id="l-email" placeholder="E-mail Corporativo">
             <input type="password" id="l-pass" placeholder="Senha">
             <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; margin-bottom:20px; cursor:pointer">
-                <input type="checkbox" id="l-remember" style="width:auto; margin:0"> Manter-me conectado
+                <input type="checkbox" id="l-remember"> Manter-me conectado
             </label>
             <button class="btn-main" style="width:100%; justify-content:center" onclick="handleAuth('login')">Entrar</button>
             <p style="font-size:0.85rem; margin-top:20px">Não tem conta? <a href="#" onclick="toggleAuth(true)" style="color:var(--gold); font-weight:700">Cadastre-se</a></p>
         </div>
-
         <div class="auth-box" id="box-signup" style="display:none">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:120px; filter:brightness(0); margin-bottom:15px">
-            <h3 style="margin-bottom:15px">Criar Conta</h3>
+            <h3>Criar Conta</h3>
             <input type="text" id="s-name" placeholder="Nome Completo">
             <input type="email" id="s-email" placeholder="E-mail Corporativo">
             <select id="s-dept">
@@ -130,7 +125,7 @@
 
     <div id="overlay" class="overlay">
         <div class="modal">
-            <h3 id="modal-title" style="margin:0 0 20px 0">Agendar Reunião</h3>
+            <h3 id="modal-title">Agendar Reunião</h3>
             <input type="hidden" id="f-id">
             <label class="info-label">Data</label><input type="date" id="f-date">
             <div style="display:flex; gap:10px">
@@ -145,7 +140,7 @@
     </div>
 
     <script>
-        const URL = "SUA_URL_AQUI"; // COLOQUE SUA URL DO GOOGLE SCRIPT AQUI
+        const URL = "https://script.google.com/macros/s/AKfycbzlntnngszk-0L67NWlDRnZT1vn6O1cPZlbUvYA2ch56VQ8_ZSPP0jVH6bpXCYOQIIM/exec"; // SUBSTITUA PELA SUA URL DE IMPLANTAÇÃO
         let room = 1, user = null, data = [];
 
         window.onload = () => {
@@ -154,14 +149,13 @@
             lucide.createIcons();
         };
 
-        function toggleAuth(signup) {
-            document.getElementById('box-login').style.display = signup ? 'none' : 'block';
-            document.getElementById('box-signup').style.display = signup ? 'block' : 'none';
+        function toggleAuth(isSignup) {
+            document.getElementById('box-login').style.display = isSignup ? 'none' : 'block';
+            document.getElementById('box-signup').style.display = isSignup ? 'block' : 'none';
         }
 
         async function handleAuth(mode) {
             showLoader("Processando...");
-            const params = new URLSearchParams();
             if(mode === 'login') {
                 const e = document.getElementById('l-email').value.toLowerCase().trim();
                 const p = document.getElementById('l-pass').value;
@@ -170,24 +164,24 @@
                 try {
                     const r = await fetch(`${URL}?action=login_verify&email=${e}&pass=${p}`);
                     const txt = await r.text();
-                    if(txt === "Erro") alert("Usuário ou senha incorretos");
+                    if(txt === "Erro") alert("Credenciais inválidas");
                     else {
                         user = JSON.parse(txt); user.email = e;
                         (rem ? localStorage : sessionStorage).setItem('v_user', JSON.stringify(user));
                         start();
                     }
-                } catch { alert("Erro de rede"); }
+                } catch { alert("Erro de conexão"); }
             } else {
                 const n = document.getElementById('s-name').value;
                 const e = document.getElementById('s-email').value.toLowerCase().trim();
                 const d = document.getElementById('s-dept').value;
                 const p = document.getElementById('s-pass').value;
-                if(!n || !e || !d || !p) { alert("Preencha todos os campos"); hideLoader(); return; }
-                params.append('action', 'signup'); params.append('user', n); params.append('email', e); params.append('dept', d); params.append('pass', p);
+                if(!n || !e || !d || !p) { alert("Preencha tudo"); hideLoader(); return; }
+                const params = new URLSearchParams({ action:'signup', user:n, email:e, dept:d, pass:p });
                 try {
                     const r = await fetch(URL, {method:'POST', body:params});
                     const res = await r.text();
-                    if(res === "Sucesso") { alert("Conta criada! Faça login."); toggleAuth(false); }
+                    if(res === "Sucesso") { alert("Conta criada!"); toggleAuth(false); }
                     else alert(res);
                 } catch { alert("Erro ao cadastrar"); }
             }
@@ -251,6 +245,7 @@
         }
 
         function openMod() {
+            // LIMPEZA TOTAL DE CAMPOS
             document.getElementById('modal-title').innerText = "Agendar Reunião";
             document.getElementById('f-id').value = "";
             document.getElementById('f-date').value = "";
@@ -291,7 +286,7 @@
                 createdBy: user.email,
                 dept: user.dept
             };
-            if(!entry.date || !entry.start || !entry.client) return alert("Preencha os campos obrigatórios!");
+            if(!entry.date || !entry.start || !entry.client) return alert("Preencha tudo");
             closeMod(); showLoader("Salvando...");
             try {
                 await fetch(URL, {method:'POST', body:new URLSearchParams(entry)});
@@ -300,7 +295,7 @@
         }
 
         async function del(id) {
-            if(confirm("Excluir agendamento?")) {
+            if(confirm("Excluir?")) {
                 showLoader("Excluindo...");
                 await fetch(URL, {method:'POST', body:new URLSearchParams({action:'delete', id})});
                 load();
