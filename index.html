@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verdi & Oelke - Gestão</title>
     
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/heitorverdi/Verdi-Oelke/main/verdi-quadrado.png">
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/heitorverdi/Verdi-Oelke/main/verdi-quadrado.png">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/fYDZ9RF2/verdi-branco.png">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/fYDZ9RF2/verdi-branco.png">
     
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="Gestão Verdi">
+    <meta name="apple-mobile-web-app-title" content="Verdi Gestão">
     <meta name="theme-color" content="#064e3b">
+
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlZlcmRpICYgT2Vsa2UgLSBHZXN0w6NvIiwKICAic2hvcnRfbmFtZSI6ICJWZXJkaSBHZXN0w6NvIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwNjRlM2IiLAogICJ0aGVtZV9jb2xvciI6ICIjMDY0ZTNiIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9pLmliYi5jby9mWURaOVJGMi92ZXJkaS1icmFuY28ucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAicHVycG9zZSI6ICJhbnkiCiAgICB9CiAgXQp9">
 
     <style>
         :root { --emerald: #065f46; --forest: #064e3b; --soft-bg: #f8fafc; --white: #ffffff; --danger: #ef4444; --text-main: #1e293b; }
@@ -60,12 +62,10 @@
     </style>
 </head>
 <body>
-
     <div id="login-screen">
         <div class="login-card">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="filter: brightness(0) saturate(100%) invert(21%) sepia(35%) saturate(1054%) hue-rotate(114deg) brightness(93%) contrast(97%);">
             <p style="font-size: 0.6rem; color: #64748b; margin-bottom: 20px; letter-spacing: 2px;">CONTADORES ASSOCIADOS</p>
-            
             <label>NOME COMPLETO</label>
             <input type="text" id="user-name" placeholder="Ex: João Silva">
             <label>E-MAIL CORPORATIVO</label>
@@ -264,22 +264,13 @@
 
         async function remove(id) {
             if(!confirm("Tem certeza que deseja excluir esta reunião definitivamente?")) return;
-            
-            // Remove visualmente na hora
             document.getElementById(`card-${id}`)?.remove();
-
-            const params = new URLSearchParams({
-                action: 'delete',
-                id: id
-            });
-
+            const params = new URLSearchParams({ action: 'delete', id: id });
             try {
                 await fetch(URL, { method: 'POST', body: params, mode: 'no-cors' });
-                console.log("Comando de exclusão enviado.");
-                // Recarrega após 2 segundos para confirmar a limpeza do banco de dados
                 setTimeout(load, 2000);
             } catch (e) { 
-                alert("Erro ao excluir do banco de dados. Tente novamente.");
+                alert("Erro ao excluir. Tente novamente.");
                 load(); 
             }
         }
