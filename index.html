@@ -155,16 +155,35 @@
             lucide.createIcons();
         };
 
-        function login() {
-            const n = document.getElementById('u-name').value, e = document.getElementById('u-email').value;
-            const s = document.getElementById('u-dept').value, k = document.getElementById('u-keep').checked;
-            if(!n || !e) return alert("Preencha Nome e E-mail.");
-            user = { name: n, email: e.toLowerCase().trim(), dept: s };
-            if(k) localStorage.setItem('v_user', JSON.stringify(user));
-            else sessionStorage.setItem('v_user', JSON.stringify(user));
-            fetch(URL, { method: 'POST', body: new URLSearchParams({action:'log', user: n, email: e}), mode: 'no-cors' });
-            start();
-        }
+     function login() {
+    const n = document.getElementById('u-name').value;
+    const e = document.getElementById('u-email').value.toLowerCase().trim();
+    const s = document.getElementById('u-dept').value;
+    const k = document.getElementById('u-keep').checked;
+
+    if(!n || !e) return alert("Por favor, preencha Nome e E-mail.");
+
+    // --- TRAVA DE SEGURANÇA ---
+    const dominioObrigatorio = "@verdicontadores.com.br";
+    const emailMestre = "heitor.verdi@gmail.com";
+
+    // Verifica se NÃO termina com o domínio E se NÃO é o seu e-mail pessoal
+    if (!e.endsWith(dominioObrigatorio) && e !== emailMestre) {
+        alert("ACESSO NEGADO: Este sistema é exclusivo para colaboradores @verdicontadores.com.br");
+        return; // Para o login aqui
+    }
+    // --------------------------
+
+    user = { name: n, email: e, dept: s };
+    
+    if(k) localStorage.setItem('v_user', JSON.stringify(user));
+    else sessionStorage.setItem('v_user', JSON.stringify(user));
+
+    // Envia o Log para a aba "Acessos" que o script vai criar
+    fetch(URL, { method: 'POST', body: new URLSearchParams({action:'log', user: n, email: e}), mode: 'no-cors' });
+    
+    start();
+}
 
         function start() {
             document.getElementById('login-screen').style.display = 'none';
@@ -248,3 +267,4 @@
     </script>
 </body>
 </html>
+
