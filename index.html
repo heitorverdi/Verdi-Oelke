@@ -8,75 +8,57 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --primary: #064e3b; --accent: #10b981; --gold: #c5a059; --bg: #f1f5f9; --text: #1e293b; --white: #ffffff; }
+        :root { --primary: #064e3b; --gold: #c5a059; --bg: #f1f5f9; --text: #1e293b; }
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; overflow: hidden; }
         
-        /* AUTH SCREEN */
+        /* LOGIN / CADASTRO */
         #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .auth-box { background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); }
-        
-        /* APP UI */
-        header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        .logo-header { height: 35px; filter: brightness(0) invert(1); }
-        .user-info { display: flex; align-items: center; gap: 12px; color: white; }
-        .user-pill { background: rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 50px; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; gap: 8px; }
-        .logout-btn { background: none; border: none; color: #fda4af; cursor: pointer; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .auth-box { background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; }
+        .check-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; font-size: 0.85rem; cursor: pointer; }
 
+        /* HEADER E TABS */
+        header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
         .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
         .tab { padding: 18px 0; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.75rem; border-bottom: 3px solid transparent; }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
-        
-        .content { max-width: 1200px; margin: 30px auto; padding: 0 20px 100px 20px; height: calc(100vh - 180px); overflow-y: auto; }
-        .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+
+        /* CARDS */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; padding: 20px; }
+        .card { background: white; border-radius: 16px; padding: 20px; position: relative; border-left: 8px solid #64748b; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card-header { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--primary); border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 12px; }
+        .info-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+        .info-label { font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; display: block; }
+        .info-value { font-size: 0.95rem; font-weight: 600; }
+
         .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-        .card { background: var(--white); border-radius: 16px; padding: 20px; position: relative; border-left: 8px solid #64748b; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .info-label { font-size: 0.6rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; display: block; margin-top: 8px; }
-        .info-value { font-size: 0.9rem; font-weight: 600; color: var(--text); }
-
-        .actions { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; }
-        .act-btn { border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .del-btn { background: #fff1f2; color: #ef4444; }
-        .edit-btn { background: #f0f9ff; color: #0ea5e9; }
-
-        .legend-box { position: fixed; bottom: 20px; left: 20px; background: white; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 0.65rem; }
-        .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; font-weight: 600; }
-        .dot { width: 8px; height: 8px; border-radius: 2px; }
-
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
-        .modal { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
         input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; }
 
-        /* SECTORS */
+        /* SETORES */
         .sector-fiscal { border-left-color: #3b82f6 !important; }
         .sector-contabil { border-left-color: #6366f1 !important; }
         .sector-comercial { border-left-color: #10b981 !important; }
         .sector-pessoal { border-left-color: #f59e0b !important; }
         .sector-societario { border-left-color: #ec4899 !important; }
-        .sector-diretoria { border-left-color: #c5a059 !important; }
 
-        #loader-container { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
+        .modal { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
     </style>
 </head>
 <body>
-    <div id="loader-container"><div class="spinner"></div><p id="loader-text" style="margin-top:10px; font-weight:600">Aguarde...</p></div>
-
     <div id="auth-screen">
         <div class="auth-box" id="box-login">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:140px; filter:brightness(0); margin-bottom:20px">
-            <h3>Acessar Painel</h3>
             <input type="email" id="l-email" placeholder="E-mail Corporativo">
             <input type="password" id="l-pass" placeholder="Senha">
-            <label style="display:flex; align-items:center; gap:8px; font-size:0.8rem; margin-bottom:20px; cursor:pointer">
-                <input type="checkbox" id="l-remember"> Manter-me conectado
-            </label>
+            <div class="check-container" onclick="document.getElementById('l-remember').click()">
+                <span>Manter-me conectado</span>
+                <input type="checkbox" id="l-remember" style="width:auto; margin:0">
+            </div>
             <button class="btn-main" style="width:100%; justify-content:center" onclick="handleAuth('login')">Entrar</button>
-            <p style="font-size:0.85rem; margin-top:20px">Não tem conta? <a href="#" onclick="toggleAuth(true)" style="color:var(--gold); font-weight:700">Cadastre-se</a></p>
+            <p style="font-size:0.8rem; margin-top:15px">Não tem conta? <a href="#" onclick="toggleAuth(true)" style="color:var(--gold); font-weight:700">Cadastre-se</a></p>
         </div>
+
         <div class="auth-box" id="box-signup" style="display:none">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:120px; filter:brightness(0); margin-bottom:15px">
             <h3>Criar Conta</h3>
@@ -84,20 +66,21 @@
             <input type="email" id="s-email" placeholder="E-mail Corporativo">
             <select id="s-dept">
                 <option value="">Selecione seu Setor</option>
-                <option>Fiscal</option><option>Contábil</option><option>Comercial</option>
-                <option>Pessoal</option><option>Societário</option><option>Diretoria</option>
+                <option>Fiscal</option><option>Contábil</option><option>Comercial</option><option>Pessoal</option><option>Societário</option>
             </select>
             <input type="password" id="s-pass" placeholder="Criar Senha">
-            <button class="btn-main" style="width:100%; justify-content:center" onclick="handleAuth('signup')">Finalizar Cadastro</button>
-            <p style="font-size:0.85rem; margin-top:15px">Já tem conta? <a href="#" onclick="toggleAuth(false)" style="color:var(--gold); font-weight:700">Entrar</a></p>
+            <button class="btn-main" style="width:100%; justify-content:center" onclick="handleAuth('signup')">Cadastrar</button>
+            <p style="font-size:0.8rem; margin-top:15px">Já tem conta? <a href="#" onclick="toggleAuth(false)" style="color:var(--gold); font-weight:700">Entrar</a></p>
         </div>
     </div>
 
     <header>
-        <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" class="logo-header">
-        <div class="user-info">
-            <div class="user-pill"><i data-lucide="user" size="14"></i><span id="user-display">Usuário</span></div>
-            <button class="logout-btn" onclick="logout()">Sair</button>
+        <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="height:35px; filter:brightness(0) invert(1);">
+        <div style="display:flex; align-items:center; gap:15px;">
+            <div style="background:rgba(255,255,255,0.1); padding:8px 15px; border-radius:50px; font-size:0.8rem; display:flex; align-items:center; gap:8px;">
+                <i data-lucide="user" size="14"></i><span id="user-display">Usuário</span>
+            </div>
+            <button onclick="logout()" style="background:none; border:none; color:#fda4af; cursor:pointer; font-weight:700; font-size:0.75rem;">SAIR</button>
         </div>
     </header>
 
@@ -106,21 +89,12 @@
         <div class="tab" onclick="setRoom(2)">SALA 02</div>
     </div>
 
-    <div class="content">
-        <div class="hero">
+    <div class="content" style="max-width:1200px; margin:auto; padding:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 id="room-title">Sala de Reunião 01</h2>
             <button class="btn-main" onclick="openMod()"><i data-lucide="plus"></i> Agendar</button>
         </div>
         <div id="list" class="grid"></div>
-    </div>
-
-    <div class="legend-box">
-        <div class="legend-item"><div class="dot" style="background:#3b82f6"></div> Fiscal</div>
-        <div class="legend-item"><div class="dot" style="background:#6366f1"></div> Contábil</div>
-        <div class="legend-item"><div class="dot" style="background:#10b981"></div> Comercial</div>
-        <div class="legend-item"><div class="dot" style="background:#f59e0b"></div> Pessoal</div>
-        <div class="legend-item"><div class="dot" style="background:#ec4899"></div> Societário</div>
-        <div class="legend-item"><div class="dot" style="background:#c5a059"></div> Diretoria</div>
     </div>
 
     <div id="overlay" class="overlay">
@@ -133,15 +107,15 @@
                 <div style="flex:1"><label class="info-label">Fim</label><input type="time" id="f-end"></div>
             </div>
             <label class="info-label">Cliente / Assunto</label><input type="text" id="f-client">
-            <label class="info-label">Host (Responsável)</label><input type="text" id="f-host">
-            <button class="btn-main" style="width:100%; justify-content:center" onclick="save()">Confirmar</button>
+            <label class="info-label">Host Responsável</label><input type="text" id="f-host">
+            <button class="btn-main" style="width:100%; justify-content:center; margin-top:10px" onclick="save()">Confirmar Agendamento</button>
             <button onclick="closeMod()" style="width:100%; background:none; border:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
         </div>
     </div>
 
     <script>
-        const URL = "https://script.google.com/macros/s/AKfycbzlntnngszk-0L67NWlDRnZT1vn6O1cPZlbUvYA2ch56VQ8_ZSPP0jVH6bpXCYOQIIM/exec"; // SUBSTITUA PELA SUA URL DE IMPLANTAÇÃO
-        let room = 1, user = null, data = [];
+        const URL = "https://script.google.com/macros/s/AKfycbxpLGj3hZfZ_FFBmwlTKEvpPVCO89lshqouY3ZmJ0fwNwKEPiPIIaWblfNyedwPHRbf/exec"; // SUBSTITUA PELA SUA URL
+        let user = null; let room = 1; let data = [];
 
         window.onload = () => {
             const saved = localStorage.getItem('v_user') || sessionStorage.getItem('v_user');
@@ -149,104 +123,80 @@
             lucide.createIcons();
         };
 
-        function toggleAuth(isSignup) {
-            document.getElementById('box-login').style.display = isSignup ? 'none' : 'block';
-            document.getElementById('box-signup').style.display = isSignup ? 'block' : 'none';
-        }
-
-        async function handleAuth(mode) {
-            showLoader("Processando...");
-            if(mode === 'login') {
-                const e = document.getElementById('l-email').value.toLowerCase().trim();
-                const p = document.getElementById('l-pass').value;
-                const rem = document.getElementById('l-remember').checked;
-                if(!e || !p) { alert("Preencha tudo"); hideLoader(); return; }
-                try {
-                    const r = await fetch(`${URL}?action=login_verify&email=${e}&pass=${p}`);
-                    const txt = await r.text();
-                    if(txt === "Erro") alert("Credenciais inválidas");
-                    else {
-                        user = JSON.parse(txt); user.email = e;
-                        (rem ? localStorage : sessionStorage).setItem('v_user', JSON.stringify(user));
-                        start();
-                    }
-                } catch { alert("Erro de conexão"); }
-            } else {
-                const n = document.getElementById('s-name').value;
-                const e = document.getElementById('s-email').value.toLowerCase().trim();
-                const d = document.getElementById('s-dept').value;
-                const p = document.getElementById('s-pass').value;
-                if(!n || !e || !d || !p) { alert("Preencha tudo"); hideLoader(); return; }
-                const params = new URLSearchParams({ action:'signup', user:n, email:e, dept:d, pass:p });
-                try {
-                    const r = await fetch(URL, {method:'POST', body:params});
-                    const res = await r.text();
-                    if(res === "Sucesso") { alert("Conta criada!"); toggleAuth(false); }
-                    else alert(res);
-                } catch { alert("Erro ao cadastrar"); }
-            }
-            hideLoader();
-        }
-
         function start() {
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('user-display').innerText = `${user.dept} | ${user.name}`;
             load();
         }
 
-        function formatTime(val) {
+        function formatTimeText(val) {
             if (!val) return "00:00";
             let s = String(val);
             return s.includes('T') ? s.split('T')[1].substring(0, 5) : s.substring(0, 5);
         }
 
         async function load() {
-            showLoader("Sincronizando...");
-            try {
-                const r = await fetch(URL);
-                data = await r.json();
-                render();
-            } catch(e) { console.error(e); }
-            hideLoader();
+            const r = await fetch(URL);
+            data = await r.json();
+            render();
         }
 
         function render() {
             const list = document.getElementById('list');
             list.innerHTML = "";
-            const today = new Date().toISOString().split('T')[0];
-            const filtered = data.filter(i => {
-                const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                return String(m.room) === String(room) && m.date.split('T')[0] >= today;
-            });
+            const todayStr = new Date().toISOString().split('T')[0];
+            const filtered = data.filter(i => String(i.ROOM) === String(room) && i.DATE.split('T')[0] >= todayStr);
 
-            if(!filtered.length) {
-                list.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:80px; color:#94a3b8"><i data-lucide="calendar-x" size="48"></i><p>Nenhuma reunião agendada.</p></div>`;
-            } else {
-                filtered.forEach(i => {
-                    const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                    const isMe = m.createdby === user.email;
-                    const sector = m.dept ? m.dept.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default';
-                    const div = document.createElement('div');
-                    div.className = `card sector-${sector}`;
-                    div.innerHTML = `
-                        <div class="card-header"><i data-lucide="clock" size="18"></i> ${formatTime(m.start)} - ${formatTime(m.end)}</div>
-                        <span class="info-label">Data</span><div class="info-value">${m.date.split('T')[0].split('-').reverse().join('/')}</div>
-                        <span class="info-label">Cliente</span><div class="info-value">${m.client}</div>
-                        <span class="info-label">Host</span><div class="info-value">${m.host}</div>
-                        ${isMe ? `<div class="actions">
-                            <button class="act-btn edit-btn" onclick="editEvent('${m.id}')"><i data-lucide="pencil" size="14"></i></button>
-                            <button class="act-btn del-btn" onclick="del('${m.id}')"><i data-lucide="trash" size="14"></i></button>
-                        </div>` : ''}
-                    `;
-                    list.appendChild(div);
-                });
-            }
+            filtered.forEach(m => {
+                const sector = m.dept ? m.dept.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default';
+                const div = document.createElement('div');
+                div.className = `card sector-${sector}`;
+                div.innerHTML = `
+                    <div class="card-header"><i data-lucide="clock" size="18" style="margin-top:2px"></i> <span>${formatTimeText(m.START)} - ${formatTimeText(m.END)}</span></div>
+                    <div class="info-row"><i data-lucide="calendar" size="16" color="#94a3b8"></i><div><span class="info-label">Data</span><div class="info-value">${m.DATE.split('T')[0].split('-').reverse().join('/')}</div></div></div>
+                    <div class="info-row"><i data-lucide="briefcase" size="16" color="#94a3b8"></i><div><span class="info-label">Cliente</span><div class="info-value">${m.CLIENT}</div></div></div>
+                    <div class="info-row"><i data-lucide="user-check" size="16" color="#94a3b8"></i><div><span class="info-label">Host</span><div class="info-value">${m.HOST}</div></div></div>
+                `;
+                list.appendChild(div);
+            });
             lucide.createIcons();
         }
 
+        async function save() {
+            const dateVal = document.getElementById('f-date').value;
+            const today = new Date().toISOString().split('T')[0];
+            
+            // VALIDAÇÃO DE DATA PASSADA
+            if (dateVal < today) {
+                alert("⚠️ Erro: Não é possível agendar reuniões em datas que já passaram.");
+                return;
+            }
+
+            const id = document.getElementById('f-id').value;
+            const entry = {
+                action: id ? 'edit' : 'create',
+                id: id || "ID-"+Date.now(),
+                room,
+                date: dateVal,
+                start: document.getElementById('f-start').value,
+                end: document.getElementById('f-end').value,
+                client: document.getElementById('f-client').value,
+                host: document.getElementById('f-host').value,
+                createdBy: user.email,
+                dept: user.dept
+            };
+
+            if(!entry.date || !entry.start || !entry.client) return alert("Preencha todos os campos");
+
+            try {
+                const r = await fetch(URL, {method:'POST', body:new URLSearchParams(entry)});
+                const res = await r.text();
+                if(res === "Sucesso") { closeMod(); load(); }
+                else alert(res);
+            } catch { alert("Erro ao conectar ao servidor"); }
+        }
+
         function openMod() {
-            // LIMPEZA TOTAL DE CAMPOS
-            document.getElementById('modal-title').innerText = "Agendar Reunião";
             document.getElementById('f-id').value = "";
             document.getElementById('f-date').value = "";
             document.getElementById('f-start').value = "";
@@ -256,57 +206,10 @@
             document.getElementById('overlay').style.display = 'flex';
         }
 
-        function editEvent(id) {
-            const item = data.find(i => {
-                const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                return m.id === id;
-            });
-            const m = {}; for(let k in item) m[k.toLowerCase().trim()] = item[k];
-            document.getElementById('modal-title').innerText = "Editar Reunião";
-            document.getElementById('f-id').value = m.id;
-            document.getElementById('f-date').value = m.date.split('T')[0];
-            document.getElementById('f-start').value = formatTime(m.start);
-            document.getElementById('f-end').value = formatTime(m.end);
-            document.getElementById('f-client').value = m.client;
-            document.getElementById('f-host').value = m.host;
-            document.getElementById('overlay').style.display = 'flex';
-        }
-
-        async function save() {
-            const id = document.getElementById('f-id').value;
-            const entry = {
-                action: id ? 'edit' : 'create',
-                id: id || "ID-"+Date.now(),
-                room,
-                date: document.getElementById('f-date').value,
-                start: document.getElementById('f-start').value,
-                end: document.getElementById('f-end').value,
-                client: document.getElementById('f-client').value,
-                host: document.getElementById('f-host').value,
-                createdBy: user.email,
-                dept: user.dept
-            };
-            if(!entry.date || !entry.start || !entry.client) return alert("Preencha tudo");
-            closeMod(); showLoader("Salvando...");
-            try {
-                await fetch(URL, {method:'POST', body:new URLSearchParams(entry)});
-                load();
-            } catch { alert("Erro ao salvar"); hideLoader(); }
-        }
-
-        async function del(id) {
-            if(confirm("Excluir?")) {
-                showLoader("Excluindo...");
-                await fetch(URL, {method:'POST', body:new URLSearchParams({action:'delete', id})});
-                load();
-            }
-        }
-
+        function toggleAuth(s) { document.getElementById('box-login').style.display=s?'none':'block'; document.getElementById('box-signup').style.display=s?'block':'none'; }
+        function closeMod() { document.getElementById('overlay').style.display = 'none'; }
         function logout() { localStorage.clear(); sessionStorage.clear(); window.location.reload(); }
-        function setRoom(n) { room = n; document.getElementById('room-title').innerText=`Sala de Reunião 0${n}`; document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active',i+1===n)); load(); }
-        function showLoader(t) { document.getElementById('loader-text').innerText=t; document.getElementById('loader-container').style.display='flex'; }
-        function hideLoader() { document.getElementById('loader-container').style.display='none'; }
-        function closeMod() { document.getElementById('overlay').style.display='none'; }
+        function setRoom(n) { room=n; document.getElementById('room-title').innerText=`Sala de Reunião 0${n}`; render(); }
     </script>
 </body>
 </html>
