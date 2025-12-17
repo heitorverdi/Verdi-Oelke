@@ -30,7 +30,6 @@
         .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; box-shadow: 0 4px 12px rgba(6, 78, 59, 0.2); }
         .btn-main:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(6, 78, 59, 0.3); }
 
-        /* GRID E CARTÕES ESTRUTURADOS */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
         .card { 
             background: var(--white); border-radius: 16px; padding: 24px; position: relative;
@@ -40,8 +39,6 @@
         .card:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
         .card-header { display: flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; }
-        .card-header i { width: 20px; height: 20px; }
-
         .info-row { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
         .info-row:last-of-type { border-bottom: none; }
         .info-label { font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -53,9 +50,7 @@
             border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; 
             display: flex; align-items: center; justify-content: center; transition: 0.2s;
         }
-        .del-btn:hover { background: #fee2e2; transform: rotate(10deg); }
 
-        /* LOADER CENTRALIZADO */
         #loader-container { 
             display: none; position: absolute; top: 50%; left: 50%; 
             transform: translate(-50%, -50%); text-align: center; z-index: 500; 
@@ -63,7 +58,6 @@
         .spinner { width: 50px; height: 50px; border: 5px solid #e2e8f0; border-top: 5px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* AUTH SCREEN */
         #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .auth-box { background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
         .keep-row { display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 12px 18px; border-radius: 12px; margin: 15px 0 20px 0; border: 1px solid #e2e8f0; cursor: pointer; }
@@ -71,7 +65,7 @@
         .keep-row input { width: 22px; height: 22px; accent-color: var(--primary); cursor: pointer; }
 
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(6px); z-index: 2000; align-items: center; justify-content: center; }
-        .modal { background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        .modal { background: white; padding: 35px; border-radius: 24px; width: 90%; max-width: 440px; }
         
         input, select { width: 100%; padding: 14px; margin: 6px 0 16px 0; border: 1.5px solid #e2e8f0; border-radius: 12px; font-size: 1rem; }
         label { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; display: block; text-align: left; }
@@ -83,8 +77,8 @@
         <div class="auth-box" id="box-signup">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 150px; filter: contrast(0.1) brightness(0.2); margin-bottom: 25px;">
             <h3>Criar Conta</h3>
-            <label>Nome Completo</label><input type="text" id="s-name" placeholder="Ex: João Silva">
-            <label>E-mail Corporativo</label><input type="email" id="s-email" placeholder="nome@verdicontadores.com.br">
+            <label>Nome Completo</label><input type="text" id="s-name" placeholder="Digite seu nome">
+            <label>E-mail Corporativo</label><input type="email" id="s-email" placeholder="seuemail@empresa.com.br">
             <label>Setor</label>
             <select id="s-dept">
                 <option value="Fiscal">Fiscal</option><option value="Contabil">Contábil</option>
@@ -99,8 +93,8 @@
         <div class="auth-box" id="box-login" style="display:none">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 150px; filter: contrast(0.1) brightness(0.2); margin-bottom: 25px;">
             <h3>Login</h3>
-            <label>E-mail</label><input type="email" id="l-email" placeholder="nome@verdicontadores.com.br">
-            <label>Senha</label><input type="password" id="l-pass" placeholder="Sua senha">
+            <label>E-mail</label><input type="email" id="l-email" placeholder="Digite seu e-mail">
+            <label>Senha</label><input type="password" id="l-pass" placeholder="Digite sua senha">
             <div class="keep-row" onclick="document.getElementById('u-keep').click()">
                 <span>Manter-me conectado</span>
                 <input type="checkbox" id="u-keep" checked onclick="event.stopPropagation()">
@@ -155,7 +149,7 @@
     </div>
 
     <script>
-        const URL = "https://script.google.com/macros/s/AKfycbyLQlU9v824Xm6TDnRChMeGD0I4i8lrNyQZ1Isr4Gz0_mPfoBju-C62tfeit246KkJc/exec";
+        const URL = "SUA_URL_DO_APPS_SCRIPT";
         let room = 1, user = null, data = [];
 
         window.onload = () => {
@@ -175,16 +169,16 @@
             if (mode === 'signup') {
                 const n = document.getElementById('s-name').value, e = document.getElementById('s-email').value.toLowerCase().trim(), s = document.getElementById('s-dept').value, p = document.getElementById('s-pass').value;
                 if(!n || !e || !p) return alert("Preencha todos os campos!");
-                if(!e.endsWith(domain) && e !== master) return alert("Use seu e-mail corporativo!");
+                if(!e.endsWith(domain) && e !== master) return alert("Apenas e-mails corporativos são permitidos.");
                 await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p}), mode: 'no-cors' });
-                alert("Cadastro realizado! Por favor, faça login.");
+                alert("Conta criada! Agora você pode entrar.");
                 toggleAuth();
             } else {
                 const e = document.getElementById('l-email').value.toLowerCase().trim(), p = document.getElementById('l-pass').value, k = document.getElementById('u-keep').checked;
                 document.getElementById('btn-login').innerText = "Verificando...";
                 const resp = await fetch(URL + "?action=login_verify&email=" + e + "&pass=" + p);
                 const resTxt = await resp.text();
-                if (resTxt === "Erro") { alert("Credenciais inválidas."); document.getElementById('btn-login').innerText = "Entrar"; }
+                if (resTxt === "Erro") { alert("E-mail ou senha incorretos."); document.getElementById('btn-login').innerText = "Entrar"; }
                 else {
                     user = JSON.parse(resTxt); user.email = e;
                     if(k) localStorage.setItem('v_user', JSON.stringify(user));
