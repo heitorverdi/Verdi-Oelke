@@ -3,150 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verdi & Oelke - Gestão</title>
+    <title>Verdi & Oelke | Gestão de Atendimento</title>
     
-    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=4">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=4">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=6">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=6">
     
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#064e3b">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root { 
-            --emerald: #10b981; 
-            --forest: #064e3b; 
-            --soft-bg: #f1f5f9; 
-            --white: #ffffff; 
-            --danger: #f43f5e; 
+            --primary: #064e3b; 
+            --accent: #10b981; 
+            --gold: #fbbf24;
+            --bg: #f8fafc; 
+            --card-bg: #ffffff;
             --text-main: #0f172a;
-            --text-muted: #64748b;
+            --text-sub: #64748b;
+            --danger: #ef4444;
         }
 
-        * { box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
-        
-        body { background-color: var(--soft-bg); margin: 0; color: var(--text-main); line-height: 1.5; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        body { background-color: var(--bg); margin: 0; color: var(--text-main); overflow-x: hidden; }
 
-        /* Header e Branding */
+        /* Header Luxo */
         header { 
-            background: linear-gradient(to right, var(--forest), #065f46); 
-            color: white; 
-            padding: 20px 40px; 
+            background: var(--primary); 
+            padding: 12px 40px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1001;
         }
 
-        .brand-container { display: flex; align-items: center; gap: 15px; }
-        .brand-logo { height: 38px; filter: brightness(0) invert(1); }
-        .brand-text h1 { margin: 0; font-size: 1.1rem; letter-spacing: 2px; font-weight: 300; text-transform: uppercase; }
+        .brand-logo { height: 40px; filter: brightness(0) invert(1); transition: 0.3s; }
         
-        .user-meta { font-size: 0.85rem; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 50px; }
-        .user-meta span { cursor: pointer; text-decoration: none; margin-left: 10px; font-weight: 700; color: #fbbf24; }
-
-        /* Navegação por Abas */
-        .tabs { background: white; display: flex; padding: 0 40px; border-bottom: 1px solid #e2e8f0; gap: 40px; position: sticky; top: 0; z-index: 100; }
-        .tab { 
-            padding: 18px 5px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            color: var(--text-muted); 
-            border-bottom: 3px solid transparent; 
-            font-size: 0.9rem; 
-            transition: 0.3s;
-        }
-        .tab:hover { color: var(--forest); }
-        .tab.active { color: var(--forest); border-bottom-color: var(--emerald); }
-
-        /* Container Principal */
-        .container { max-width: 1100px; margin: 30px auto; padding: 0 25px; }
-        
-        .top-bar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 30px; 
-        }
-        
-        .top-bar h2 { color: var(--forest); margin: 0; font-size: 1.5rem; font-weight: 700; }
-
-        /* Botão Agendar */
-        .btn-add { 
-            background: var(--emerald); 
+        .user-badge { 
+            font-size: 0.75rem; 
             color: white; 
-            border: none; 
-            padding: 12px 24px; 
-            border-radius: 12px; 
-            font-weight: 600; 
-            cursor: pointer; 
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+            background: rgba(255,255,255,0.08); 
+            padding: 6px 14px; 
+            border-radius: 100px; 
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; gap: 8px;
         }
-        .btn-add:hover { background: var(--forest); transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .user-badge span { color: var(--gold); font-weight: 700; cursor: pointer; text-transform: uppercase; }
 
-        /* Lista de Cards */
-        .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-        
-        .card { 
+        /* Menu de Salas Estilo Barra Inferior */
+        .tabs { 
             background: white; 
-            border-radius: 16px; 
-            padding: 24px; 
-            position: relative; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
-            border-left: 6px solid var(--emerald);
+            display: flex; 
+            justify-content: center;
+            padding: 0; 
+            border-bottom: 1px solid #e2e8f0; 
+            gap: 50px; 
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .tab { 
+            padding: 18px 10px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            color: var(--text-sub); 
+            border-bottom: 3px solid transparent; 
+            font-size: 0.8rem; 
+            letter-spacing: 1px;
             transition: 0.3s;
         }
-        .card:hover { transform: scale(1.02); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); }
-        
-        .card h3 { margin: 0 0 12px 0; color: var(--forest); font-size: 1.4rem; display: flex; align-items: center; gap: 8px; }
-        .card p { margin: 6px 0; font-size: 0.95rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
-        .card p strong { color: var(--text-muted); min-width: 70px; font-weight: 500; }
+        .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 
-        /* Botão de Excluir (X) */
-        .delete-x { 
-            position: absolute; 
-            top: 15px; 
-            right: 15px; 
-            background: #fff1f2; 
-            color: var(--danger); 
-            border: 1px solid #fee2e2; 
-            width: 36px; 
-            height: 36px; 
-            border-radius: 10px; 
-            cursor: pointer; 
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Container & Grid */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 30px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+        .top-bar h2 { color: var(--primary); margin: 0; font-size: 1.8rem; font-weight: 700; letter-spacing: -0.5px; }
+
+        .btn-add { 
+            background: var(--primary); color: white; border: none; padding: 14px 28px; border-radius: 12px; 
+            font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 14px rgba(6, 78, 59, 0.2);
+        }
+        .btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(6, 78, 59, 0.3); }
+
+        /* Cards Estilo Corporativo */
+        .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 25px; }
+        .card { 
+            background: var(--card-bg); border-radius: 20px; padding: 25px; position: relative; 
+            border: 1px solid rgba(226, 232, 240, 0.8); transition: 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); }
+        .card h3 { margin: 0 0 15px 0; color: var(--primary); font-size: 1.4rem; font-weight: 700; }
+        .card p { margin: 10px 0; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; }
+        .card p strong { color: var(--text-sub); font-weight: 500; width: 90px; font-size: 0.75rem; text-transform: uppercase; }
+
+        .delete-btn { 
+            position: absolute; top: 20px; right: 20px; 
+            background: #fff1f2; color: var(--danger); 
+            border: none; width: 36px; height: 36px; 
+            border-radius: 12px; cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
             transition: 0.2s;
         }
-        .delete-x:hover { background: var(--danger); color: white; border-color: var(--danger); }
+        .delete-btn:hover { background: var(--danger); color: white; }
 
-        /* Login Screen */
-        #login-screen { position: fixed; inset: 0; background: var(--forest); display: flex; justify-content: center; align-items: center; z-index: 2000; }
-        .login-card { background: white; padding: 45px; border-radius: 32px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        /* Login & Modais */
+        #login-screen { position: fixed; inset: 0; background: var(--primary); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+        .login-card { background: white; padding: 50px; border-radius: 30px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
         
-        /* Modal */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
-        .modal-body { background: white; padding: 35px; border-radius: 24px; width: 100%; max-width: 450px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); align-items: center; justify-content: center; z-index: 1001; }
+        .modal-body { background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 450px; }
         
-        /* Inputs */
         input, select { 
-            width: 100%; 
-            padding: 14px; 
-            margin: 8px 0 18px 0; 
-            border: 1px solid #e2e8f0; 
-            border-radius: 12px; 
-            font-size: 1rem; 
-            background: #f8fafc;
-            transition: 0.2s;
+            width: 100%; padding: 14px; margin: 8px 0 20px 0; border: 1px solid #e2e8f0; 
+            border-radius: 12px; font-size: 1rem; background: #f8fafc; transition: 0.2s;
         }
-        input:focus { outline: none; border-color: var(--emerald); background: white; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
-        label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(6, 78, 59, 0.05); }
+        label { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Feedback de Carregamento */
+        .loader { width: 20px; height: 20px; border: 3px solid #FFF; border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; margin-right: 10px; display: none; }
+        @keyframes rotation { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
 
     </style>
 </head>
@@ -154,7 +132,8 @@
 
     <div id="login-screen">
         <div class="login-card">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 240px; filter: brightness(0) saturate(100%) invert(21%) sepia(35%) saturate(1054%) hue-rotate(114deg) brightness(93%) contrast(97%); margin-bottom: 30px;">
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 220px; filter: contrast(0.1) brightness(0.2); margin-bottom: 40px;">
+            <label>Identificação</label>
             <input type="text" id="user-name" placeholder="Nome Completo">
             <input type="email" id="user-email" placeholder="E-mail Corporativo">
             <select id="user-dept">
@@ -164,49 +143,45 @@
                 <option value="Societario">Setor Societário</option>
                 <option value="Comercial">Setor Comercial</option>
             </select>
-            <button class="btn-add" style="width:100%; padding: 18px; justify-content: center;" onclick="login()">Entrar no Sistema</button>
+            <button class="btn-add" style="width:100%; padding: 18px;" onclick="login()">Acessar Gestão</button>
         </div>
     </div>
 
     <header>
-        <div class="brand-container">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" class="brand-logo">
-            <div class="brand-text"><h1>VERDI & OELKE</h1></div>
-        </div>
-        <div id="header-user" class="user-meta"></div>
+        <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" class="brand-logo">
+        <div id="header-user" class="user-badge"></div>
     </header>
 
     <div class="tabs">
-        <div class="tab active" id="tab1" onclick="switchTab(1)">SALA DE REUNIÃO 01</div>
-        <div class="tab" id="tab2" onclick="switchTab(2)">SALA DE REUNIÃO 02</div>
+        <div class="tab active" id="tab1" onclick="switchTab(1)">SALA 01</div>
+        <div class="tab" id="tab2" onclick="switchTab(2)">SALA 02</div>
     </div>
 
     <div class="container">
         <div class="top-bar">
-            <h2 id="title">Sala de Reunião 01</h2>
-            <button class="btn-add" onclick="showModal()">
-                <span>+</span> Agendar Reunião
-            </button>
+            <div>
+                <p style="margin:0; color:var(--accent); font-weight:700; font-size:0.7rem; letter-spacing:1px; text-transform:uppercase;">Disponibilidade</p>
+                <h2 id="title">Sala de Reunião 01</h2>
+            </div>
+            <button class="btn-add" onclick="showModal()">+ Agendar</button>
         </div>
         <div id="meetings-list" class="list"></div>
     </div>
 
     <div id="modal" class="modal">
         <div class="modal-body">
-            <h3 style="margin: 0 0 20px 0; color: var(--forest)">Novo Agendamento</h3>
-            <label>Data</label>
-            <input type="date" id="f-date">
+            <h3 style="margin: 0 0 25px 0; color: var(--primary)">Agendar Horário</h3>
+            <label>Data</label><input type="date" id="f-date">
             <div style="display:flex; gap:15px">
                 <div style="flex:1"><label>Início</label><input type="time" id="f-start"></div>
                 <div style="flex:1"><label>Fim</label><input type="time" id="f-end"></div>
             </div>
-            <label>Cliente / Empresa</label>
-            <input type="text" id="f-client" placeholder="Nome da empresa">
-            <label>Responsável</label>
-            <input type="text" id="f-host" placeholder="Quem conduzirá">
-            
-            <button class="btn-add" style="width:100%; padding: 16px; justify-content: center; margin-top: 10px;" onclick="save()">Salvar Agendamento</button>
-            <button onclick="hideModal()" style="width:100%; margin-top:15px; border:none; background:none; color: var(--text-muted); cursor:pointer; font-weight: 600;">Cancelar</button>
+            <label>Cliente / Empresa</label><input type="text" id="f-client" placeholder="Ex: Banco do Brasil">
+            <label>Condutor</label><input type="text" id="f-host" placeholder="Nome do responsável">
+            <button class="btn-add" id="save-btn" style="width:100%; margin-top: 10px;" onclick="save()">
+                <span class="loader" id="loader"></span> Confirmar Reserva
+            </button>
+            <button onclick="hideModal()" style="width:100%; margin-top:15px; border:none; background:none; color: var(--text-sub); cursor:pointer; font-weight:600;">Voltar</button>
         </div>
     </div>
 
@@ -214,6 +189,7 @@
         const URL = "https://script.google.com/macros/s/AKfycbyLQlU9v824Xm6TDnRChMeGD0I4i8lrNyQZ1Isr4Gz0_mPfoBju-C62tfeit246KkJc/exec";
         let room = 1;
         let currentUser = null;
+        let localData = [];
 
         window.onload = () => {
             const saved = localStorage.getItem('v_user_data');
@@ -223,7 +199,7 @@
         function login() {
             const name = document.getElementById('user-name').value;
             const email = document.getElementById('user-email').value;
-            if(!name || !email) return alert("Por favor, preencha nome e e-mail.");
+            if(!name || !email) return alert("Por favor, preencha seus dados.");
             currentUser = { name, email: email.toLowerCase().trim(), dept: document.getElementById('user-dept').value };
             localStorage.setItem('v_user_data', JSON.stringify(currentUser));
             finishLogin();
@@ -231,7 +207,7 @@
 
         function finishLogin() {
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('header-user').innerHTML = `👤 ${currentUser.name} <span onclick="logout()">Sair</span>`;
+            document.getElementById('header-user').innerHTML = `Logado como: ${currentUser.name} <span onclick="logout()">Sair</span>`;
             load();
         }
 
@@ -242,46 +218,60 @@
             document.getElementById('tab1').classList.toggle('active', n===1);
             document.getElementById('tab2').classList.toggle('active', n===2);
             document.getElementById('title').innerText = `Sala de Reunião 0${n}`;
-            load();
+            render();
         }
 
         async function load() {
-            const list = document.getElementById('meetings-list');
-            list.innerHTML = "<p style='grid-column:1/-1; text-align:center; padding: 50px;'>⏳ Sincronizando com a planilha...</p>";
             try {
                 const res = await fetch(URL);
-                const rawData = await res.json();
-                list.innerHTML = "";
-                
-                rawData.forEach(item => {
-                    const m = {};
-                    for (let key in item) { m[key.toLowerCase()] = item[key]; }
-                    if(String(m.room || m.sala) !== String(room)) return;
-                    
-                    let dStr = String(m.date || m.data || "");
-                    if(dStr.includes('T')) dStr = dStr.split('T')[0];
-                    if(dStr.includes('-')) dStr = dStr.split('-').reverse().join('/');
+                localData = await res.json();
+                render();
+            } catch(e) { console.error("Erro ao carregar"); }
+        }
 
-                    const isOwner = (m.createdby || m.email || "").toLowerCase().trim() === currentUser.email;
-                    
-                    const div = document.createElement('div');
-                    div.className = 'card';
-                    div.innerHTML = `
-                        <h3>🕒 ${m.start || '00:00'} - ${m.end || '00:00'}</h3>
-                        <p><strong>DATA</strong> ${dStr}</p>
-                        <p><strong>CLIENTE</strong> ${m.client || m.cliente || 'N/A'}</p>
-                        <p><strong>CONTADOR</strong> ${m.host || m.condutor || 'N/A'}</p>
-                        ${isOwner ? `<button class="delete-x" title="Excluir Agendamento" onclick="remove('${m.id}')">✕</button>` : ''}
-                    `;
-                    list.appendChild(div);
-                });
-                if(list.innerHTML === "") list.innerHTML = "<div style='grid-column:1/-1; text-align:center; padding: 50px; color:#94a3b8;'>📅 Nenhuma reunião para hoje.</div>";
-            } catch(e) { list.innerHTML = "Erro ao carregar dados."; }
+        function render() {
+            const list = document.getElementById('meetings-list');
+            list.innerHTML = "";
+            
+            const filtered = localData.filter(item => {
+                const m = {};
+                for (let key in item) { m[key.toLowerCase().trim()] = item[key]; }
+                return String(m.room || m.sala) === String(room);
+            });
+
+            if(filtered.length === 0) {
+                list.innerHTML = "<p style='grid-column:1/-1; text-align:center; padding: 60px; color:#94a3b8;'>Nenhum agendamento para esta sala.</p>";
+                return;
+            }
+
+            filtered.forEach(item => {
+                const m = {};
+                for (let key in item) { m[key.toLowerCase().trim()] = item[key]; }
+                
+                let dStr = String(m.date || m.data || "");
+                if(dStr.includes('T')) dStr = dStr.split('T')[0];
+                if(dStr.includes('-')) dStr = dStr.split('-').reverse().join('/');
+
+                const isOwner = (m.createdby || m.email || "").toLowerCase().trim() === currentUser.email;
+                
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <h3>${m.start || '00:00'} — ${m.end || '00:00'}</h3>
+                    <p><strong>Data</strong> ${dStr}</p>
+                    <p><strong>Cliente</strong> ${m.client || m.cliente || 'N/A'}</p>
+                    <p><strong>Responsável</strong> ${m.host || m.condutor || 'N/A'}</p>
+                    ${isOwner ? `<button class="delete-btn" onclick="remove('${m.id}')">✕</button>` : ''}
+                `;
+                list.appendChild(div);
+            });
         }
 
         async function save() {
-            const params = new URLSearchParams({
-                action: 'create',
+            const loader = document.getElementById('loader');
+            const saveBtn = document.getElementById('save-btn');
+            
+            const newEntry = {
                 id: "ID-" + Date.now(),
                 room: room,
                 date: document.getElementById('f-date').value,
@@ -290,16 +280,31 @@
                 client: document.getElementById('f-client').value,
                 host: document.getElementById('f-host').value,
                 createdBy: currentUser.email
-            });
-            await fetch(URL, { method: 'POST', body: params, mode: 'no-cors' });
+            };
+
+            // UPDATE OTIMISTA (Atualiza a tela na hora)
+            localData.push(newEntry);
+            render();
             hideModal();
-            setTimeout(load, 1500);
+
+            // Sincroniza com o Google (em segundo plano)
+            const params = new URLSearchParams({ action: 'create', ...newEntry });
+            fetch(URL, { method: 'POST', body: params, mode: 'no-cors' });
         }
 
         async function remove(id) {
-            if(!confirm("Tem certeza que deseja excluir este agendamento?")) return;
+            if(!confirm("Deseja cancelar esta reserva?")) return;
+            
+            // UPDATE OTIMISTA (Remove da tela na hora)
+            localData = localData.filter(item => {
+                const m = {};
+                for (let key in item) { m[key.toLowerCase().trim()] = item[key]; }
+                return String(m.id) !== String(id);
+            });
+            render();
+
+            // Sincroniza com o Google
             await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'delete', id: id}), mode: 'no-cors' });
-            setTimeout(load, 1000);
         }
 
         function showModal() { 
