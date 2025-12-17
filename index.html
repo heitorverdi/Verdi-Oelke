@@ -5,13 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verdi & Oelke | Gestão</title>
     
-    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png">
-    <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png">
-    
-    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png">
-    <meta name="apple-mobile-web-app-title" content="Verdi Gestão">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#064e3b">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=8">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=8">
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -82,6 +77,7 @@
             display: flex; align-items: center; justify-content: center;
         }
 
+        /* Modais */
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
         .modal { background: white; padding: 35px; border-radius: 24px; width: 100%; max-width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         
@@ -99,7 +95,7 @@
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 180px; filter: contrast(0.1) brightness(0.2); margin-bottom: 30px;">
             <input type="text" id="u-name" placeholder="Seu Nome">
             <input type="email" id="u-email" placeholder="E-mail Corporativo">
-            <button class="btn-main" style="width:100%; justify-content:center" onclick="login()">Acessar Sistema</button>
+            <button class="btn-main" style="width:100%; justify-content:center" onclick="login()">Entrar</button>
         </div>
     </div>
 
@@ -123,7 +119,7 @@
 
     <div id="overlay" class="overlay">
         <div class="modal">
-            <h3 style="margin-top:0; color: var(--primary)">Nova Reserva</h3>
+            <h3 style="margin-top:0">Nova Reserva</h3>
             <label>Data</label><input type="date" id="f-date">
             <div style="display:flex; gap:10px">
                 <div style="flex:1"><label>Início</label><input type="time" id="f-start"></div>
@@ -131,7 +127,7 @@
             </div>
             <label>Cliente</label><input type="text" id="f-client">
             <label>Condutor</label><input type="text" id="f-host">
-            <button class="btn-main" style="width:100%; justify-content:center" onclick="save()">Confirmar Agendamento</button>
+            <button class="btn-main" style="width:100%; justify-content:center" onclick="save()">Confirmar</button>
             <button onclick="closeMod()" style="width:100%; border:none; background:none; margin-top:15px; color:#94a3b8; cursor:pointer">Voltar</button>
         </div>
     </div>
@@ -161,11 +157,9 @@
         }
 
         async function load() {
-            try {
-                const res = await fetch(URL);
-                data = await res.json();
-                render();
-            } catch(e) { console.error("Erro ao carregar dados."); }
+            const res = await fetch(URL);
+            data = await res.json();
+            render();
         }
 
         function setRoom(n) {
@@ -184,7 +178,7 @@
                 return String(m.room || m.sala) === String(room);
             });
 
-            filtered.sort((a,b) => String(a.start).localeCompare(String(b.start))).forEach(i => {
+            filtered.forEach(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
                 let d = String(m.date || m.data || "").split('T')[0].split('-').reverse().join('/');
                 const isMe = (m.createdby || m.email || "").toLowerCase().trim() === user.email;
@@ -211,20 +205,21 @@
                 createdBy: user.email
             };
 
+            // Trava de Conflito
             const conflict = data.some(m => {
                 const ex = {}; for(let k in m) ex[k.toLowerCase().trim()] = m[k];
                 let exD = String(ex.date || ex.data || "").split('T')[0];
                 return String(ex.room) === String(room) && exD === entry.date && (entry.start < ex.end && entry.end > ex.start);
             });
 
-            if(conflict) return alert("Atenção: Já existe uma reunião neste horário nesta sala.");
+            if(conflict) return alert("Horário indisponível nesta sala!");
 
             data.push(entry); render(); closeMod();
             await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'create', ...entry}), mode: 'no-cors' });
         }
 
         async function del(id) {
-            if(!confirm("Tem certeza que deseja cancelar esta reunião?")) return;
+            if(!confirm("Excluir?")) return;
             data = data.filter(i => String(i.id || i.ID) !== String(id));
             render();
             await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'delete', id}), mode: 'no-cors' });
