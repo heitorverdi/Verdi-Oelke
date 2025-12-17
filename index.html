@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verdi & Oelke | Gestão</title>
     
-    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=9">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=9">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=11">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/L9Y0Yp2/verdi-quadrado.png?v=11">
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -42,7 +42,7 @@
         }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
 
-        .content { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .content { max-width: 1100px; margin: 30px auto; padding: 0 20px; min-height: 300px; position: relative; }
         .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .hero h2 { font-size: 1.4rem; color: var(--primary); margin: 0; }
 
@@ -70,18 +70,34 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* LOGIN SCREEN - SCROLL ATIVADO */
+        /* LOGIN SCREEN */
         #login-screen { 
             position: fixed; inset: 0; background: var(--primary); z-index: 3000; 
             display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 40px 20px;
         }
         .login-box { 
             background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; 
-            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); margin-bottom: 40px;
+            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); margin-top: 20px; margin-bottom: 40px;
         }
         .keep-connected { 
             display: flex; align-items: center; gap: 8px; font-size: 0.8rem; 
             color: #64748b; margin: 10px 0 20px 0; justify-content: center; cursor: pointer;
+        }
+
+        /* LOADING INDICATOR */
+        #loader {
+            display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; color: var(--primary); z-index: 500;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold);
+            border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* MENSAGEM VAZIA */
+        #empty-msg {
+            display: none; text-align: center; padding: 60px 20px; color: #94a3b8; font-weight: 500;
         }
 
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
@@ -96,8 +112,8 @@
     <div id="login-screen">
         <div class="login-box">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width: 160px; filter: contrast(0.1) brightness(0.2); margin-bottom: 25px;">
-            <label>Nome Completo</label><input type="text" id="u-name" placeholder="João Silva">
-            <label>E-mail Corporativo</label><input type="email" id="u-email" placeholder="nome@verdioelke.com.br">
+            <label>Nome Completo</label><input type="text" id="u-name" placeholder="Ex: João Silva">
+            <label>E-mail Corporativo</label><input type="email" id="u-email" placeholder="nome@verdicontadores.com.br">
             <label>Setor</label>
             <select id="u-dept">
                 <option value="Fiscal">Fiscal</option>
@@ -105,10 +121,11 @@
                 <option value="Pessoal">Pessoal</option>
                 <option value="Societario">Societário</option>
                 <option value="Comercial">Comercial</option>
+                <option value="Diretoria">Diretoria</option>
             </select>
             <label>Senha</label><input type="password" id="u-pass" placeholder="••••••••">
             <label class="keep-connected"><input type="checkbox" id="u-keep" checked> Manter-me conectado</label>
-            <button class="btn-main" style="width:100%; justify-content:center; padding: 15px;" onclick="login()">Acessar Sistema</button>
+            <button class="btn-main" id="btn-login" style="width:100%; justify-content:center; padding: 15px;" onclick="login()">Acessar Sistema</button>
         </div>
     </div>
 
@@ -123,10 +140,18 @@
     </div>
 
     <div class="content">
+        <div id="loader"><div class="spinner"></div><p>Carregando...</p></div>
+        
         <div class="hero">
             <h2 id="room-title">Sala de Reunião 01</h2>
             <button class="btn-main" onclick="openMod()">+ Agendar</button>
         </div>
+
+        <div id="empty-msg">
+            <i data-lucide="calendar-x" style="width: 48px; height: 48px; margin-bottom: 10px;"></i>
+            <p>Nenhuma reunião agendada para esta sala.</p>
+        </div>
+
         <div id="list" class="grid"></div>
     </div>
 
@@ -155,35 +180,30 @@
             lucide.createIcons();
         };
 
-     function login() {
-    const n = document.getElementById('u-name').value;
-    const e = document.getElementById('u-email').value.toLowerCase().trim();
-    const s = document.getElementById('u-dept').value;
-    const k = document.getElementById('u-keep').checked;
+        function login() {
+            const n = document.getElementById('u-name').value;
+            const e = document.getElementById('u-email').value.toLowerCase().trim();
+            const s = document.getElementById('u-dept').value;
+            const k = document.getElementById('u-keep').checked;
 
-    if(!n || !e) return alert("Por favor, preencha Nome e E-mail.");
+            if(!n || !e) return alert("Por favor, preencha Nome e E-mail.");
 
-    // --- TRAVA DE SEGURANÇA ---
-    const dominioObrigatorio = "@verdicontadores.com.br";
-    const emailMestre = "heitor.verdi@gmail.com";
+            const dominioObrigatorio = "@verdicontadores.com.br";
+            const emailMestre = "heitor.verdi@gmail.com";
 
-    // Verifica se NÃO termina com o domínio E se NÃO é o seu e-mail pessoal
-    if (!e.endsWith(dominioObrigatorio) && e !== emailMestre) {
-        alert("ACESSO NEGADO: Este sistema é exclusivo para colaboradores @verdicontadores.com.br");
-        return; // Para o login aqui
-    }
-    // --------------------------
+            if (!e.endsWith(dominioObrigatorio) && e !== emailMestre) {
+                alert("ACESSO NEGADO: Use o e-mail @verdicontadores.com.br");
+                return;
+            }
 
-    user = { name: n, email: e, dept: s };
-    
-    if(k) localStorage.setItem('v_user', JSON.stringify(user));
-    else sessionStorage.setItem('v_user', JSON.stringify(user));
+            document.getElementById('btn-login').innerHTML = "Processando...";
+            user = { name: n, email: e, dept: s };
+            if(k) localStorage.setItem('v_user', JSON.stringify(user));
+            else sessionStorage.setItem('v_user', JSON.stringify(user));
 
-    // Envia o Log para a aba "Acessos" que o script vai criar
-    fetch(URL, { method: 'POST', body: new URLSearchParams({action:'log', user: n, email: e}), mode: 'no-cors' });
-    
-    start();
-}
+            fetch(URL, { method: 'POST', body: new URLSearchParams({action:'log', user: n, email: e}), mode: 'no-cors' });
+            start();
+        }
 
         function start() {
             document.getElementById('login-screen').style.display = 'none';
@@ -194,9 +214,22 @@
         function logout() { localStorage.clear(); sessionStorage.clear(); location.reload(); }
 
         async function load() {
-            const res = await fetch(URL);
-            data = await res.json();
-            render();
+            showLoading(true);
+            try {
+                const res = await fetch(URL);
+                data = await res.json();
+                render();
+            } catch(e) {
+                console.error("Erro ao carregar");
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function showLoading(show) {
+            document.getElementById('loader').style.display = show ? 'block' : 'none';
+            document.getElementById('list').style.opacity = show ? '0.3' : '1';
+            document.getElementById('empty-msg').style.display = 'none';
         }
 
         function setRoom(n) {
@@ -209,13 +242,26 @@
 
         function render() {
             const list = document.getElementById('list');
+            const emptyMsg = document.getElementById('empty-msg');
             list.innerHTML = "";
+            
             const filtered = data.filter(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
                 return String(m.room || m.sala) === String(room);
             });
 
-            filtered.forEach(i => {
+            if(filtered.length === 0) {
+                emptyMsg.style.display = 'block';
+                return;
+            } else {
+                emptyMsg.style.display = 'none';
+            }
+
+            filtered.sort((a,b) => {
+                const m1 = {}; for(let k in a) m1[k.toLowerCase().trim()] = a[k];
+                const m2 = {}; for(let k in b) m2[k.toLowerCase().trim()] = b[k];
+                return String(m1.start).localeCompare(String(m2.start));
+            }).forEach(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
                 let d = String(m.date || m.data || "").split('T')[0].split('-').reverse().join('/');
                 const creator = (m.createdby || m.email || "").toLowerCase().trim();
@@ -242,29 +288,38 @@
                 client: document.getElementById('f-client').value, host: document.getElementById('f-host').value,
                 createdBy: user.email
             };
+            
+            if(!entry.date || !entry.start || !entry.end) return alert("Preencha data e horários!");
+
             const conflict = data.some(m => {
                 const ex = {}; for(let k in m) ex[k.toLowerCase().trim()] = m[k];
                 let exD = String(ex.date || ex.data || "").split('T')[0];
                 return String(ex.room) === String(room) && exD === entry.date && (entry.start < ex.end && entry.end > ex.start);
             });
+            
             if(conflict) return alert("Horário indisponível!");
-            data.push(entry); render(); closeMod();
+
+            showLoading(true);
+            closeMod();
+            
             await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'create', ...entry}), mode: 'no-cors' });
+            
+            // Recarrega para garantir que pegamos os dados reais do servidor
+            setTimeout(load, 1000); 
         }
 
         async function del(id) {
-            if(!confirm("Excluir?")) return;
-            data = data.filter(i => {
-                const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                return String(m.id) !== String(id);
-            });
-            render();
+            if(!confirm("Excluir esta reserva?")) return;
+            showLoading(true);
             await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'delete', id}), mode: 'no-cors' });
+            setTimeout(load, 1000);
         }
 
-        function openMod() { document.getElementById('f-date').value = new Date().toISOString().split('T')[0]; document.getElementById('overlay').style.display='flex'; }
+        function openMod() { 
+            document.getElementById('f-date').value = new Date().toISOString().split('T')[0]; 
+            document.getElementById('overlay').style.display='flex'; 
+        }
         function closeMod() { document.getElementById('overlay').style.display='none'; }
     </script>
 </body>
 </html>
-
