@@ -17,7 +17,11 @@
         .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
         .tab { padding: 18px 0; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.75rem; letter-spacing: 1px; border-bottom: 3px solid transparent; transition: 0.3s; }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
-        .content { max-width: 1200px; margin: 30px auto; padding: 0 20px 100px 20px; min-height: 400px; position: relative; }
+        
+        /* AJUSTE DO LOADER CENTRALIZADO */
+        .content { max-width: 1200px; margin: 30px auto; padding: 0 20px 100px 20px; min-height: 400px; position: relative; display: flex; flex-direction: column; }
+        #loader-container { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 5000; background: rgba(241, 245, 249, 0.8); padding: 20px; border-radius: 20px; }
+        
         .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .hero h2 { font-size: 1.5rem; color: var(--primary); margin: 0; font-weight: 700; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
@@ -28,10 +32,6 @@
         .card.sector-pessoal { border-left-color: #f59e0b; }
         .card.sector-societario { border-left-color: #ec4899; }
         .card.sector-diretoria { border-left-color: #c5a059; }
-        .status-badge { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; align-self: flex-start; }
-        .status-now { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .status-today { background: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
-        .status-future { background: #f1f5f9; color: #475569; }
         .card-header { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; color: var(--text); }
         .info-row { display: flex; flex-direction: column; gap: 2px; }
         .info-label { font-size: 0.6rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
@@ -39,18 +39,19 @@
         .actions { position: absolute; top: 15px; right: 15px; display: flex; gap: 5px; }
         .act-btn { border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .del-btn { background: #fff1f2; color: #ef4444; }
-        .edit-btn { background: #f0f9ff; color: #0ea5e9; }
+        
         .legend-box { position: fixed; bottom: 20px; left: 20px; background: white; padding: 12px 18px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; z-index: 900; }
         .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 600; color: #475569; }
         .color-dot { width: 12px; height: 12px; border-radius: 3px; }
-        #loader-container { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
+        
+        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 3000; display: flex; align-items: center; justify-content: center; }
         .auth-box { background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
         .modal { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
-        input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; }
+        input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; }
         label { font-size: 0.65rem; font-weight: 700; color: #64748b; text-transform: uppercase; display: block; text-align: left; }
     </style>
 </head>
@@ -100,7 +101,8 @@
     </div>
 
     <div class="content">
-        <div id="loader-container"><div class="spinner"></div><p>Sincronizando...</p></div>
+        <div id="loader-container"><div class="spinner"></div><p id="loader-text">Sincronizando...</p></div>
+        
         <div class="hero">
             <h2 id="room-title">Sala de Reunião 01</h2>
             <button class="btn-main" onclick="openMod()"><i data-lucide="plus"></i> Agendar</button>
@@ -117,15 +119,14 @@
                 <div style="flex:1"><label>Início</label><input type="time" id="f-start"></div>
                 <div style="flex:1"><label>Fim</label><input type="time" id="f-end"></div>
             </div>
-            <label>Cliente / Assunto</label><input type="text" id="f-client">
-            <label>Host (Responsável)</label><input type="text" id="f-host">
+            <label>Cliente / Assunto</label><input type="text" id="f-client" placeholder="Nome do cliente">
+            <label>Host (Responsável)</label><input type="text" id="f-host" placeholder="Quem conduzirá">
             <button class="btn-main" style="width:100%; justify-content:center" onclick="save()">Confirmar Agendamento</button>
             <button onclick="closeMod()" style="width:100%; background:none; border:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
         </div>
     </div>
 
     <script>
-        // SUBSTITUA ABAIXO PELA SUA URL DE IMPLANTAÇÃO (SEM ESPAÇOS OU QUEBRAS DE LINHA)
         const URL = "https://script.google.com/macros/s/AKfycbyLQlU9v824Xm6TDnRChMeGD0I4i8lrNyQZ1Isr4Gz0_mPfoBju-C62tfeit246KkJc/exec"; 
         
         let room = 1, user = null, data = [];
@@ -185,24 +186,38 @@
 
         async function load() {
             document.getElementById('loader-container').style.display='block';
-            try { const res = await fetch(URL); data = await res.json(); render(); } catch(e){}
+            document.getElementById('loader-text').innerText = "Sincronizando...";
+            try { 
+                const res = await fetch(URL); 
+                data = await res.json(); 
+                render(); 
+            } catch(e){ console.error("Erro ao carregar:", e); }
             document.getElementById('loader-container').style.display='none';
         }
 
         function setRoom(n) { room = n; document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active',i+1===n)); document.getElementById('room-title').innerText = `Sala de Reunião 0${n}`; render(); }
 
         function render() {
-            const list = document.getElementById('list'); list.innerHTML = "";
+            const list = document.getElementById('list'); 
+            list.innerHTML = "";
             const todayStr = new Date().toISOString().split('T')[0];
+            
+            // Filtro corrigido para garantir que strings e datas batam
             const filtered = data.filter(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
-                return String(m.room) === String(room) && m.date.split('T')[0] >= todayStr;
+                const itemDate = m.date ? m.date.split('T')[0] : "";
+                return String(m.room) === String(room) && itemDate >= todayStr;
             });
+
+            if(filtered.length === 0) {
+                list.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #94a3b8; margin-top: 40px;">Nenhuma reunião agendada para esta sala.</p>`;
+            }
+
             filtered.forEach(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
                 const isMe = m.createdby === user.email;
                 const div = document.createElement('div');
-                div.className = `card sector-${m.dept.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`;
+                div.className = `card sector-${m.dept ? m.dept.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default'}`;
                 div.innerHTML = `
                     <div class="card-header"><i data-lucide="clock"></i> ${m.start} - ${m.end}</div>
                     <div class="info-row"><span class="info-label">Data</span><span class="info-value">${m.date.split('T')[0].split('-').reverse().join('/')}</span></div>
@@ -216,15 +231,60 @@
         }
 
         async function save() {
-            const entry = { id: "ID-"+Date.now(), room, date: document.getElementById('f-date').value, start: document.getElementById('f-start').value, end: document.getElementById('f-end').value, client: document.getElementById('f-client').value, host: document.getElementById('f-host').value, createdBy: user.email, dept: user.dept };
-            if(!entry.date || !entry.start || !entry.client) return alert("Preencha tudo.");
-            closeMod(); document.getElementById('loader-container').style.display='block';
-            await fetch(URL, {method:'POST', body:new URLSearchParams({action:'create', ...entry})});
-            setTimeout(load, 1500);
+            const entry = { 
+                id: "ID-"+Date.now(), 
+                room, 
+                date: document.getElementById('f-date').value, 
+                start: document.getElementById('f-start').value, 
+                end: document.getElementById('f-end').value, 
+                client: document.getElementById('f-client').value, 
+                host: document.getElementById('f-host').value, 
+                createdBy: user.email, 
+                dept: user.dept 
+            };
+
+            if(!entry.date || !entry.start || !entry.client) return alert("Preencha todos os campos obrigatórios.");
+            
+            closeMod(); 
+            document.getElementById('loader-container').style.display='block';
+            document.getElementById('loader-text').innerText = "Salvando agendamento...";
+
+            try {
+                await fetch(URL, {method:'POST', body:new URLSearchParams({action:'create', ...entry})});
+                // Limpa os campos após o sucesso
+                clearForm();
+                // Recarrega os dados
+                setTimeout(load, 1500);
+            } catch(e) {
+                alert("Erro ao salvar. Verifique sua conexão.");
+                document.getElementById('loader-container').style.display='none';
+            }
         }
 
-        async function del(id) { if(confirm("Excluir?")) { await fetch(URL, {method:'POST', body:new URLSearchParams({action:'delete', id})}); setTimeout(load, 1000); } }
-        function openMod() { document.getElementById('overlay').style.display='flex'; }
+        function clearForm() {
+            document.getElementById('f-date').value = "";
+            document.getElementById('f-start').value = "";
+            document.getElementById('f-end').value = "";
+            document.getElementById('f-client').value = "";
+            document.getElementById('f-host').value = "";
+        }
+
+        async function del(id) { 
+            if(confirm("Deseja realmente excluir este agendamento?")) { 
+                document.getElementById('loader-container').style.display='block';
+                document.getElementById('loader-text').innerText = "Excluindo...";
+                await fetch(URL, {method:'POST', body:new URLSearchParams({action:'delete', id})}); 
+                setTimeout(load, 1000); 
+            } 
+        }
+
+        function openMod() { 
+            // Garante que o formulário está limpo ao abrir
+            clearForm(); 
+            document.getElementById('f-date').min = new Date().toISOString().split("T")[0];
+            document.getElementById('overlay').style.display='flex'; 
+        }
+        
         function closeMod() { document.getElementById('overlay').style.display='none'; }
     </script>
 </body>
