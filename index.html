@@ -18,20 +18,34 @@
         .tab { padding: 18px 0; cursor: pointer; font-weight: 600; color: #94a3b8; font-size: 0.75rem; letter-spacing: 1px; border-bottom: 3px solid transparent; transition: 0.3s; }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
         
-        /* AJUSTE DO LOADER CENTRALIZADO */
-        .content { max-width: 1200px; margin: 30px auto; padding: 0 20px 100px 20px; min-height: 400px; position: relative; display: flex; flex-direction: column; }
-        #loader-container { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 5000; background: rgba(241, 245, 249, 0.8); padding: 20px; border-radius: 20px; }
+        /* LOADER TOTALMENTE CENTRALIZADO */
+        #loader-container { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(2px);
+            z-index: 9999; 
+            display: none; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+        }
         
+        .content { max-width: 1200px; margin: 30px auto; padding: 0 20px 100px 20px; min-height: 400px; position: relative; }
         .hero { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .hero h2 { font-size: 1.5rem; color: var(--primary); margin: 0; font-weight: 700; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
         .card { background: var(--white); border-radius: 16px; padding: 24px; position: relative; border: 1px solid #e2e8f0; transition: 0.3s; border-left: 8px solid #64748b; display: flex; flex-direction: column; gap: 10px; }
-        .card.sector-fiscal { border-left-color: #3b82f6; } 
-        .card.sector-comercial { border-left-color: #10b981; }
-        .card.sector-pessoal { border-left-color: #f59e0b; }
-        .card.sector-societario { border-left-color: #ec4899; }
-        .card.sector-diretoria { border-left-color: #c5a059; }
+        
+        /* Cores dos Setores */
+        .sector-fiscal { border-left-color: #3b82f6 !important; } 
+        .sector-comercial { border-left-color: #10b981 !important; }
+        .sector-pessoal { border-left-color: #f59e0b !important; }
+        .sector-societario { border-left-color: #ec4899 !important; }
+        .sector-diretoria { border-left-color: #c5a059 !important; }
+
         .card-header { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; color: var(--text); }
         .info-row { display: flex; flex-direction: column; gap: 2px; }
         .info-label { font-size: 0.6rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
@@ -41,14 +55,14 @@
         .del-btn { background: #fff1f2; color: #ef4444; }
         
         .legend-box { position: fixed; bottom: 20px; left: 20px; background: white; padding: 12px 18px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; z-index: 900; }
-        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 600; color: #475569; }
+        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 4px; }
         .color-dot { width: 12px; height: 12px; border-radius: 3px; }
         
-        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px auto; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 3000; display: flex; align-items: center; justify-content: center; }
-        .auth-box { background: white; padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; }
+        .auth-box { background: white; padding: 40px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
         .modal { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
         input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; }
@@ -56,6 +70,11 @@
     </style>
 </head>
 <body>
+    <div id="loader-container">
+        <div class="spinner"></div>
+        <p id="loader-text" style="font-weight: 600; color: var(--primary);">Sincronizando...</p>
+    </div>
+
     <div class="legend-box" id="legend" style="display:none">
         <div class="legend-item"><div class="color-dot" style="background:#3b82f6"></div> Fiscal</div>
         <div class="legend-item"><div class="color-dot" style="background:#10b981"></div> Comercial</div>
@@ -101,8 +120,6 @@
     </div>
 
     <div class="content">
-        <div id="loader-container"><div class="spinner"></div><p id="loader-text">Sincronizando...</p></div>
-        
         <div class="hero">
             <h2 id="room-title">Sala de Reunião 01</h2>
             <button class="btn-main" onclick="openMod()"><i data-lucide="plus"></i> Agendar</button>
@@ -113,7 +130,6 @@
     <div id="overlay" class="overlay">
         <div class="modal">
             <h3 id="modal-title">Agendar Reunião</h3>
-            <input type="hidden" id="f-id">
             <label>Data</label><input type="date" id="f-date">
             <div style="display:flex; gap:10px">
                 <div style="flex:1"><label>Início</label><input type="time" id="f-start"></div>
@@ -128,15 +144,34 @@
 
     <script>
         const URL = "https://script.google.com/macros/s/AKfycbyLQlU9v824Xm6TDnRChMeGD0I4i8lrNyQZ1Isr4Gz0_mPfoBju-C62tfeit246KkJc/exec"; 
-        
         let room = 1, user = null, data = [];
 
         window.onload = () => {
             const saved = localStorage.getItem('v_user');
             if(saved) { user = JSON.parse(saved); start(); }
             lucide.createIcons();
-            document.getElementById('f-date').min = new Date().toISOString().split("T")[0];
         };
+
+        function showLoader(text) {
+            const loader = document.getElementById('loader-container');
+            document.getElementById('loader-text').innerText = text;
+            loader.style.display = 'flex';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader-container').style.display = 'none';
+        }
+
+        // FUNÇÃO PARA CORRIGIR O HORÁRIO DESFORMATADO
+        function formatTime(val) {
+            if (!val) return "--:--";
+            // Se vier formato ISO (1899-12-30T23:06...), extrai apenas a hora
+            if (val.includes('T')) {
+                const parts = val.split('T')[1].split(':');
+                return `${parts[0]}:${parts[1]}`;
+            }
+            return val; // Se já vier HH:mm, retorna direto
+        }
 
         function toggleAuth() {
             const s = document.getElementById('box-signup'), l = document.getElementById('box-login');
@@ -151,27 +186,25 @@
                       s = document.getElementById('s-dept').value, 
                       p = document.getElementById('s-pass').value;
                 if(!n || !e || !p) return alert("Preencha tudo.");
-                const btn = document.getElementById('btn-signup');
-                btn.innerText = "Cadastrando...";
+                showLoader("Cadastrando...");
                 try {
                     const response = await fetch(URL, { method: 'POST', body: new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p}) });
                     const result = await response.text();
                     if(result === "Email ja existe") alert("E-mail já cadastrado!");
                     else { alert("Sucesso! Faça login."); toggleAuth(); }
                 } catch(err) { alert("Erro de conexão."); }
-                btn.innerText = "Finalizar Cadastro";
+                hideLoader();
             } else {
                 const e = document.getElementById('l-email').value.toLowerCase().trim(), 
                       p = document.getElementById('l-pass').value;
-                const btn = document.getElementById('btn-login');
-                btn.innerText = "Verificando...";
+                showLoader("Verificando...");
                 try {
                     const resp = await fetch(`${URL}?action=login_verify&email=${e}&pass=${p}`);
                     const resTxt = await resp.text();
                     if(resTxt === "Erro") alert("E-mail ou senha incorretos.");
                     else { user = JSON.parse(resTxt); user.email = e; localStorage.setItem('v_user', JSON.stringify(user)); start(); }
                 } catch(err) { alert("Erro no servidor."); }
-                btn.innerText = "Entrar";
+                hideLoader();
             }
         }
 
@@ -185,14 +218,13 @@
         function logout() { localStorage.clear(); location.reload(); }
 
         async function load() {
-            document.getElementById('loader-container').style.display='block';
-            document.getElementById('loader-text').innerText = "Sincronizando...";
+            showLoader("Sincronizando...");
             try { 
                 const res = await fetch(URL); 
                 data = await res.json(); 
                 render(); 
             } catch(e){ console.error("Erro ao carregar:", e); }
-            document.getElementById('loader-container').style.display='none';
+            hideLoader();
         }
 
         function setRoom(n) { room = n; document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active',i+1===n)); document.getElementById('room-title').innerText = `Sala de Reunião 0${n}`; render(); }
@@ -202,7 +234,6 @@
             list.innerHTML = "";
             const todayStr = new Date().toISOString().split('T')[0];
             
-            // Filtro corrigido para garantir que strings e datas batam
             const filtered = data.filter(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
                 const itemDate = m.date ? m.date.split('T')[0] : "";
@@ -216,10 +247,12 @@
             filtered.forEach(i => {
                 const m = {}; for(let k in i) m[k.toLowerCase().trim()] = i[k];
                 const isMe = m.createdby === user.email;
+                const sectorClass = m.dept ? m.dept.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default';
+                
                 const div = document.createElement('div');
-                div.className = `card sector-${m.dept ? m.dept.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default'}`;
+                div.className = `card sector-${sectorClass}`;
                 div.innerHTML = `
-                    <div class="card-header"><i data-lucide="clock"></i> ${m.start} - ${m.end}</div>
+                    <div class="card-header"><i data-lucide="clock"></i> ${formatTime(m.start)} - ${formatTime(m.end)}</div>
                     <div class="info-row"><span class="info-label">Data</span><span class="info-value">${m.date.split('T')[0].split('-').reverse().join('/')}</span></div>
                     <div class="info-row"><span class="info-label">Cliente</span><span class="info-value">${m.client}</span></div>
                     <div class="info-row"><span class="info-label">Host</span><span class="info-value">${m.host}</span></div>
@@ -246,41 +279,31 @@
             if(!entry.date || !entry.start || !entry.client) return alert("Preencha todos os campos obrigatórios.");
             
             closeMod(); 
-            document.getElementById('loader-container').style.display='block';
-            document.getElementById('loader-text').innerText = "Salvando agendamento...";
+            showLoader("Salvando agendamento...");
 
             try {
                 await fetch(URL, {method:'POST', body:new URLSearchParams({action:'create', ...entry})});
-                // Limpa os campos após o sucesso
-                clearForm();
-                // Recarrega os dados
-                setTimeout(load, 1500);
+                await load(); // Carrega imediatamente após salvar
             } catch(e) {
-                alert("Erro ao salvar. Verifique sua conexão.");
-                document.getElementById('loader-container').style.display='none';
+                alert("Erro ao salvar.");
+                hideLoader();
             }
-        }
-
-        function clearForm() {
-            document.getElementById('f-date').value = "";
-            document.getElementById('f-start').value = "";
-            document.getElementById('f-end').value = "";
-            document.getElementById('f-client').value = "";
-            document.getElementById('f-host').value = "";
         }
 
         async function del(id) { 
             if(confirm("Deseja realmente excluir este agendamento?")) { 
-                document.getElementById('loader-container').style.display='block';
-                document.getElementById('loader-text').innerText = "Excluindo...";
+                showLoader("Excluindo...");
                 await fetch(URL, {method:'POST', body:new URLSearchParams({action:'delete', id})}); 
-                setTimeout(load, 1000); 
+                await load(); 
             } 
         }
 
         function openMod() { 
-            // Garante que o formulário está limpo ao abrir
-            clearForm(); 
+            document.getElementById('f-date').value = "";
+            document.getElementById('f-start').value = "";
+            document.getElementById('f-end').value = "";
+            document.getElementById('f-client').value = "";
+            document.getElementById('f-host').value = user.name;
             document.getElementById('f-date').min = new Date().toISOString().split("T")[0];
             document.getElementById('overlay').style.display='flex'; 
         }
