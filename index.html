@@ -13,254 +13,189 @@
             --fiscal: #2563eb; --contabil: #4f46e5; --comercial: #10b981; 
             --pessoal: #f59e0b; --societario: #db2777;
         }
-        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s ease; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; overflow: hidden; }
         
-        /* AUTH SECTION */
-        #auth-screen { position: fixed; inset: 0; background: linear-gradient(135deg, var(--primary) 0%, #022c22 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .auth-box { background: white; padding: 40px; border-radius: 28px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-        .check-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 15px 0 25px 0; font-size: 0.85rem; font-weight: 600; color: #64748b; cursor: pointer; }
-        
-        /* UI ELEMENTS */
-        header { background: var(--primary); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .tabs { background: white; display: flex; justify-content: center; gap: 50px; border-bottom: 1px solid #e2e8f0; }
-        .tab { padding: 20px 0; cursor: pointer; font-weight: 700; color: #94a3b8; font-size: 0.8rem; border-bottom: 3px solid transparent; letter-spacing: 1px; }
+        /* LOADING */
+        .spinner { display: none; width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; margin-left: 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* UI */
+        header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
+        .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
+        .tab { padding: 20px 0; cursor: pointer; font-weight: 700; color: #94a3b8; font-size: 0.8rem; border-bottom: 3px solid transparent; }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
-        
-        .content { max-width: 1200px; margin: auto; padding: 30px; height: calc(100vh - 210px); overflow-y: auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+        .content { max-width: 1200px; margin: auto; padding: 20px; height: calc(100vh - 200px); overflow-y: auto; }
 
-        /* CARDS */
-        .card { background: white; border-radius: 20px; padding: 24px; position: relative; border-left: 10px solid #cbd5e1; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .card-header { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--primary); border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 15px; font-size: 1.1rem; }
-        .info-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
-        .info-label { font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; display: block; }
-        .info-value { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+        /* CARDS E BOTOES */
+        .card { background: white; border-radius: 16px; padding: 20px; position: relative; border-left: 8px solid #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .actions { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; }
+        .act-btn { border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; background: #f1f5f9; }
+        .del-btn { color: #ef4444; }
+        .edit-btn { color: #0ea5e9; }
 
-        /* ACTIONS */
-        .actions { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; }
-        .act-btn { border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .del-btn { background: #fff1f2; color: #ef4444; }
-        .edit-btn { background: #f0f9ff; color: #0ea5e9; }
-        .del-btn:hover { background: #ef4444; color: white; }
-        .edit-btn:hover { background: #0ea5e9; color: white; }
-
-        /* LEGEND */
-        .legend-box { position: fixed; bottom: 25px; left: 25px; background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
-        .legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 0.7rem; font-weight: 700; color: #475569; }
-        .dot { width: 10px; height: 10px; border-radius: 3px; }
-
-        /* MODAL */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; }
-        .modal { background: white; padding: 35px; border-radius: 24px; width: 95%; max-width: 450px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-        input, select { width: 100%; padding: 14px; margin: 8px 0 18px 0; border: 1.5px solid #e2e8f0; border-radius: 12px; font-weight: 500; font-size: 0.9rem; }
-        input:focus { border-color: var(--gold); outline: none; }
-        .btn-main { background: var(--primary); color: white; border: none; padding: 14px 28px; border-radius: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 4px 6px rgba(6, 78, 59, 0.2); }
-        .btn-main:hover { background: #042f24; transform: scale(1.02); }
-
-        /* SETORES CORES */
+        /* SETORES */
         .sector-fiscal { border-left-color: var(--fiscal) !important; }
         .sector-contabil { border-left-color: var(--contabil) !important; }
         .sector-comercial { border-left-color: var(--comercial) !important; }
         .sector-pessoal { border-left-color: var(--pessoal) !important; }
         .sector-societario { border-left-color: var(--societario) !important; }
+
+        /* AUTH E MODAL */
+        #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .auth-box { background: white; padding: 40px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
+        .modal { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
+        input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
 
     <div id="auth-screen">
         <div class="auth-box" id="box-login">
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:160px; filter:brightness(0); margin-bottom:25px">
-            <input type="email" id="l-email" placeholder="E-mail Corporativo">
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:140px; filter:brightness(0); margin-bottom:20px">
+            <input type="email" id="l-email" placeholder="E-mail">
             <input type="password" id="l-pass" placeholder="Senha">
-            <div class="check-container" onclick="document.getElementById('l-remember').click()">
-                <span>Manter-me conectado</span>
-                <input type="checkbox" id="l-remember" style="width:18px; height:18px; margin:0">
-            </div>
-            <button class="btn-main" style="width:100%" onclick="handleAuth('login')">Entrar no Sistema</button>
-            <p style="font-size:0.85rem; margin-top:25px; font-weight:500">Novo por aqui? <a href="javascript:void(0)" onclick="toggleAuth(true)" style="color:var(--gold); text-decoration:none; font-weight:700">Crie sua conta</a></p>
+            <button class="btn-main" style="width:100%" onclick="handleAuth('login')">
+                <span>Entrar</span><div class="spinner" id="spin-login"></div>
+            </button>
+            <p style="font-size:0.8rem; margin-top:20px">Novo? <a href="#" onclick="toggleAuth(true)">Cadastre-se</a></p>
         </div>
-
         <div class="auth-box" id="box-signup" style="display:none">
-            <h3 style="margin-top:0; color:var(--primary); font-size:1.5rem">Cadastro de Usuário</h3>
-            <input type="text" id="s-name" placeholder="Nome Completo">
-            <input type="email" id="s-email" placeholder="E-mail Corporativo">
+            <h3>Criar Conta</h3>
+            <input type="text" id="s-name" placeholder="Nome">
+            <input type="email" id="s-email" placeholder="E-mail">
             <select id="s-dept">
-                <option value="">Selecione seu Setor</option>
+                <option value="">Setor</option>
                 <option>Fiscal</option><option>Contábil</option><option>Comercial</option><option>Pessoal</option><option>Societário</option>
             </select>
-            <input type="password" id="s-pass" placeholder="Defina sua Senha">
-            <button class="btn-main" style="width:100%" onclick="handleAuth('signup')">Finalizar Cadastro</button>
-            <p style="font-size:0.85rem; margin-top:25px; font-weight:500">Já tem acesso? <a href="javascript:void(0)" onclick="toggleAuth(false)" style="color:var(--gold); text-decoration:none; font-weight:700">Fazer Login</a></p>
+            <input type="password" id="s-pass" placeholder="Senha">
+            <button class="btn-main" style="width:100%" onclick="handleAuth('signup')">
+                <span>Cadastrar</span><div class="spinner" id="spin-signup"></div>
+            </button>
+            <p style="font-size:0.8rem; margin-top:20px"><a href="#" onclick="toggleAuth(false)">Voltar</a></p>
         </div>
     </div>
 
     <header>
-        <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="height:40px; filter:brightness(0) invert(1);">
-        <div style="display:flex; align-items:center; gap:20px;">
-            <div style="background:rgba(255,255,255,0.15); padding:10px 20px; border-radius:50px; font-size:0.85rem; font-weight:600; color:white; display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,0.1);">
-                <i data-lucide="user-circle" size="18"></i><span id="user-display">Carregando...</span>
-            </div>
-            <button onclick="logout()" style="background:none; border:none; color:#fda4af; cursor:pointer; font-weight:800; font-size:0.75rem; letter-spacing:1px">SAIR</button>
-        </div>
+        <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="height:35px; filter:brightness(0) invert(1);">
+        <div id="user-display" style="font-size:0.8rem; font-weight:600"></div>
     </header>
 
     <div class="tabs">
-        <div class="tab active" id="t1" onclick="setRoom(1)">SALA DE REUNIÃO 01</div>
-        <div class="tab" id="t2" onclick="setRoom(2)">SALA DE REUNIÃO 02</div>
+        <div class="tab active" id="t1" onclick="setRoom(1)">SALA 01</div>
+        <div class="tab" id="t2" onclick="setRoom(2)">SALA 02</div>
     </div>
 
     <div class="content">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <h2 id="room-title" style="margin:0; font-weight:800; color:var(--primary); font-size:1.6rem">Sala 01</h2>
-            <button class="btn-main" onclick="openMod()"><i data-lucide="calendar-plus"></i> Novo Agendamento</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 id="room-title">Sala 01</h2>
+            <button class="btn-main" onclick="openMod()"><i data-lucide="plus"></i> Agendar</button>
         </div>
-        <div id="list" class="grid"></div>
-    </div>
-
-    <div class="legend-box">
-        <div class="legend-item"><div class="dot" style="background:var(--fiscal)"></div> FISCAL</div>
-        <div class="legend-item"><div class="dot" style="background:var(--contabil)"></div> CONTÁBIL</div>
-        <div class="legend-item"><div class="dot" style="background:var(--comercial)"></div> COMERCIAL</div>
-        <div class="legend-item"><div class="dot" style="background:var(--pessoal)"></div> PESSOAL</div>
-        <div class="legend-item"><div class="dot" style="background:var(--societario)"></div> SOCIETÁRIO</div>
+        <div id="list"></div>
     </div>
 
     <div id="overlay" class="overlay">
         <div class="modal">
-            <h3 id="modal-title" style="margin-top:0; color:var(--primary); font-size:1.4rem">Agendar</h3>
+            <h3 id="modal-title">Agendar</h3>
             <input type="hidden" id="f-id">
-            
-            <label class="info-label">Data da Reunião</label>
             <input type="date" id="f-date">
-            
-            <div style="display:flex; gap:15px">
-                <div style="flex:1"><label class="info-label">Início</label><input type="time" id="f-start"></div>
-                <div style="flex:1"><label class="info-label">Término</label><input type="time" id="f-end"></div>
+            <div style="display:flex; gap:10px">
+                <input type="time" id="f-start">
+                <input type="time" id="f-end">
             </div>
-            
-            <label class="info-label">Cliente ou Assunto</label>
-            <input type="text" id="f-client" placeholder="Ex: Reunião de Planejamento">
-            
-            <label class="info-label">Responsável (Host)</label>
-            <input type="text" id="f-host">
-            
-            <button class="btn-main" style="width:100%; margin-top:10px" onclick="save()">Confirmar e Salvar</button>
-            <button onclick="closeMod()" style="width:100%; background:none; border:none; margin-top:15px; color:#94a3b8; font-weight:700; cursor:pointer">Voltar / Cancelar</button>
+            <input type="text" id="f-client" placeholder="Cliente">
+            <input type="text" id="f-host" placeholder="Host">
+            <button class="btn-main" style="width:100%" onclick="save()">
+                <span>Salvar</span><div class="spinner" id="spin-save"></div>
+            </button>
+            <button onclick="closeMod()" style="width:100%; border:none; background:none; margin-top:10px; cursor:pointer">Cancelar</button>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyoRd4TELlnmx7Hlkj2xzzpYdgWFvY3QJk9SBHmxJOv1EktysHAVofKX-yACC4nETLX/exec"; 
-        let user = null; let room = 1; let meetingsData = [];
+        const API = "https://script.google.com/macros/s/AKfycbyoRd4TELlnmx7Hlkj2xzzpYdgWFvY3QJk9SBHmxJOv1EktysHAVofKX-yACC4nETLX/exec";
+        let user = null; let room = 1; let mData = [];
 
         window.onload = () => {
-            const saved = localStorage.getItem('v_user') || sessionStorage.getItem('v_user');
-            if(saved) { user = JSON.parse(saved); startApp(); }
+            const saved = sessionStorage.getItem('v_user');
+            if(saved) { user = JSON.parse(saved); start(); }
             lucide.createIcons();
         };
 
-        function toggleAuth(showSignup) {
-            document.getElementById('box-login').style.display = showSignup ? 'none' : 'block';
-            document.getElementById('box-signup').style.display = showSignup ? 'block' : 'none';
-        }
+        function toggleAuth(s) { document.getElementById('box-login').style.display=s?'none':'block'; document.getElementById('box-signup').style.display=s?'block':'none'; }
 
         async function handleAuth(mode) {
+            const spin = document.getElementById(mode === 'login' ? 'spin-login' : 'spin-signup');
+            spin.style.display = 'inline-block';
             if(mode === 'login') {
                 const e = document.getElementById('l-email').value.toLowerCase().trim();
                 const p = document.getElementById('l-pass').value;
-                if(!e || !p) return alert("Preencha e-mail e senha.");
-                
-                const resp = await fetch(`${API_URL}?action=login_verify&email=${e}&pass=${p}`);
-                const txt = await resp.text();
-                if(txt === "Erro") return alert("Acesso negado. Verifique os dados.");
-                
-                user = JSON.parse(txt); user.email = e;
-                (document.getElementById('l-remember').checked ? localStorage : sessionStorage).setItem('v_user', JSON.stringify(user));
-                startApp();
+                const r = await fetch(`${API}?action=login_verify&email=${e}&pass=${p}`);
+                const res = await r.text();
+                spin.style.display = 'none';
+                if(res === "Erro") return alert("Erro no login");
+                user = JSON.parse(res); user.email = e;
+                sessionStorage.setItem('v_user', JSON.stringify(user));
+                start();
             } else {
                 const n = document.getElementById('s-name').value;
                 const e = document.getElementById('s-email').value.toLowerCase().trim();
                 const d = document.getElementById('s-dept').value;
                 const p = document.getElementById('s-pass').value;
-                if(!n || !e || !d || !p) return alert("Preencha todos os campos do cadastro.");
-                
-                const resp = await fetch(API_URL, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:d, pass:p})});
-                const resTxt = await resp.text();
-                if(resTxt === "Sucesso") { alert("Cadastro realizado! Faça seu login."); toggleAuth(false); } else alert(resTxt);
+                const r = await fetch(API, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:d, pass:p})});
+                spin.style.display = 'none';
+                alert(await r.text()); toggleAuth(false);
             }
         }
 
-        function startApp() {
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('user-display').innerText = `${user.dept} | ${user.name}`;
-            loadData();
-        }
-
-        async function loadData() {
-            const r = await fetch(API_URL);
-            meetingsData = await r.json();
-            render();
-        }
+        function start() { document.getElementById('auth-screen').style.display = 'none'; document.getElementById('user-display').innerText = user.name; load(); }
+        async function load() { const r = await fetch(API); mData = await r.json(); render(); }
 
         function render() {
             const list = document.getElementById('list');
             list.innerHTML = "";
-            const today = new Date().toISOString().split('T')[0];
-            const filtered = meetingsData.filter(m => String(m.ROOM) === String(room) && m.DATE.split('T')[0] >= today);
-
-            if(filtered.length === 0) {
-                list.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:100px 0; color:#94a3b8"><i data-lucide="calendar-off" size="60" style="margin-bottom:15px"></i><p style="font-weight:700">Nenhum agendamento futuro encontrado.</p></div>`;
-            } else {
-                filtered.forEach(m => {
-                    const sector = m.DEPT ? m.DEPT.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default';
-                    const isOwner = m.CREATEDBY === user.email;
-                    const div = document.createElement('div');
-                    div.className = `card sector-${sector}`;
-                    div.innerHTML = `
-                        <div class="card-header"><i data-lucide="clock" size="20"></i> <span>${m.START} - ${m.END}</span></div>
-                        <div class="info-row"><i data-lucide="calendar" size="18" color="#94a3b8"></i> <div><span class="info-label">Data</span><div class="info-value">${m.DATE.split('T')[0].split('-').reverse().join('/')}</div></div></div>
-                        <div class="info-row"><i data-lucide="briefcase" size="18" color="#94a3b8"></i> <div><span class="info-label">Cliente / Assunto</span><div class="info-value">${m.CLIENT}</div></div></div>
-                        <div class="info-row"><i data-lucide="user-check" size="18" color="#94a3b8"></i> <div><span class="info-label">Host Responsável</span><div class="info-value">${m.HOST}</div></div></div>
-                        ${isOwner ? `<div class="actions">
-                            <button class="act-btn edit-btn" onclick="editEvent('${m.ID}')"><i data-lucide="pencil" size="16"></i></button>
-                            <button class="act-btn del-btn" onclick="deleteEvent('${m.ID}')"><i data-lucide="trash-2" size="16"></i></button>
-                        </div>` : ''}
-                    `;
-                    list.appendChild(div);
-                });
-            }
+            const filtered = mData.filter(m => String(m.ROOM) === String(room));
+            if(!filtered.length) list.innerHTML = "<p>Sem reuniões.</p>";
+            filtered.forEach(m => {
+                const sector = m.DEPT ? m.DEPT.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default';
+                const isMe = m.CREATEDBY === user.email;
+                const div = document.createElement('div');
+                div.className = `card sector-${sector}`;
+                div.innerHTML = `
+                    <div style="font-weight:800; color:var(--primary)">${m.START} - ${m.END}</div>
+                    <div style="font-size:0.9rem; margin-top:5px"><b>Cliente:</b> ${m.CLIENT}</div>
+                    <div style="font-size:0.9rem"><b>Host:</b> ${m.HOST}</div>
+                    ${isMe ? `<div class="actions">
+                        <button class="act-btn edit-btn" onclick="editEvent('${m.ID}')"><i data-lucide="pencil" size="14"></i></button>
+                        <button class="act-btn del-btn" onclick="deleteEvent('${m.ID}')"><i data-lucide="trash-2" size="14"></i></button>
+                    </div>` : ''}
+                `;
+                list.appendChild(div);
+            });
             lucide.createIcons();
         }
 
         async function save() {
-            const dVal = document.getElementById('f-date').value;
-            if(!dVal) return alert("Selecione uma data.");
-            if(dVal < new Date().toISOString().split('T')[0]) return alert("Atenção: Não é possível agendar no passado.");
-
+            document.getElementById('spin-save').style.display = 'inline-block';
             const entry = {
                 action: document.getElementById('f-id').value ? 'edit' : 'create',
                 id: document.getElementById('f-id').value || 'ID-'+Date.now(),
-                room, 
-                date: dVal,
+                room, date: document.getElementById('f-date').value,
                 start: document.getElementById('f-start').value,
                 end: document.getElementById('f-end').value,
                 client: document.getElementById('f-client').value,
                 host: document.getElementById('f-host').value,
-                createdBy: user.email,
-                dept: user.dept
+                createdBy: user.email, dept: user.dept
             };
-            
-            if(!entry.start || !entry.end || !entry.client) return alert("Preencha todos os campos.");
-            
-            await fetch(API_URL, {method:'POST', body:new URLSearchParams(entry)});
-            closeMod(); loadData();
+            await fetch(API, {method:'POST', body:new URLSearchParams(entry)});
+            document.getElementById('spin-save').style.display = 'none';
+            closeMod(); load();
         }
 
         function editEvent(id) {
-            const m = meetingsData.find(x => x.ID === id);
-            document.getElementById('modal-title').innerText = "Editar Reunião";
+            const m = mData.find(x => x.ID === id);
             document.getElementById('f-id').value = m.ID;
             document.getElementById('f-date').value = m.DATE.split('T')[0];
             document.getElementById('f-start').value = m.START;
@@ -270,33 +205,10 @@
             document.getElementById('overlay').style.display = 'flex';
         }
 
-        async function deleteEvent(id) {
-            if(confirm("Deseja realmente excluir este agendamento?")) {
-                await fetch(API_URL, {method:'POST', body:new URLSearchParams({action:'delete', id: id})});
-                loadData();
-            }
-        }
-
-        function openMod() { 
-            document.getElementById('modal-title').innerText = "Novo Agendamento";
-            document.getElementById('f-id').value = ""; 
-            document.getElementById('f-date').value = "";
-            document.getElementById('f-start').value = "";
-            document.getElementById('f-end').value = "";
-            document.getElementById('f-client').value = "";
-            document.getElementById('f-host').value = user.name;
-            document.getElementById('overlay').style.display = 'flex'; 
-        }
-
+        async function deleteEvent(id) { if(confirm("Excluir?")) { await fetch(API, {method:'POST', body:new URLSearchParams({action:'delete', id})}); load(); } }
+        function openMod() { document.getElementById('f-id').value=""; document.getElementById('overlay').style.display='flex'; }
         function closeMod() { document.getElementById('overlay').style.display = 'none'; }
-        function logout() { localStorage.clear(); sessionStorage.clear(); window.location.reload(); }
-        function setRoom(n) { 
-            room = n; 
-            document.getElementById('room-title').innerText = `Sala 0${n}`; 
-            document.getElementById('t1').classList.toggle('active', n==1); 
-            document.getElementById('t2').classList.toggle('active', n==2); 
-            render(); 
-        }
+        function setRoom(n) { room=n; render(); }
     </script>
 </body>
 </html>
