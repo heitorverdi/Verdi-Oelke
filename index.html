@@ -154,7 +154,8 @@
     </div>
 
     <script>
-        const URL = "SUA_URL_AQUI"; // <--- ATUALIZE AQUI
+        const URL = "https://script.google.com/macros/s/AKfycbyLQlU9v824Xm6TDnRChMeGD0I4i8lrNyQZ1Isr4Gz0_mPfoBju-C62tfeit246KkJc/exec
+            "; // <--- ATUALIZE AQUI
         let room = 1, user = null, data = [];
 
         window.onload = () => {
@@ -169,23 +170,60 @@
             document.getElementById('box-login').style.display = document.getElementById('box-login').style.display === 'none' ? 'block' : 'none';
         }
 
-        async function handleAuth(mode) {
-            const domain = "@verdicontadores.com.br";
-            if(mode==='signup'){
-                const n=document.getElementById('s-name').value, e=document.getElementById('s-email').value.toLowerCase().trim(), s=document.getElementById('s-dept').value, p=document.getElementById('s-pass').value;
-                if(!n||!e||!p) return alert("Preencha tudo.");
-                if(!e.endsWith(domain) && e !== "heitor.verdi@gmail.com") return alert("Use e-mail corporativo.");
-                await fetch(URL, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p}), mode:'no-cors'});
-                alert("Cadastrado! Faça login."); toggleAuth();
+async function handleAuth(mode) {
+    const domain = "@verdicontadores.com.br";
+    if(mode === 'signup') {
+        const n = document.getElementById('s-name').value, 
+              e = document.getElementById('s-email').value.toLowerCase().trim(), 
+              s = document.getElementById('s-dept').value, 
+              p = document.getElementById('s-pass').value;
+              
+        if(!n || !e || !p) return alert("Preencha todos os campos.");
+        if(!e.endsWith(domain) && e !== "heitor.verdi@gmail.com") return alert("Use e-mail corporativo.");
+
+        // Adicionamos um FormData para que o Apps Script receba o POST corretamente
+        const formData = new URLSearchParams({action:'signup', user:n, email:e, dept:s, pass:p});
+        
+        try {
+            const response = await fetch(URL, { method: 'POST', body: formData });
+            const result = await response.text();
+            
+            if(result === "Email ja existe") {
+                alert("Este e-mail já está cadastrado!");
             } else {
-                const e=document.getElementById('l-email').value.toLowerCase().trim(), p=document.getElementById('l-pass').value;
-                document.getElementById('btn-login').innerText = "Entrando...";
-                const resp = await fetch(URL+"?action=login_verify&email="+e+"&pass="+p);
-                const resTxt = await resp.text();
-                if(resTxt==="Erro") { alert("Dados incorretos."); document.getElementById('btn-login').innerText="Entrar"; }
-                else { user=JSON.parse(resTxt); user.email=e; localStorage.setItem('v_user', JSON.stringify(user)); start(); }
+                alert("Cadastro realizado com sucesso!");
+                toggleAuth();
             }
+        } catch(err) {
+            alert("Erro ao cadastrar. Verifique a URL do Script.");
         }
+    } else {
+        // LOGIN
+        const e = document.getElementById('l-email').value.toLowerCase().trim(), 
+              p = document.getElementById('l-pass').value;
+        
+        const btn = document.getElementById('btn-login');
+        btn.innerText = "Entrando...";
+        
+        try {
+            const resp = await fetch(`${URL}?action=login_verify&email=${e}&pass=${p}`);
+            const resTxt = await resp.text();
+            
+            if(resTxt === "Erro" || resTxt.includes("Erro:")) { 
+                alert("E-mail ou senha incorretos."); 
+                btn.innerText = "Entrar"; 
+            } else {
+                user = JSON.parse(resTxt); 
+                user.email = e; 
+                localStorage.setItem('v_user', JSON.stringify(user)); 
+                start(); 
+            }
+        } catch(err) {
+            alert("Erro de conexão com o servidor.");
+            btn.innerText = "Entrar";
+        }
+    }
+}
 
         function start() { 
             document.getElementById('auth-screen').style.display='none'; 
@@ -293,3 +331,4 @@
     </script>
 </body>
 </html>
+
