@@ -10,54 +10,52 @@
     <style>
         :root { 
             --primary: #064e3b; --gold: #c5a059; --bg: #f8fafc; --text: #0f172a; 
-            --fiscal: #2563eb; --contabil: #4f46e5; --comercial: #10b981; 
-            --pessoal: #f59e0b; --societario: #db2777;
+            --fiscal: #0052FF; --contabil: #6D28D9; --comercial: #10B981; 
+            --pessoal: #F59E0B; --societario: #EC4899;
         }
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s ease; }
         body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; overflow: hidden; }
         
-        /* LOADING SPINNER */
         .spinner { display: none; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; margin-left: 10px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* AUTH */
         #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .auth-box { background: white; padding: 40px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; }
+        .auth-box a { color: var(--gold); text-decoration: none; font-weight: 700; }
         
-        /* HEADER & TABS */
         header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
+        .user-tag { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; }
+        .logout-btn { color: #fda4af; cursor: pointer; font-weight: 800; border: none; background: none; font-size: 0.75rem; }
+
         .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
         .tab { padding: 20px 0; cursor: pointer; font-weight: 700; color: #94a3b8; font-size: 0.8rem; border-bottom: 3px solid transparent; }
         .tab.active { color: var(--primary); border-bottom-color: var(--gold); }
         
         .content { max-width: 1200px; margin: auto; padding: 20px; height: calc(100vh - 200px); overflow-y: auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
-        /* CARDS */
-        .card { background: white; border-radius: 16px; padding: 20px; position: relative; border-left: 8px solid #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card-header { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--primary); border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 12px; }
-        .info-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
-        .info-label { font-size: 0.65rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
-        .info-value { font-size: 0.9rem; font-weight: 600; }
+        /* CARDS QUADRADOS E ROBUSTOS */
+        .card { background: white; border-radius: 20px; padding: 25px; position: relative; border-left: 10px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-height: 220px; }
+        .card-header { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--primary); font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+        .info-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+        .info-label { font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
+        .info-value { font-size: 0.95rem; font-weight: 600; }
 
-        /* BOTOES AÇÃO */
         .actions { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; }
-        .act-btn { border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: #64748b; }
+        .act-btn { border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; background: #f8fafc; border: 1px solid #e2e8f0; }
         .del-btn { color: #ef4444; }
         .edit-btn { color: #0ea5e9; }
 
-        /* LEGENDA */
-        .legend-box { position: fixed; bottom: 20px; left: 20px; background: white; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 0.65rem; font-weight: 700; }
-        .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-        .dot { width: 10px; height: 10px; border-radius: 2px; }
+        .legend-box { position: fixed; bottom: 20px; left: 20px; background: white; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 0.7rem; font-weight: 800; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+        .dot { width: 12px; height: 12px; border-radius: 3px; }
 
-        /* MODAL */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
-        .modal { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
-        input, select { width: 100%; padding: 12px; margin: 5px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 10px; }
-        .btn-main { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
+        .modal { background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 12px; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* CORES SETORES */
+        /* CORES DOS SETORES */
         .sector-fiscal { border-left-color: var(--fiscal) !important; }
         .sector-contabil { border-left-color: var(--contabil) !important; }
         .sector-comercial { border-left-color: var(--comercial) !important; }
@@ -72,14 +70,13 @@
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:140px; filter:brightness(0); margin-bottom:20px">
             <input type="email" id="l-email" placeholder="E-mail">
             <input type="password" id="l-pass" placeholder="Senha">
-            <button class="btn-main" style="width:100%" id="btn-login" onclick="handleAuth('login')">
+            <button class="btn-main" style="width:100%" onclick="handleAuth('login')">
                 <span>Entrar</span><div class="spinner" id="spin-login"></div>
             </button>
-            <p style="font-size:0.8rem; margin-top:20px">Novo? <a href="#" onclick="toggleAuth(true)">Cadastre-se</a></p>
+            <p style="font-size:0.8rem; margin-top:20px">Novo aqui? <a href="#" onclick="toggleAuth(true)">Cadastre-se</a></p>
         </div>
-
         <div class="auth-box" id="box-signup" style="display:none">
-            <h3 style="margin-top:0">Cadastro</h3>
+            <h2>Cadastro</h2>
             <input type="text" id="s-name" placeholder="Nome Completo">
             <input type="email" id="s-email" placeholder="E-mail">
             <select id="s-dept">
@@ -87,18 +84,21 @@
                 <option>Fiscal</option><option>Contábil</option><option>Comercial</option><option>Pessoal</option><option>Societário</option>
             </select>
             <input type="password" id="s-pass" placeholder="Senha">
-            <button class="btn-main" style="width:100%" id="btn-signup" onclick="handleAuth('signup')">
+            <button class="btn-main" style="width:100%" onclick="handleAuth('signup')">
                 <span>Cadastrar</span><div class="spinner" id="spin-signup"></div>
             </button>
-            <p style="font-size:0.8rem; margin-top:20px">Já tem conta? <a href="#" onclick="toggleAuth(false)">Entrar</a></p>
+            <p style="font-size:0.8rem; margin-top:20px"><a href="#" onclick="toggleAuth(false)">Voltar ao Login</a></p>
         </div>
     </div>
 
     <header>
-        <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="height:35px; filter:brightness(0) invert(1);">
-        <div style="display:flex; align-items:center; gap:15px;">
-            <div style="background:rgba(255,255,255,0.1); padding:8px 15px; border-radius:50px; font-size:0.8rem;"><span id="user-display">Usuário</span></div>
-            <button onclick="logout()" style="background:none; border:none; color:#fda4af; cursor:pointer; font-weight:700;">SAIR</button>
+        <div style="display:flex; align-items:center; gap:20px;">
+            <button onclick="logout()" class="logout-btn">SAIR</button>
+            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="height:35px; filter:brightness(0) invert(1);">
+        </div>
+        <div class="user-tag" id="tag-ui">
+            <span id="u-dept" style="margin-right:10px; border-right:1px solid rgba(255,255,255,0.3); padding-right:10px"></span>
+            <span id="u-name"></span>
         </div>
     </header>
 
@@ -134,10 +134,10 @@
             </div>
             <label class="info-label">Cliente / Assunto</label><input type="text" id="f-client">
             <label class="info-label">Host Responsável</label><input type="text" id="f-host">
-            <button class="btn-main" style="width:100%" id="btn-save" onclick="save()">
+            <button class="btn-main" style="width:100%" onclick="save()">
                 <span>Confirmar</span><div class="spinner" id="spin-save"></div>
             </button>
-            <button onclick="closeMod()" style="width:100%; background:none; border:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
+            <button onclick="closeMod()" style="width:100%; border:none; background:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
         </div>
     </div>
 
@@ -146,20 +146,20 @@
         let user = null; let room = 1; let mData = [];
 
         window.onload = () => {
-            const saved = localStorage.getItem('v_user') || sessionStorage.getItem('v_user');
+            const saved = sessionStorage.getItem('v_user');
             if(saved) { user = JSON.parse(saved); start(); }
             lucide.createIcons();
         };
 
         function toggleAuth(s) { document.getElementById('box-login').style.display=s?'none':'block'; document.getElementById('box-signup').style.display=s?'block':'none'; }
-        
+
         async function handleAuth(mode) {
             const spin = document.getElementById(mode === 'login' ? 'spin-login' : 'spin-signup');
             spin.style.display = 'inline-block';
+            const e = document.getElementById(mode === 'login' ? 'l-email' : 's-email').value.toLowerCase().trim();
+            const p = document.getElementById(mode === 'login' ? 'l-pass' : 's-pass').value;
 
             if(mode === 'login') {
-                const e = document.getElementById('l-email').value.toLowerCase().trim();
-                const p = document.getElementById('l-pass').value;
                 const r = await fetch(`${API}?action=login_verify&email=${e}&pass=${p}`);
                 const res = await r.text();
                 spin.style.display = 'none';
@@ -169,20 +169,19 @@
                 start();
             } else {
                 const n = document.getElementById('s-name').value;
-                const e = document.getElementById('s-email').value.toLowerCase().trim();
                 const d = document.getElementById('s-dept').value;
-                const p = document.getElementById('s-pass').value;
-                if(!n || !e || !d || !p) { spin.style.display = 'none'; return alert("Preencha tudo"); }
                 const res = await fetch(API, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:d, pass:p})});
                 spin.style.display = 'none';
-                const txt = await res.text();
-                if(txt === "Sucesso") { alert("Cadastrado!"); toggleAuth(false); } else alert(txt);
+                alert(await res.text()); toggleAuth(false);
             }
         }
 
         function start() {
             document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('user-display').innerText = `${user.dept} | ${user.name}`;
+            document.getElementById('u-name').innerText = user.name;
+            document.getElementById('u-dept').innerText = user.dept;
+            const colors = { 'Fiscal': 'var(--fiscal)', 'Contábil': 'var(--contabil)', 'Comercial': 'var(--comercial)', 'Pessoal': 'var(--pessoal)', 'Societário': 'var(--societario)' };
+            document.getElementById('tag-ui').style.color = colors[user.dept] || 'white';
             load();
         }
 
@@ -199,19 +198,20 @@
             const filtered = mData.filter(m => String(m.ROOM) === String(room) && m.DATE.split('T')[0] >= today);
 
             if(!filtered.length) {
-                list.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:#94a3b8"><p>Nenhuma reunião agendada.</p></div>`;
+                list.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; background:white; border-radius:20px; border:2px dashed #cbd5e1; color:#94a3b8">
+                    <p>Nenhum agendamento ativo para esta sala no momento.</p>
+                </div>`;
             } else {
-                filtered.forEach(m => {
-                    // Normalização para as cores funcionarem mesmo com acentos
+                filtered.sort((a,b) => a.START.localeCompare(b.START)).forEach(m => {
                     const sectorClass = m.DEPT ? m.DEPT.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default';
                     const isOwner = m.CREATEDBY === user.email;
                     const div = document.createElement('div');
                     div.className = `card sector-${sectorClass}`;
                     div.innerHTML = `
                         <div class="card-header"><i data-lucide="clock" size="18"></i> <span>${m.START} - ${m.END}</span></div>
-                        <div class="info-row"><i data-lucide="calendar" size="16"></i> <div><span class="info-label">Data</span><div class="info-value">${m.DATE.split('T')[0].split('-').reverse().join('/')}</div></div></div>
-                        <div class="info-row"><i data-lucide="briefcase" size="16"></i> <div><span class="info-label">Cliente</span><div class="info-value">${m.CLIENT}</div></div></div>
-                        <div class="info-row"><i data-lucide="user-check" size="16"></i> <div><span class="info-label">Host</span><div class="info-value">${m.HOST}</div></div></div>
+                        <div class="info-row"><i data-lucide="calendar" size="16" style="opacity:0.6"></i> <div><span class="info-label">Data</span><div class="info-value">${m.DATE.split('T')[0].split('-').reverse().join('/')}</div></div></div>
+                        <div class="info-row"><i data-lucide="briefcase" size="16" style="opacity:0.6"></i> <div><span class="info-label">Cliente</span><div class="info-value">${m.CLIENT}</div></div></div>
+                        <div class="info-row"><i data-lucide="user-check" size="16" style="opacity:0.6"></i> <div><span class="info-label">Host</span><div class="info-value">${m.HOST}</div></div></div>
                         ${isOwner ? `<div class="actions">
                             <button class="act-btn edit-btn" onclick="editEvent('${m.ID}')"><i data-lucide="pencil" size="14"></i></button>
                             <button class="act-btn del-btn" onclick="deleteEvent('${m.ID}')"><i data-lucide="trash-2" size="14"></i></button>
@@ -224,29 +224,34 @@
         }
 
         async function save() {
-            const spin = document.getElementById('spin-save');
-            const dVal = document.getElementById('f-date').value;
-            if(dVal < new Date().toISOString().split('T')[0]) return alert("Data já passou!");
+            const id = document.getElementById('f-id').value;
+            const date = document.getElementById('f-date').value;
+            const start = document.getElementById('f-start').value;
+            const end = document.getElementById('f-end').value;
+
+            if(date < new Date().toISOString().split('T')[0]) return alert("Data já passou!");
             
-            spin.style.display = 'inline-block';
-            const entry = {
-                action: document.getElementById('f-id').value ? 'edit' : 'create',
-                id: document.getElementById('f-id').value || 'ID-'+Date.now(),
-                room, date: dVal,
-                start: document.getElementById('f-start').value,
-                end: document.getElementById('f-end').value,
-                client: document.getElementById('f-client').value,
-                host: document.getElementById('f-host').value,
+            // Validação de Conflito Local
+            const conflict = mData.some(m => String(m.ROOM) === String(room) && m.DATE.split('T')[0] === date && m.ID !== id && 
+                ((start >= m.START && start < m.END) || (end > m.START && end <= m.END)));
+            
+            if(conflict) return alert("Horário já ocupado nesta sala!");
+
+            document.getElementById('spin-save').style.display = 'inline-block';
+            const body = new URLSearchParams({
+                action: id ? 'edit' : 'create', id: id || 'ID-'+Date.now(), room, date, start, end,
+                client: document.getElementById('f-client').value, host: document.getElementById('f-host').value,
                 createdBy: user.email, dept: user.dept
-            };
-            await fetch(API, {method:'POST', body:new URLSearchParams(entry)});
-            spin.style.display = 'none';
+            });
+
+            await fetch(API, {method:'POST', body});
+            document.getElementById('spin-save').style.display = 'none';
             closeMod(); load();
         }
 
         function editEvent(id) {
             const m = mData.find(x => x.ID === id);
-            document.getElementById('modal-title').innerText = "Editar Reunião";
+            document.getElementById('modal-title').innerText = "Editar";
             document.getElementById('f-id').value = m.ID;
             document.getElementById('f-date').value = m.DATE.split('T')[0];
             document.getElementById('f-start').value = m.START;
@@ -256,10 +261,29 @@
             document.getElementById('overlay').style.display = 'flex';
         }
 
-        async function deleteEvent(id) { if(confirm("Excluir agendamento?")) { await fetch(API, {method:'POST', body:new URLSearchParams({action:'delete', id})}); load(); } }
-        function openMod() { document.getElementById('modal-title').innerText="Agendar"; document.getElementById('f-id').value=""; document.getElementById('f-host').value=user.name; document.getElementById('overlay').style.display='flex'; }
+        async function deleteEvent(id) { if(confirm("Excluir?")) { await fetch(API, {method:'POST', body:new URLSearchParams({action:'delete', id})}); load(); } }
+        
+        function openMod() { 
+            document.getElementById('modal-title').innerText="Agendar"; 
+            document.getElementById('f-id').value=""; 
+            document.getElementById('f-date').value=""; 
+            document.getElementById('f-start').value=""; 
+            document.getElementById('f-end').value=""; 
+            document.getElementById('f-client').value=""; 
+            document.getElementById('f-host').value=user.name; 
+            document.getElementById('overlay').style.display='flex'; 
+        }
+        
         function closeMod() { document.getElementById('overlay').style.display = 'none'; }
-        function setRoom(n) { room=n; document.getElementById('room-title').innerText=`Sala 0${n}`; document.getElementById('t1').classList.toggle('active', n==1); document.getElementById('t2').classList.toggle('active', n==2); render(); }
+        
+        function setRoom(n) { 
+            room = n; 
+            document.getElementById('room-title').innerText=`Sala 0${n}`; 
+            document.getElementById('t1').classList.toggle('active', n==1); 
+            document.getElementById('t2').classList.toggle('active', n==2); 
+            render(); 
+        }
+        
         function logout() { sessionStorage.clear(); window.location.reload(); }
     </script>
 </body>
