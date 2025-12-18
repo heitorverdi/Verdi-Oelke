@@ -19,7 +19,6 @@
         .spinner { display: none; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; margin-left: 10px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* LOADING SOBREPOSTO PARA ATUALIZAÇÕES */
         #global-loader { display: none; position: fixed; inset: 0; background: rgba(248, 250, 252, 0.7); z-index: 3000; align-items: center; justify-content: center; flex-direction: column; gap: 10px; }
         .spinner-dark { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
 
@@ -28,7 +27,9 @@
         .auth-box a { color: var(--gold); text-decoration: none; font-weight: 700; }
         
         header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
-        .user-tag { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; }
+        /* AJUSTE: Cores em branco para o nome e setor no topo */
+        .user-tag { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; color: white !important; }
+        .user-tag span { color: white !important; }
         .logout-btn { color: #fda4af; cursor: pointer; font-weight: 800; border: none; background: none; font-size: 0.75rem; margin-left: 15px; padding-left: 15px; border-left: 1px solid rgba(255,255,255,0.3); }
 
         .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
@@ -58,6 +59,7 @@
         input, select { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 12px; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
+        /* Classes de cores das bordas laterais baseadas no setor */
         .sector-fiscal { border-left-color: var(--fiscal) !important; }
         .sector-contabil { border-left-color: var(--contabil) !important; }
         .sector-comercial { border-left-color: var(--comercial) !important; }
@@ -85,7 +87,7 @@
         <div class="auth-box" id="box-signup" style="display:none">
             <h2>Cadastro</h2>
             <input type="text" id="s-name" placeholder="Nome Completo">
-            <input type="email" id="s-email" placeholder="E-mail">
+            <input type="email" id="s-email" placeholder="E-mail @verdicontadores.com.br">
             <select id="s-dept">
                 <option value="">Selecione seu Setor</option>
                 <option>Fiscal</option><option>Contábil</option><option>Comercial</option><option>Pessoal</option><option>Societário</option>
@@ -160,9 +162,17 @@
 
         async function handleAuth(mode) {
             const spin = document.getElementById(mode === 'login' ? 'spin-login' : 'spin-signup');
-            spin.style.display = 'inline-block';
             const e = document.getElementById(mode === 'login' ? 'l-email' : 's-email').value.toLowerCase().trim();
             const p = document.getElementById(mode === 'login' ? 'l-pass' : 's-pass').value;
+
+            // FILTRO DE EMAIL: Permite @verdicontadores.com.br OU o seu email específico
+            const isAuthorized = e.endsWith('@verdicontadores.com.br') || e === 'heitor.verdi@gmail.com';
+            
+            if(!isAuthorized) {
+                return alert("Acesso restrito para e-mails @verdicontadores.com.br");
+            }
+
+            spin.style.display = 'inline-block';
 
             if(mode === 'login') {
                 const r = await fetch(`${API}?action=login_verify&email=${e}&pass=${p}`);
@@ -175,6 +185,10 @@
             } else {
                 const n = document.getElementById('s-name').value;
                 const d = document.getElementById('s-dept').value;
+                if(!n || !d || !p) {
+                    spin.style.display = 'none';
+                    return alert("Preencha todos os campos");
+                }
                 const res = await fetch(API, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:d, pass:p})});
                 spin.style.display = 'none';
                 alert(await res.text()); toggleAuth(false);
@@ -185,19 +199,17 @@
             document.getElementById('auth-screen').style.display = 'none';
             document.getElementById('u-name').innerText = user.name;
             document.getElementById('u-dept').innerText = user.dept;
-            const colors = { 'Fiscal': 'var(--fiscal)', 'Contábil': 'var(--contabil)', 'Comercial': 'var(--comercial)', 'Pessoal': 'var(--pessoal)', 'Societário': 'var(--societario)' };
-            document.getElementById('tag-ui').style.color = colors[user.dept] || 'white';
             load();
         }
 
         async function load() {
-            document.getElementById('global-loader').style.display = 'flex'; // MOSTRA LOADING
+            document.getElementById('global-loader').style.display = 'flex';
             try {
                 const r = await fetch(API);
                 mData = await r.json();
                 render();
             } finally {
-                document.getElementById('global-loader').style.display = 'none'; // ESCONDE LOADING
+                document.getElementById('global-loader').style.display = 'none';
             }
         }
 
@@ -213,6 +225,7 @@
                 </div>`;
             } else {
                 filtered.sort((a,b) => a.START.localeCompare(b.START)).forEach(m => {
+                    // AJUSTE: Normalização do setor para aplicar a classe de cor da borda
                     const sectorClass = m.DEPT ? m.DEPT.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default';
                     const isOwner = m.CREATEDBY === user.email;
                     const div = document.createElement('div');
@@ -256,7 +269,7 @@
             await fetch(API, {method:'POST', body});
             document.getElementById('spin-save').style.display = 'none';
             closeMod(); 
-            await load(); // AGUARDA O CARREGAMENTO COM O LOADING NA TELA
+            await load();
         }
 
         function editEvent(id) {
