@@ -19,13 +19,17 @@
         .spinner { display: none; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; margin-left: 10px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* LOADING SOBREPOSTO PARA ATUALIZAÇÕES */
+        #global-loader { display: none; position: fixed; inset: 0; background: rgba(248, 250, 252, 0.7); z-index: 3000; align-items: center; justify-content: center; flex-direction: column; gap: 10px; }
+        .spinner-dark { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+
         #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .auth-box { background: white; padding: 40px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; }
         .auth-box a { color: var(--gold); text-decoration: none; font-weight: 700; }
         
         header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
         .user-tag { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; }
-        .logout-btn { color: #fda4af; cursor: pointer; font-weight: 800; border: none; background: none; font-size: 0.75rem; }
+        .logout-btn { color: #fda4af; cursor: pointer; font-weight: 800; border: none; background: none; font-size: 0.75rem; margin-left: 15px; padding-left: 15px; border-left: 1px solid rgba(255,255,255,0.3); }
 
         .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
         .tab { padding: 20px 0; cursor: pointer; font-weight: 700; color: #94a3b8; font-size: 0.8rem; border-bottom: 3px solid transparent; }
@@ -34,7 +38,6 @@
         .content { max-width: 1200px; margin: auto; padding: 20px; height: calc(100vh - 200px); overflow-y: auto; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
-        /* CARDS QUADRADOS E ROBUSTOS */
         .card { background: white; border-radius: 20px; padding: 25px; position: relative; border-left: 10px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-height: 220px; }
         .card-header { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--primary); font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
         .info-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
@@ -55,7 +58,6 @@
         input, select { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 12px; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* CORES DOS SETORES */
         .sector-fiscal { border-left-color: var(--fiscal) !important; }
         .sector-contabil { border-left-color: var(--contabil) !important; }
         .sector-comercial { border-left-color: var(--comercial) !important; }
@@ -64,6 +66,11 @@
     </style>
 </head>
 <body>
+
+    <div id="global-loader">
+        <div class="spinner-dark"></div>
+        <span style="font-weight: 700; color: var(--primary); font-size: 0.9rem;">Atualizando reuniões...</span>
+    </div>
 
     <div id="auth-screen">
         <div class="auth-box" id="box-login">
@@ -92,13 +99,11 @@
     </div>
 
     <header>
-        <div style="display:flex; align-items:center; gap:20px;">
-            <button onclick="logout()" class="logout-btn">SAIR</button>
-            <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="height:35px; filter:brightness(0) invert(1);">
-        </div>
+        <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="height:35px; filter:brightness(0) invert(1);">
         <div class="user-tag" id="tag-ui">
             <span id="u-dept" style="margin-right:10px; border-right:1px solid rgba(255,255,255,0.3); padding-right:10px"></span>
             <span id="u-name"></span>
+            <button onclick="logout()" class="logout-btn">SAIR</button>
         </div>
     </header>
 
@@ -186,9 +191,14 @@
         }
 
         async function load() {
-            const r = await fetch(API);
-            mData = await r.json();
-            render();
+            document.getElementById('global-loader').style.display = 'flex'; // MOSTRA LOADING
+            try {
+                const r = await fetch(API);
+                mData = await r.json();
+                render();
+            } finally {
+                document.getElementById('global-loader').style.display = 'none'; // ESCONDE LOADING
+            }
         }
 
         function render() {
@@ -231,7 +241,6 @@
 
             if(date < new Date().toISOString().split('T')[0]) return alert("Data já passou!");
             
-            // Validação de Conflito Local
             const conflict = mData.some(m => String(m.ROOM) === String(room) && m.DATE.split('T')[0] === date && m.ID !== id && 
                 ((start >= m.START && start < m.END) || (end > m.START && end <= m.END)));
             
@@ -246,7 +255,8 @@
 
             await fetch(API, {method:'POST', body});
             document.getElementById('spin-save').style.display = 'none';
-            closeMod(); load();
+            closeMod(); 
+            await load(); // AGUARDA O CARREGAMENTO COM O LOADING NA TELA
         }
 
         function editEvent(id) {
@@ -261,7 +271,12 @@
             document.getElementById('overlay').style.display = 'flex';
         }
 
-        async function deleteEvent(id) { if(confirm("Excluir?")) { await fetch(API, {method:'POST', body:new URLSearchParams({action:'delete', id})}); load(); } }
+        async function deleteEvent(id) { 
+            if(confirm("Excluir?")) { 
+                await fetch(API, {method:'POST', body:new URLSearchParams({action:'delete', id})}); 
+                await load(); 
+            } 
+        }
         
         function openMod() { 
             document.getElementById('modal-title').innerText="Agendar"; 
