@@ -27,7 +27,6 @@
         .auth-box a { color: var(--gold); text-decoration: none; font-weight: 700; }
         
         header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
-        /* AJUSTE: Cores em branco para o nome e setor no topo */
         .user-tag { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; color: white !important; }
         .user-tag span { color: white !important; }
         .logout-btn { color: #fda4af; cursor: pointer; font-weight: 800; border: none; background: none; font-size: 0.75rem; margin-left: 15px; padding-left: 15px; border-left: 1px solid rgba(255,255,255,0.3); }
@@ -59,7 +58,6 @@
         input, select { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 12px; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* Classes de cores das bordas laterais baseadas no setor */
         .sector-fiscal { border-left-color: var(--fiscal) !important; }
         .sector-contabil { border-left-color: var(--contabil) !important; }
         .sector-comercial { border-left-color: var(--comercial) !important; }
@@ -71,7 +69,7 @@
 
     <div id="global-loader">
         <div class="spinner-dark"></div>
-        <span style="font-weight: 700; color: var(--primary); font-size: 0.9rem;">Atualizando reuniões...</span>
+        <span style="font-weight: 700; color: var(--primary); font-size: 0.9rem;">Carregando...</span>
     </div>
 
     <div id="auth-screen">
@@ -87,7 +85,7 @@
         <div class="auth-box" id="box-signup" style="display:none">
             <h2>Cadastro</h2>
             <input type="text" id="s-name" placeholder="Nome Completo">
-            <input type="email" id="s-email" placeholder="E-mail @verdicontadores.com.br">
+            <input type="email" id="s-email" placeholder="E-mail Corporativo">
             <select id="s-dept">
                 <option value="">Selecione seu Setor</option>
                 <option>Fiscal</option><option>Contábil</option><option>Comercial</option><option>Pessoal</option><option>Societário</option>
@@ -165,11 +163,11 @@
             const e = document.getElementById(mode === 'login' ? 'l-email' : 's-email').value.toLowerCase().trim();
             const p = document.getElementById(mode === 'login' ? 'l-pass' : 's-pass').value;
 
-            // FILTRO DE EMAIL: Permite @verdicontadores.com.br OU o seu email específico
+            // VALIDAÇÃO INVISÍVEL (O domínio não aparece na tela)
             const isAuthorized = e.endsWith('@verdicontadores.com.br') || e === 'heitor.verdi@gmail.com';
             
             if(!isAuthorized) {
-                return alert("Acesso restrito para e-mails @verdicontadores.com.br");
+                return alert("E-mail não autorizado para este sistema.");
             }
 
             spin.style.display = 'inline-block';
@@ -185,10 +183,7 @@
             } else {
                 const n = document.getElementById('s-name').value;
                 const d = document.getElementById('s-dept').value;
-                if(!n || !d || !p) {
-                    spin.style.display = 'none';
-                    return alert("Preencha todos os campos");
-                }
+                if(!n || !d || !p) { spin.style.display = 'none'; return alert("Preencha todos os campos"); }
                 const res = await fetch(API, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:d, pass:p})});
                 spin.style.display = 'none';
                 alert(await res.text()); toggleAuth(false);
@@ -221,11 +216,11 @@
 
             if(!filtered.length) {
                 list.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; background:white; border-radius:20px; border:2px dashed #cbd5e1; color:#94a3b8">
-                    <p>Nenhum agendamento ativo para esta sala no momento.</p>
+                    <p>Nenhum agendamento ativo.</p>
                 </div>`;
             } else {
                 filtered.sort((a,b) => a.START.localeCompare(b.START)).forEach(m => {
-                    // AJUSTE: Normalização do setor para aplicar a classe de cor da borda
+                    // RESOLVE A COR DO CANTO BASEADO NO SETOR SALVO NA REUNIÃO
                     const sectorClass = m.DEPT ? m.DEPT.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : 'default';
                     const isOwner = m.CREATEDBY === user.email;
                     const div = document.createElement('div');
@@ -251,25 +246,19 @@
             const date = document.getElementById('f-date').value;
             const start = document.getElementById('f-start').value;
             const end = document.getElementById('f-end').value;
-
             if(date < new Date().toISOString().split('T')[0]) return alert("Data já passou!");
-            
             const conflict = mData.some(m => String(m.ROOM) === String(room) && m.DATE.split('T')[0] === date && m.ID !== id && 
                 ((start >= m.START && start < m.END) || (end > m.START && end <= m.END)));
-            
-            if(conflict) return alert("Horário já ocupado nesta sala!");
-
+            if(conflict) return alert("Horário já ocupado!");
             document.getElementById('spin-save').style.display = 'inline-block';
             const body = new URLSearchParams({
                 action: id ? 'edit' : 'create', id: id || 'ID-'+Date.now(), room, date, start, end,
                 client: document.getElementById('f-client').value, host: document.getElementById('f-host').value,
                 createdBy: user.email, dept: user.dept
             });
-
             await fetch(API, {method:'POST', body});
             document.getElementById('spin-save').style.display = 'none';
-            closeMod(); 
-            await load();
+            closeMod(); await load();
         }
 
         function editEvent(id) {
@@ -284,34 +273,10 @@
             document.getElementById('overlay').style.display = 'flex';
         }
 
-        async function deleteEvent(id) { 
-            if(confirm("Excluir?")) { 
-                await fetch(API, {method:'POST', body:new URLSearchParams({action:'delete', id})}); 
-                await load(); 
-            } 
-        }
-        
-        function openMod() { 
-            document.getElementById('modal-title').innerText="Agendar"; 
-            document.getElementById('f-id').value=""; 
-            document.getElementById('f-date').value=""; 
-            document.getElementById('f-start').value=""; 
-            document.getElementById('f-end').value=""; 
-            document.getElementById('f-client').value=""; 
-            document.getElementById('f-host').value=user.name; 
-            document.getElementById('overlay').style.display='flex'; 
-        }
-        
+        async function deleteEvent(id) { if(confirm("Excluir?")) { await fetch(API, {method:'POST', body:new URLSearchParams({action:'delete', id})}); await load(); } }
+        function openMod() { document.getElementById('modal-title').innerText="Agendar"; document.getElementById('f-id').value=""; document.getElementById('f-date').value=""; document.getElementById('f-start').value=""; document.getElementById('f-end').value=""; document.getElementById('f-client').value=""; document.getElementById('f-host').value=user.name; document.getElementById('overlay').style.display='flex'; }
         function closeMod() { document.getElementById('overlay').style.display = 'none'; }
-        
-        function setRoom(n) { 
-            room = n; 
-            document.getElementById('room-title').innerText=`Sala 0${n}`; 
-            document.getElementById('t1').classList.toggle('active', n==1); 
-            document.getElementById('t2').classList.toggle('active', n==2); 
-            render(); 
-        }
-        
+        function setRoom(n) { room = n; document.getElementById('room-title').innerText=`Sala 0${n}`; document.getElementById('t1').classList.toggle('active', n==1); document.getElementById('t2').classList.toggle('active', n==2); render(); }
         function logout() { sessionStorage.clear(); window.location.reload(); }
     </script>
 </body>
