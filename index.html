@@ -149,18 +149,33 @@
 
             if(!(e.endsWith('@verdicontadores.com.br') || e === 'heitor.verdi@gmail.com')) return alert("E-mail não autorizado.");
 
-            if(mode === 'login') {
-                const r = await fetch(`${API}?action=login_verify&email=${e}&pass=${p}`);
-                const res = await r.text();
-                if(res === "Erro") return alert("Dados incorretos.");
-                user = JSON.parse(res); user.email = e;
-                sessionStorage.setItem('v_user', JSON.stringify(user));
-                start();
-            } else {
-                const n = document.getElementById('s-name').value;
-                const d = document.getElementById('s-dept').value;
-                await fetch(API, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:d, pass:p})});
-                alert("Sucesso! Faça o login."); toggleAuth(false);
+            // ATIVA O LOADER
+            document.getElementById('global-loader').style.display = 'flex';
+
+            try {
+                if(mode === 'login') {
+                    const r = await fetch(`${API}?action=login_verify&email=${e}&pass=${p}`);
+                    const res = await r.text();
+                    // DESATIVA O LOADER
+                    document.getElementById('global-loader').style.display = 'none';
+
+                    if(res === "Erro") return alert("Dados incorretos.");
+                    user = JSON.parse(res); user.email = e;
+                    sessionStorage.setItem('v_user', JSON.stringify(user));
+                    start();
+                } else {
+                    const n = document.getElementById('s-name').value;
+                    const d = document.getElementById('s-dept').value;
+                    await fetch(API, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:d, pass:p})});
+                    
+                    // DESATIVA O LOADER
+                    document.getElementById('global-loader').style.display = 'none';
+                    
+                    alert("Sucesso! Faça o login."); toggleAuth(false);
+                }
+            } catch (error) {
+                document.getElementById('global-loader').style.display = 'none';
+                alert("Erro de conexão.");
             }
         }
 
@@ -213,13 +228,45 @@
 
         async function save() {
             const id = document.getElementById('f-id').value;
+            const sDate = document.getElementById('f-date').value;
+            const sStart = document.getElementById('f-start').value;
+            const sEnd = document.getElementById('f-end').value;
+
+            // VERIFICAÇÃO DE CONFLITO DE HORÁRIO
+            const conflict = mData.some(m => {
+                // Se for a mesma sala E o mesmo dia
+                if(String(m.ROOM) === String(room) && m.DATE.split('T')[0] === sDate) {
+                    // Se estiver editando, ignora a própria reunião atual
+                    if(id && m.ID === id) return false;
+
+                    // Verifica sobreposição de horários
+                    // (Inicio Novo < Fim Existente) E (Fim Novo > Inicio Existente)
+                    if(sStart < m.END && sEnd > m.START) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+
+            if(conflict) {
+                return alert("Esse horário já está ocupado.");
+            }
+
+            // ATIVA O LOADER
+            document.getElementById('global-loader').style.display = 'flex';
+
             const body = new URLSearchParams({
                 action: id ? 'edit' : 'create', id: id || 'ID-'+Date.now(), room, 
-                date: document.getElementById('f-date').value, start: document.getElementById('f-start').value, 
-                end: document.getElementById('f-end').value, client: document.getElementById('f-client').value, 
+                date: sDate, start: sStart, 
+                end: sEnd, client: document.getElementById('f-client').value, 
                 host: document.getElementById('f-host').value, createdBy: user.email, dept: user.dept
             });
+            
             await fetch(API, {method:'POST', body});
+            
+            // DESATIVA O LOADER
+            document.getElementById('global-loader').style.display = 'none';
+            
             closeMod(); load();
         }
 
