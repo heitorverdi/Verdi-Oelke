@@ -10,27 +10,27 @@
     <style>
         :root { 
             --primary: #064e3b; --gold: #c5a059; --bg: #f8fafc; --text: #0f172a; 
-            /* CORES DOS SETORES */
-            --fiscal: #0052FF; 
-            --contabil: #6D28D9; 
-            --comercial: #10B981; 
-            --pessoal: #F59E0B; 
-            --societario: #EC4899;
-            --diretoria: #1e293b; /* Nova cor para Diretoria (Cinza Escuro/Preto) */
+            --fiscal: #0052FF; --contabil: #6D28D9; --comercial: #10B981; 
+            --pessoal: #F59E0B; --societario: #EC4899; --diretoria: #1e293b; 
             --default: #cbd5e1;
         }
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s ease; }
         body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; overflow: hidden; }
         
-        /* LOADER GLOBAL */
-        #global-loader { display: none; position: fixed; inset: 0; background: rgba(248, 250, 252, 0.7); z-index: 3000; align-items: center; justify-content: center; }
-        .spinner-dark { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        /* CAMADAS (Z-INDEX) CORRIGIDAS */
+        /* Loader: Maxima prioridade */
+        #global-loader { display: none; position: fixed; inset: 0; background: rgba(248, 250, 252, 0.7); z-index: 20000; align-items: center; justify-content: center; }
         
-        /* LOADER DO BOTÃO */
+        /* Modais: Prioridade alta (acima do login) */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10001; align-items: center; justify-content: center; }
+        
+        /* Tela de Login: Prioridade média */
+        #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 9000; display: flex; align-items: center; justify-content: center; }
+
+        .spinner-dark { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
         .btn-loader { display: none; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 10px; }
         .btn-loading .btn-text { opacity: 0.7; }
         .btn-loading .btn-loader { display: inline-block; }
-        
         @keyframes spin { to { transform: rotate(360deg); } }
 
         header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
@@ -46,10 +46,7 @@
         .content { max-width: 1200px; margin: auto; padding: 20px; height: calc(100vh - 200px); overflow-y: auto; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 
-        /* ESTILO DO CARD COM A BORDA ESQUERDA DINÂMICA */
         .card { background: white; border-radius: 20px; padding: 25px; position: relative; border-left: 12px solid var(--default); box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-height: 220px; }
-        
-        /* CLASSES DE CORES */
         .border-fiscal { border-left-color: var(--fiscal) !important; }
         .border-contabil { border-left-color: var(--contabil) !important; }
         .border-comercial { border-left-color: var(--comercial) !important; }
@@ -67,14 +64,11 @@
         .info-label { font-size: 0.65rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
         .info-value { font-size: 0.95rem; font-weight: 600; }
 
-        #auth-screen { position: fixed; inset: 0; background: var(--primary); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .auth-box { background: white; padding: 40px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; }
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
         .modal { background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; }
         input, select { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 12px; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .btn-main:disabled { opacity: 0.7; cursor: not-allowed; }
-        
         .link-text { color: var(--gold); font-weight: 700; cursor: pointer; text-decoration: none; font-size: 0.8rem; }
         .link-text:hover { text-decoration: underline; }
     </style>
@@ -83,7 +77,7 @@
 
     <div id="global-loader"><div class="spinner-dark"></div></div>
 
-    <!-- TELA DE AUTENTICAÇÃO -->
+    <!-- TELA DE AUTENTICAÇÃO (Z-INDEX 9000) -->
     <div id="auth-screen">
         <!-- LOGIN -->
         <div class="auth-box" id="box-login">
@@ -110,7 +104,7 @@
             <input type="email" id="s-email" placeholder="E-mail Corporativo">
             <select id="s-dept">
                 <option value="">Selecione seu Setor</option>
-                <option value="Diretoria">Diretoria</option> <!-- NOVO SETOR -->
+                <option value="Diretoria">Diretoria</option>
                 <option value="Fiscal">Fiscal</option>
                 <option value="Contabil">Contábil</option>
                 <option value="Comercial">Comercial</option>
@@ -132,23 +126,16 @@
         <div class="user-tag">
             <span id="u-dept" style="margin-right:5px; border-right:1px solid rgba(255,255,255,0.3); padding-right:10px; color:white"></span>
             <span id="u-name" style="color:white"></span>
-            
-            <!-- BOTÃO DE EDITAR PERFIL -->
-            <button class="icon-btn" onclick="openProfileMod()" title="Editar Perfil">
-                <i data-lucide="settings" size="16"></i>
-            </button>
-            
+            <button class="icon-btn" onclick="openProfileMod()" title="Editar Perfil"><i data-lucide="settings" size="16"></i></button>
             <button onclick="logout()" class="logout-btn">SAIR</button>
         </div>
     </header>
 
-    <!-- ABAS -->
     <div class="tabs">
         <div class="tab active" id="t1" onclick="setRoom(1)">SALA 01</div>
         <div class="tab" id="t2" onclick="setRoom(2)">SALA 02</div>
     </div>
 
-    <!-- CONTEÚDO -->
     <div class="content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 id="room-title">Sala 01</h2>
@@ -157,7 +144,9 @@
         <div id="list" class="grid"></div>
     </div>
 
-    <!-- MODAL AGENDAR/EDITAR REUNIÃO -->
+    <!-- MODAIS (Z-INDEX 10001) -->
+    
+    <!-- AGENDAR -->
     <div id="overlay" class="overlay">
         <div class="modal">
             <h3 id="modal-title" style="margin-top:0">Agendar Reunião</h3>
@@ -174,12 +163,11 @@
         </div>
     </div>
 
-    <!-- MODAL EDITAR PERFIL -->
+    <!-- PERFIL -->
     <div id="overlay-profile" class="overlay">
         <div class="modal">
             <h3 style="margin-top:0">Editar Meu Perfil</h3>
-            <label class="info-label">Nome</label>
-            <input type="text" id="p-name">
+            <label class="info-label">Nome</label><input type="text" id="p-name">
             <label class="info-label">Setor</label>
             <select id="p-dept">
                 <option value="Diretoria">Diretoria</option>
@@ -189,27 +177,22 @@
                 <option value="Pessoal">Pessoal</option>
                 <option value="Societario">Societário</option>
             </select>
-            <label class="info-label">Nova Senha (Opcional)</label>
-            <input type="password" id="p-pass" placeholder="Deixe em branco para manter">
-            
+            <label class="info-label">Nova Senha (Opcional)</label><input type="password" id="p-pass" placeholder="Deixe em branco para manter">
             <button class="btn-main" id="btn-profile-save" style="width:100%" onclick="saveProfile()">
-                <span class="btn-text">Salvar Alterações</span>
-                <div class="btn-loader"></div>
+                <span class="btn-text">Salvar Alterações</span><div class="btn-loader"></div>
             </button>
             <button onclick="closeMod('overlay-profile')" style="width:100%; border:none; background:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
         </div>
     </div>
 
-    <!-- MODAL ESQUECI SENHA -->
+    <!-- ESQUECI SENHA -->
     <div id="overlay-forgot" class="overlay">
         <div class="modal">
             <h3 style="margin-top:0">Recuperar Senha</h3>
             <p style="font-size:0.9rem; color:#64748b; margin-bottom:20px">Digite seu e-mail para receber instruções.</p>
             <input type="email" id="forgot-email" placeholder="Seu e-mail cadastrado">
-            
             <button class="btn-main" id="btn-forgot" style="width:100%" onclick="sendForgot()">
-                <span class="btn-text">Enviar</span>
-                <div class="btn-loader"></div>
+                <span class="btn-text">Enviar</span><div class="btn-loader"></div>
             </button>
             <button onclick="closeMod('overlay-forgot')" style="width:100%; border:none; background:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
         </div>
@@ -233,13 +216,8 @@
 
         function setLoading(btnId, isLoading) {
             const btn = document.getElementById(btnId);
-            if(isLoading) {
-                btn.classList.add('btn-loading');
-                btn.disabled = true;
-            } else {
-                btn.classList.remove('btn-loading');
-                btn.disabled = false;
-            }
+            if(isLoading) { btn.classList.add('btn-loading'); btn.disabled = true; } 
+            else { btn.classList.remove('btn-loading'); btn.disabled = false; }
         }
 
         async function handleAuth(mode) {
@@ -250,14 +228,13 @@
             if(!e) return alert("Preencha o e-mail.");
             if(!(e.endsWith('@verdicontadores.com.br') || e === ADMIN_EMAIL)) return alert("E-mail não autorizado.");
 
-            setLoading(btnId, true); // ATIVA O LOADING NO BOTÃO
+            setLoading(btnId, true);
 
             try {
                 if(mode === 'login') {
                     const r = await fetch(`${API}?action=login_verify&email=${e}&pass=${p}`);
                     const res = await r.text();
                     setLoading(btnId, false);
-
                     if(res === "Erro") return alert("Dados incorretos.");
                     user = JSON.parse(res); user.email = e;
                     sessionStorage.setItem('v_user', JSON.stringify(user));
@@ -266,16 +243,11 @@
                     const n = document.getElementById('s-name').value;
                     const d = document.getElementById('s-dept').value;
                     if(!n || !d || !p) { setLoading(btnId, false); return alert("Preencha todos os campos."); }
-
                     await fetch(API, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:d, pass:p})});
                     setLoading(btnId, false);
-                    
                     alert("Sucesso! Faça o login."); toggleAuth('login');
                 }
-            } catch (error) {
-                setLoading(btnId, false);
-                alert("Erro de conexão.");
-            }
+            } catch (error) { setLoading(btnId, false); alert("Erro de conexão."); }
         }
 
         function start() {
@@ -291,10 +263,7 @@
 
         async function load() {
             document.getElementById('global-loader').style.display = 'flex';
-            try {
-                const r = await fetch(API);
-                mData = await r.json();
-            } catch(e) { console.error(e); }
+            try { const r = await fetch(API); mData = await r.json(); } catch(e) { console.error(e); }
             document.getElementById('global-loader').style.display = 'none';
             render();
         }
@@ -308,12 +277,19 @@
             filtered.sort((a,b) => a.START.localeCompare(b.START)).forEach(m => {
                 const sectorClean = m.DEPT ? m.DEPT.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim() : 'default';
                 
-                // LÓGICA DE PERMISSÃO REFORÇADA
+                // --- LÓGICA DE PERMISSÃO CORRIGIDA ---
                 const logEmail = user.email.toLowerCase().trim();
+                // Tenta pegar o CREATEDBY. Se não existir (reunião antiga), fica vazio.
                 const ownerEmail = (m.CREATEDBY || "").toLowerCase().trim();
                 
-                // Permite se for o dono OU se for o Admin (Heitor)
-                const canEdit = (logEmail === ownerEmail) || (logEmail === ADMIN_EMAIL);
+                // 1. Sou o Admin? (Heitor)
+                const isAdmin = logEmail === ADMIN_EMAIL;
+                
+                // 2. Sou o Dono? (E o dono existe na planilha?)
+                const isOwner = (ownerEmail !== "") && (logEmail === ownerEmail);
+
+                // Pode editar se for Admin OU se for o Dono
+                const canEdit = isAdmin || isOwner;
 
                 const div = document.createElement('div');
                 div.className = `card border-${sectorClean}`;
@@ -356,13 +332,10 @@
             const body = new URLSearchParams({
                 action: id ? 'edit' : 'create', 
                 id: id || 'ID-'+Date.now(), 
-                room, 
-                date: sDate, 
-                start: sStart, 
-                end: sEnd, 
+                room, date: sDate, start: sStart, end: sEnd, 
                 client: document.getElementById('f-client').value, 
                 host: document.getElementById('f-host').value, 
-                createdBy: user.email, // Garante que o email do criador seja salvo
+                createdBy: user.email, // Envia o email atual
                 dept: user.dept
             });
             
@@ -370,8 +343,6 @@
             document.getElementById('global-loader').style.display = 'none';
             closeMod('overlay'); load();
         }
-
-        // --- FUNÇÕES DE PERFIL E SENHA ---
 
         function openProfileMod() {
             document.getElementById('p-name').value = user.name;
@@ -384,51 +355,26 @@
             const n = document.getElementById('p-name').value;
             const d = document.getElementById('p-dept').value;
             const p = document.getElementById('p-pass').value;
-
             setLoading('btn-profile-save', true);
-
-            // Envia para o Backend (Google Script precisa tratar action 'update_user')
-            await fetch(API, {method:'POST', body:new URLSearchParams({
-                action: 'update_user',
-                email: user.email,
-                name: n,
-                dept: d,
-                new_pass: p // Se vazio, backend deve ignorar
-            })});
-
-            // Atualiza localmente
-            user.name = n;
-            user.dept = d;
+            await fetch(API, {method:'POST', body:new URLSearchParams({ action: 'update_user', email: user.email, name: n, dept: d, new_pass: p })});
+            user.name = n; user.dept = d;
             sessionStorage.setItem('v_user', JSON.stringify(user));
             updateHeaderInfo();
-            
             setLoading('btn-profile-save', false);
-            alert("Perfil atualizado!");
-            closeMod('overlay-profile');
+            alert("Perfil atualizado!"); closeMod('overlay-profile');
         }
 
-        function openForgotMod() {
-            document.getElementById('overlay-forgot').style.display = 'flex';
-        }
+        function openForgotMod() { document.getElementById('overlay-forgot').style.display = 'flex'; }
 
         async function sendForgot() {
             const e = document.getElementById('forgot-email').value;
             if(!e) return alert("Digite o e-mail.");
-
             setLoading('btn-forgot', true);
-            
-            // Backend precisa tratar action 'reset_pass'
-            await fetch(API, {method:'POST', body:new URLSearchParams({
-                action: 'reset_pass',
-                email: e
-            })});
-
+            await fetch(API, {method:'POST', body:new URLSearchParams({ action: 'reset_pass', email: e })});
             setLoading('btn-forgot', false);
             alert("Se o e-mail estiver cadastrado, você receberá instruções.");
             closeMod('overlay-forgot');
         }
-
-        // --- AUXILIARES ---
 
         function editEvent(id) {
             const m = mData.find(x => x.ID === id);
@@ -443,18 +389,7 @@
         }
 
         async function deleteEvent(id) { if(confirm("Excluir?")) { await fetch(API, {method:'POST', body:new URLSearchParams({action:'delete', id})}); load(); } }
-        
-        function openMod() { 
-            document.getElementById('modal-title').innerText="Agendar Reunião"; 
-            document.getElementById('f-id').value=""; 
-            document.getElementById('f-date').value=""; 
-            document.getElementById('f-start').value=""; 
-            document.getElementById('f-end').value=""; 
-            document.getElementById('f-client').value=""; 
-            document.getElementById('f-host').value=user.name; 
-            document.getElementById('overlay').style.display='flex'; 
-        }
-        
+        function openMod() { document.getElementById('modal-title').innerText="Agendar Reunião"; document.getElementById('f-id').value=""; document.getElementById('f-date').value=""; document.getElementById('f-start').value=""; document.getElementById('f-end').value=""; document.getElementById('f-client').value=""; document.getElementById('f-host').value=user.name; document.getElementById('overlay').style.display='flex'; }
         function closeMod(id) { document.getElementById(id).style.display = 'none'; }
         function setRoom(n) { room = n; document.getElementById('room-title').innerText=`Sala 0${n}`; document.getElementById('t1').classList.toggle('active', n==1); document.getElementById('t2').classList.toggle('active', n==2); render(); }
         function logout() { sessionStorage.clear(); window.location.reload(); }
