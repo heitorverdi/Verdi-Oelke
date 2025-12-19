@@ -16,18 +16,28 @@
             --comercial: #10B981; 
             --pessoal: #F59E0B; 
             --societario: #EC4899;
+            --diretoria: #1e293b; /* Nova cor para Diretoria (Cinza Escuro/Preto) */
             --default: #cbd5e1;
         }
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s ease; }
         body { background-color: var(--bg); margin: 0; color: var(--text); height: 100vh; overflow: hidden; }
         
+        /* LOADER GLOBAL */
         #global-loader { display: none; position: fixed; inset: 0; background: rgba(248, 250, 252, 0.7); z-index: 3000; align-items: center; justify-content: center; }
         .spinner-dark { width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        
+        /* LOADER DO BOTÃO */
+        .btn-loader { display: none; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 10px; }
+        .btn-loading .btn-text { opacity: 0.7; }
+        .btn-loading .btn-loader { display: inline-block; }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
 
         header { background: var(--primary); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
-        .user-tag { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; color: white; }
-        .logout-btn { color: #fda4af; cursor: pointer; font-weight: 800; border: none; background: none; font-size: 0.75rem; margin-left: 15px; padding-left: 15px; border-left: 1px solid rgba(255,255,255,0.3); }
+        .user-tag { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; color: white; gap: 10px; }
+        .icon-btn { color: white; cursor: pointer; background: none; border: none; padding: 5px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .icon-btn:hover { background: rgba(255,255,255,0.2); }
+        .logout-btn { color: #fda4af; cursor: pointer; font-weight: 800; border: none; background: none; font-size: 0.75rem; padding-left: 10px; border-left: 1px solid rgba(255,255,255,0.3); }
 
         .tabs { background: white; display: flex; justify-content: center; gap: 40px; border-bottom: 1px solid #e2e8f0; }
         .tab { padding: 20px 0; cursor: pointer; font-weight: 700; color: #94a3b8; font-size: 0.8rem; border-bottom: 3px solid transparent; }
@@ -45,6 +55,7 @@
         .border-comercial { border-left-color: var(--comercial) !important; }
         .border-pessoal { border-left-color: var(--pessoal) !important; }
         .border-societario { border-left-color: var(--societario) !important; }
+        .border-diretoria { border-left-color: var(--diretoria) !important; }
 
         .card-header { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--primary); font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
         .actions { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; z-index: 20; }
@@ -62,26 +73,44 @@
         .modal { background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; }
         input, select { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #e2e8f0; border-radius: 12px; }
         .btn-main { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .btn-main:disabled { opacity: 0.7; cursor: not-allowed; }
+        
+        .link-text { color: var(--gold); font-weight: 700; cursor: pointer; text-decoration: none; font-size: 0.8rem; }
+        .link-text:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <div id="global-loader"><div class="spinner-dark"></div></div>
 
+    <!-- TELA DE AUTENTICAÇÃO -->
     <div id="auth-screen">
+        <!-- LOGIN -->
         <div class="auth-box" id="box-login">
             <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="width:140px; filter:brightness(0); margin-bottom:20px">
             <input type="email" id="l-email" placeholder="E-mail">
             <input type="password" id="l-pass" placeholder="Senha">
-            <button class="btn-main" style="width:100%" onclick="handleAuth('login')">Entrar</button>
-            <p style="font-size:0.8rem; margin-top:20px">Novo aqui? <a href="#" style="color:var(--gold); font-weight:700" onclick="toggleAuth(true)">Cadastre-se</a></p>
+            
+            <div style="text-align: right; margin-bottom: 15px; margin-top: -10px;">
+                <a href="#" class="link-text" style="color: #94a3b8; font-weight: 500;" onclick="openForgotMod()">Esqueci minha senha</a>
+            </div>
+
+            <button class="btn-main" id="btn-login" style="width:100%" onclick="handleAuth('login')">
+                <span class="btn-text">Entrar</span>
+                <div class="btn-loader"></div>
+            </button>
+            
+            <p style="font-size:0.8rem; margin-top:20px">Novo aqui? <a href="#" class="link-text" onclick="toggleAuth('signup')">Cadastre-se</a></p>
         </div>
+
+        <!-- CADASTRO -->
         <div class="auth-box" id="box-signup" style="display:none">
             <h2>Cadastro</h2>
             <input type="text" id="s-name" placeholder="Nome Completo">
             <input type="email" id="s-email" placeholder="E-mail Corporativo">
             <select id="s-dept">
                 <option value="">Selecione seu Setor</option>
+                <option value="Diretoria">Diretoria</option> <!-- NOVO SETOR -->
                 <option value="Fiscal">Fiscal</option>
                 <option value="Contabil">Contábil</option>
                 <option value="Comercial">Comercial</option>
@@ -89,25 +118,37 @@
                 <option value="Societario">Societário</option>
             </select>
             <input type="password" id="s-pass" placeholder="Senha">
-            <button class="btn-main" style="width:100%" onclick="handleAuth('signup')">Cadastrar</button>
-            <p style="font-size:0.8rem; margin-top:20px"><a href="#" onclick="toggleAuth(false)">Voltar ao Login</a></p>
+            <button class="btn-main" id="btn-signup" style="width:100%" onclick="handleAuth('signup')">
+                <span class="btn-text">Cadastrar</span>
+                <div class="btn-loader"></div>
+            </button>
+            <p style="font-size:0.8rem; margin-top:20px"><a href="#" class="link-text" onclick="toggleAuth('login')">Voltar ao Login</a></p>
         </div>
     </div>
 
+    <!-- HEADER -->
     <header>
         <img src="https://i.ibb.co/fYDZ9RF2/verdi-branco.png" style="height:35px; filter:brightness(0) invert(1);">
         <div class="user-tag">
-            <span id="u-dept" style="margin-right:10px; border-right:1px solid rgba(255,255,255,0.3); padding-right:10px; color:white"></span>
+            <span id="u-dept" style="margin-right:5px; border-right:1px solid rgba(255,255,255,0.3); padding-right:10px; color:white"></span>
             <span id="u-name" style="color:white"></span>
+            
+            <!-- BOTÃO DE EDITAR PERFIL -->
+            <button class="icon-btn" onclick="openProfileMod()" title="Editar Perfil">
+                <i data-lucide="settings" size="16"></i>
+            </button>
+            
             <button onclick="logout()" class="logout-btn">SAIR</button>
         </div>
     </header>
 
+    <!-- ABAS -->
     <div class="tabs">
         <div class="tab active" id="t1" onclick="setRoom(1)">SALA 01</div>
         <div class="tab" id="t2" onclick="setRoom(2)">SALA 02</div>
     </div>
 
+    <!-- CONTEÚDO -->
     <div class="content">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 id="room-title">Sala 01</h2>
@@ -116,6 +157,7 @@
         <div id="list" class="grid"></div>
     </div>
 
+    <!-- MODAL AGENDAR/EDITAR REUNIÃO -->
     <div id="overlay" class="overlay">
         <div class="modal">
             <h3 id="modal-title" style="margin-top:0">Agendar Reunião</h3>
@@ -128,36 +170,93 @@
             <label class="info-label">Cliente / Assunto</label><input type="text" id="f-client">
             <label class="info-label">Host Responsável</label><input type="text" id="f-host">
             <button class="btn-main" style="width:100%" onclick="save()">Confirmar</button>
-            <button onclick="closeMod()" style="width:100%; border:none; background:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
+            <button onclick="closeMod('overlay')" style="width:100%; border:none; background:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR PERFIL -->
+    <div id="overlay-profile" class="overlay">
+        <div class="modal">
+            <h3 style="margin-top:0">Editar Meu Perfil</h3>
+            <label class="info-label">Nome</label>
+            <input type="text" id="p-name">
+            <label class="info-label">Setor</label>
+            <select id="p-dept">
+                <option value="Diretoria">Diretoria</option>
+                <option value="Fiscal">Fiscal</option>
+                <option value="Contabil">Contábil</option>
+                <option value="Comercial">Comercial</option>
+                <option value="Pessoal">Pessoal</option>
+                <option value="Societario">Societário</option>
+            </select>
+            <label class="info-label">Nova Senha (Opcional)</label>
+            <input type="password" id="p-pass" placeholder="Deixe em branco para manter">
+            
+            <button class="btn-main" id="btn-profile-save" style="width:100%" onclick="saveProfile()">
+                <span class="btn-text">Salvar Alterações</span>
+                <div class="btn-loader"></div>
+            </button>
+            <button onclick="closeMod('overlay-profile')" style="width:100%; border:none; background:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL ESQUECI SENHA -->
+    <div id="overlay-forgot" class="overlay">
+        <div class="modal">
+            <h3 style="margin-top:0">Recuperar Senha</h3>
+            <p style="font-size:0.9rem; color:#64748b; margin-bottom:20px">Digite seu e-mail para receber instruções.</p>
+            <input type="email" id="forgot-email" placeholder="Seu e-mail cadastrado">
+            
+            <button class="btn-main" id="btn-forgot" style="width:100%" onclick="sendForgot()">
+                <span class="btn-text">Enviar</span>
+                <div class="btn-loader"></div>
+            </button>
+            <button onclick="closeMod('overlay-forgot')" style="width:100%; border:none; background:none; margin-top:10px; color:#94a3b8; cursor:pointer">Cancelar</button>
         </div>
     </div>
 
     <script>
         const API = "https://script.google.com/macros/s/AKfycbyoRd4TELlnmx7Hlkj2xzzpYdgWFvY3QJk9SBHmxJOv1EktysHAVofKX-yACC4nETLX/exec"; 
         let user = null; let room = 1; let mData = [];
+        const ADMIN_EMAIL = 'heitor.verdi@gmail.com';
 
         window.onload = () => {
             const saved = sessionStorage.getItem('v_user');
             if(saved) { user = JSON.parse(saved); start(); }
+            lucide.createIcons();
         };
 
-        function toggleAuth(s) { document.getElementById('box-login').style.display=s?'none':'block'; document.getElementById('box-signup').style.display=s?'block':'none'; }
+        function toggleAuth(mode) { 
+            document.getElementById('box-login').style.display = mode === 'login' ? 'block' : 'none'; 
+            document.getElementById('box-signup').style.display = mode === 'signup' ? 'block' : 'none'; 
+        }
+
+        function setLoading(btnId, isLoading) {
+            const btn = document.getElementById(btnId);
+            if(isLoading) {
+                btn.classList.add('btn-loading');
+                btn.disabled = true;
+            } else {
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+            }
+        }
 
         async function handleAuth(mode) {
+            const btnId = mode === 'login' ? 'btn-login' : 'btn-signup';
             const e = document.getElementById(mode === 'login' ? 'l-email' : 's-email').value.toLowerCase().trim();
             const p = document.getElementById(mode === 'login' ? 'l-pass' : 's-pass').value;
 
-            if(!(e.endsWith('@verdicontadores.com.br') || e === 'heitor.verdi@gmail.com')) return alert("E-mail não autorizado.");
+            if(!e) return alert("Preencha o e-mail.");
+            if(!(e.endsWith('@verdicontadores.com.br') || e === ADMIN_EMAIL)) return alert("E-mail não autorizado.");
 
-            // ATIVA O LOADER
-            document.getElementById('global-loader').style.display = 'flex';
+            setLoading(btnId, true); // ATIVA O LOADING NO BOTÃO
 
             try {
                 if(mode === 'login') {
                     const r = await fetch(`${API}?action=login_verify&email=${e}&pass=${p}`);
                     const res = await r.text();
-                    // DESATIVA O LOADER
-                    document.getElementById('global-loader').style.display = 'none';
+                    setLoading(btnId, false);
 
                     if(res === "Erro") return alert("Dados incorretos.");
                     user = JSON.parse(res); user.email = e;
@@ -166,30 +265,36 @@
                 } else {
                     const n = document.getElementById('s-name').value;
                     const d = document.getElementById('s-dept').value;
+                    if(!n || !d || !p) { setLoading(btnId, false); return alert("Preencha todos os campos."); }
+
                     await fetch(API, {method:'POST', body:new URLSearchParams({action:'signup', user:n, email:e, dept:d, pass:p})});
+                    setLoading(btnId, false);
                     
-                    // DESATIVA O LOADER
-                    document.getElementById('global-loader').style.display = 'none';
-                    
-                    alert("Sucesso! Faça o login."); toggleAuth(false);
+                    alert("Sucesso! Faça o login."); toggleAuth('login');
                 }
             } catch (error) {
-                document.getElementById('global-loader').style.display = 'none';
+                setLoading(btnId, false);
                 alert("Erro de conexão.");
             }
         }
 
         function start() {
             document.getElementById('auth-screen').style.display = 'none';
+            updateHeaderInfo();
+            load();
+        }
+
+        function updateHeaderInfo() {
             document.getElementById('u-name').innerText = user.name;
             document.getElementById('u-dept').innerText = user.dept;
-            load();
         }
 
         async function load() {
             document.getElementById('global-loader').style.display = 'flex';
-            const r = await fetch(API);
-            mData = await r.json();
+            try {
+                const r = await fetch(API);
+                mData = await r.json();
+            } catch(e) { console.error(e); }
             document.getElementById('global-loader').style.display = 'none';
             render();
         }
@@ -201,17 +306,19 @@
             const filtered = mData.filter(m => String(m.ROOM) === String(room) && m.DATE.split('T')[0] >= today);
 
             filtered.sort((a,b) => a.START.localeCompare(b.START)).forEach(m => {
-                // NORMALIZA O SETOR PARA A CLASSE CSS (Remove acentos e espaços)
                 const sectorClean = m.DEPT ? m.DEPT.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim() : 'default';
                 
+                // LÓGICA DE PERMISSÃO REFORÇADA
                 const logEmail = user.email.toLowerCase().trim();
                 const ownerEmail = (m.CREATEDBY || "").toLowerCase().trim();
-                const isOwner = logEmail === ownerEmail || logEmail === 'heitor.verdi@gmail.com';
+                
+                // Permite se for o dono OU se for o Admin (Heitor)
+                const canEdit = (logEmail === ownerEmail) || (logEmail === ADMIN_EMAIL);
 
                 const div = document.createElement('div');
                 div.className = `card border-${sectorClean}`;
                 div.innerHTML = `
-                    ${isOwner ? `
+                    ${canEdit ? `
                     <div class="actions">
                         <button class="act-btn edit-btn" onclick="editEvent('${m.ID}')"><i data-lucide="pencil" size="16"></i></button>
                         <button class="act-btn del-btn" onclick="deleteEvent('${m.ID}')"><i data-lucide="trash-2" size="16"></i></button>
@@ -232,43 +339,96 @@
             const sStart = document.getElementById('f-start').value;
             const sEnd = document.getElementById('f-end').value;
 
-            // VERIFICAÇÃO DE CONFLITO DE HORÁRIO
-            const conflict = mData.some(m => {
-                // Se for a mesma sala E o mesmo dia
-                if(String(m.ROOM) === String(room) && m.DATE.split('T')[0] === sDate) {
-                    // Se estiver editando, ignora a própria reunião atual
-                    if(id && m.ID === id) return false;
+            if(!sDate || !sStart || !sEnd) return alert("Preencha data e horários.");
 
-                    // Verifica sobreposição de horários
-                    // (Inicio Novo < Fim Existente) E (Fim Novo > Inicio Existente)
-                    if(sStart < m.END && sEnd > m.START) {
-                        return true;
-                    }
+            const conflict = mData.some(m => {
+                if(String(m.ROOM) === String(room) && m.DATE.split('T')[0] === sDate) {
+                    if(id && m.ID === id) return false;
+                    if(sStart < m.END && sEnd > m.START) return true;
                 }
                 return false;
             });
 
-            if(conflict) {
-                return alert("Esse horário já está ocupado.");
-            }
+            if(conflict) return alert("Esse horário já está ocupado.");
 
-            // ATIVA O LOADER
             document.getElementById('global-loader').style.display = 'flex';
 
             const body = new URLSearchParams({
-                action: id ? 'edit' : 'create', id: id || 'ID-'+Date.now(), room, 
-                date: sDate, start: sStart, 
-                end: sEnd, client: document.getElementById('f-client').value, 
-                host: document.getElementById('f-host').value, createdBy: user.email, dept: user.dept
+                action: id ? 'edit' : 'create', 
+                id: id || 'ID-'+Date.now(), 
+                room, 
+                date: sDate, 
+                start: sStart, 
+                end: sEnd, 
+                client: document.getElementById('f-client').value, 
+                host: document.getElementById('f-host').value, 
+                createdBy: user.email, // Garante que o email do criador seja salvo
+                dept: user.dept
             });
             
             await fetch(API, {method:'POST', body});
-            
-            // DESATIVA O LOADER
             document.getElementById('global-loader').style.display = 'none';
-            
-            closeMod(); load();
+            closeMod('overlay'); load();
         }
+
+        // --- FUNÇÕES DE PERFIL E SENHA ---
+
+        function openProfileMod() {
+            document.getElementById('p-name').value = user.name;
+            document.getElementById('p-dept').value = user.dept;
+            document.getElementById('p-pass').value = "";
+            document.getElementById('overlay-profile').style.display = 'flex';
+        }
+
+        async function saveProfile() {
+            const n = document.getElementById('p-name').value;
+            const d = document.getElementById('p-dept').value;
+            const p = document.getElementById('p-pass').value;
+
+            setLoading('btn-profile-save', true);
+
+            // Envia para o Backend (Google Script precisa tratar action 'update_user')
+            await fetch(API, {method:'POST', body:new URLSearchParams({
+                action: 'update_user',
+                email: user.email,
+                name: n,
+                dept: d,
+                new_pass: p // Se vazio, backend deve ignorar
+            })});
+
+            // Atualiza localmente
+            user.name = n;
+            user.dept = d;
+            sessionStorage.setItem('v_user', JSON.stringify(user));
+            updateHeaderInfo();
+            
+            setLoading('btn-profile-save', false);
+            alert("Perfil atualizado!");
+            closeMod('overlay-profile');
+        }
+
+        function openForgotMod() {
+            document.getElementById('overlay-forgot').style.display = 'flex';
+        }
+
+        async function sendForgot() {
+            const e = document.getElementById('forgot-email').value;
+            if(!e) return alert("Digite o e-mail.");
+
+            setLoading('btn-forgot', true);
+            
+            // Backend precisa tratar action 'reset_pass'
+            await fetch(API, {method:'POST', body:new URLSearchParams({
+                action: 'reset_pass',
+                email: e
+            })});
+
+            setLoading('btn-forgot', false);
+            alert("Se o e-mail estiver cadastrado, você receberá instruções.");
+            closeMod('overlay-forgot');
+        }
+
+        // --- AUXILIARES ---
 
         function editEvent(id) {
             const m = mData.find(x => x.ID === id);
@@ -283,8 +443,19 @@
         }
 
         async function deleteEvent(id) { if(confirm("Excluir?")) { await fetch(API, {method:'POST', body:new URLSearchParams({action:'delete', id})}); load(); } }
-        function openMod() { document.getElementById('modal-title').innerText="Agendar Reunião"; document.getElementById('f-id').value=""; document.getElementById('f-date').value=""; document.getElementById('f-start').value=""; document.getElementById('f-end').value=""; document.getElementById('f-client').value=""; document.getElementById('f-host').value=user.name; document.getElementById('overlay').style.display='flex'; }
-        function closeMod() { document.getElementById('overlay').style.display = 'none'; }
+        
+        function openMod() { 
+            document.getElementById('modal-title').innerText="Agendar Reunião"; 
+            document.getElementById('f-id').value=""; 
+            document.getElementById('f-date').value=""; 
+            document.getElementById('f-start').value=""; 
+            document.getElementById('f-end').value=""; 
+            document.getElementById('f-client').value=""; 
+            document.getElementById('f-host').value=user.name; 
+            document.getElementById('overlay').style.display='flex'; 
+        }
+        
+        function closeMod(id) { document.getElementById(id).style.display = 'none'; }
         function setRoom(n) { room = n; document.getElementById('room-title').innerText=`Sala 0${n}`; document.getElementById('t1').classList.toggle('active', n==1); document.getElementById('t2').classList.toggle('active', n==2); render(); }
         function logout() { sessionStorage.clear(); window.location.reload(); }
     </script>
